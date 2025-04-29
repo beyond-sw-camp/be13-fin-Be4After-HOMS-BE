@@ -24,6 +24,11 @@ repositories {
 }
 
 dependencies {
+    configurations.all {
+        // 모든 configuration(testCompileClasspath, runtimeClasspath 등)에 적용
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
@@ -43,7 +48,11 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        // 테스트 시에도 순환 브릿지를 일으키는 로깅 스타터 제거
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
