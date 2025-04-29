@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: elk-example
+  profiles:
+    include: mariadb
+server:
+  port: 8088
+springdoc:
+  swagger-ui:
+    version: v1.0.0
+    tags-sorter: alpha
+    operations-sorter: alpha
+  packages-to-scan: com.beyond.homs
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8

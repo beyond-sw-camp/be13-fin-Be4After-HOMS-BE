@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO"
+               packages="org.springframework.boot.logging.log4j2">
+    <Appenders>
+        <Socket name="LogstashTcp"
+                host="localhost" port="50000"
+                protocol="Tcp"
+                immediateFlush="true"
+                reconnectDelayMillis="5000"
+                ignoreExceptions="true">
+            <JsonLayout eventEol="true" compact="true"
+                        objectMessageAsJsonObject="true"
+                        includeStacktrace="true"/>
+        </Socket>
+        <Console name="Console">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] %c{1} - %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="LogstashTcp"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
