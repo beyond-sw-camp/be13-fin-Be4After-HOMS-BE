@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,8 +18,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "product")
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Product {
     @Id
@@ -38,4 +37,12 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory category;
+
+    @Builder
+    public Product(String productName, String productFeature, String productUsage, ProductCategory category) {
+        this.productName = productName;
+        this.productFeature = productFeature;
+        this.productUsage = productUsage;
+        this.category = category;
+    }
 }
