@@ -25,7 +25,7 @@ public class ProductFile {
 
     @OneToOne(fetch = FetchType.EAGER)
     @MapsId
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "s3_image", length = 1024)
