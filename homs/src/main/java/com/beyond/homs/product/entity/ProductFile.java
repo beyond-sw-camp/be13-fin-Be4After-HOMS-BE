@@ -9,6 +9,7 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,8 +17,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "productfile")
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductFile {
     @Id
@@ -46,4 +45,14 @@ public class ProductFile {
 
     @Column(name = "s3_guide", length = 1024)
     private String s3Guide;
+
+    @Builder
+    public ProductFile(String s3Image, String s3Msds, String s3Tds1, String s3Tds2, String s3Property, String s3Guide) {
+        this.s3Image = s3Image;
+        this.s3Msds = s3Msds;
+        this.s3Tds1 = s3Tds1;
+        this.s3Tds2 = s3Tds2;
+        this.s3Property = s3Property;
+        this.s3Guide = s3Guide;
+    }
 }

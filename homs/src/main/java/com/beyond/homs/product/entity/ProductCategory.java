@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 @Entity
 @Table(name = "category")
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductCategory {
     @Id
@@ -50,4 +49,12 @@ public class ProductCategory {
                orphanRemoval = true)
     @OrderBy("sno ASC")
     private List<ProductCategory> children = new ArrayList<>();
+
+    @Builder
+    public ProductCategory(String categoryName, int sno, boolean active, ProductCategory parent) {
+        this.categoryName = categoryName;
+        this.sno = sno;
+        this.active = active;
+        this.parent = parent;
+    }
 }
