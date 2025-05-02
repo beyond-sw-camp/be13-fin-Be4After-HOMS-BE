@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -64,4 +65,18 @@ public class Company {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
     private Country country;
+
+    @Builder
+    Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean isContinueStatus, boolean isApproveStatus, Country country) {
+        this.companyName = companyName;
+        this.registrationNumber = registrationNumber;
+        this.representName = representName;
+        this.representCall = representCall;
+        this.representPhone = representPhone;
+        this.representManagerName = representManagerName;
+        this.representManagerEmail = representManagerEmail;
+        this.isContinueStatus = isContinueStatus;
+        this.isApproveStatus = isApproveStatus;
+        this.country = country;
+    }
 }

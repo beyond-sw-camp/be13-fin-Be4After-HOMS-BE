@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,9 @@ public class Country {
     @Column(name = "country_name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private CountryEnum countryName;
+
+    @Builder
+    public Country(CountryEnum countryName) {
+        this.countryName = countryName;
+    }
 }
