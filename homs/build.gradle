@@ -27,6 +27,7 @@ dependencies {
     configurations.all {
         // 모든 configuration(testCompileClasspath, runtimeClasspath 등)에 적용
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
@@ -44,6 +45,12 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
+
+// 메일서버와 연결해서 메일을 발송하는데 필요한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

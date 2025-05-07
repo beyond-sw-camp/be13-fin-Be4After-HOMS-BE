@@ -3,6 +3,18 @@ spring:
     name: elk-example
   profiles:
     include: mariadb
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail.username}
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 server:
   port: 8088
 springdoc:
