@@ -1,6 +1,7 @@
 package com.beyond.homs.notice.service;
 
 import com.beyond.homs.notice.dto.CreateNoticeDto;
+import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.entity.Notice;
 import com.beyond.homs.notice.repository.NoticeRepository;
@@ -9,16 +10,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
     
-    // 공지사항 목록
+    // 공지사항 목록 조회
     @Override
-    public List<Notice> getNotices() {
-        return noticeRepository.findAll();
+    public List<NoticeListDto> getNotices() {
+        return noticeRepository.findAll().stream()
+                .map(NoticeListDto::new)
+                .collect(Collectors.toList());
     }
     
     // 공지사항 등록
