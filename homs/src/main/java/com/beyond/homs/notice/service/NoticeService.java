@@ -10,6 +10,9 @@ import java.util.List;
 public interface NoticeService {
     List<NoticeListDto> getNotices();
 
+    // 공지사항 상세 조회
+    NoticeResponseDto getNoticeDetail(Long noticeId);
+
     // 공지사항 등록
     @Transactional
     NoticeResponseDto createNotice(noticeRequestDto noticeRequestDto);

@@ -24,6 +24,21 @@ public class NoticeServiceImpl implements NoticeService {
                 .map(NoticeListDto::new)
                 .collect(Collectors.toList());
     }
+
+    // 공지사항 상세 조회
+    @Override
+    public NoticeResponseDto getNoticeDetail(Long noticeId){
+        Notice post = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+
+        return NoticeResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+    }
     
     // 공지사항 등록
     @Transactional

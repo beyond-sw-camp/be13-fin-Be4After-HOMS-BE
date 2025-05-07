@@ -33,8 +33,22 @@ public class NoticeControllerImpl implements NoticeController {
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
-                        "모든 공지사항을 불러왔습니다.",
+                        "모든 공지사항 목록을 불러왔습니다.",
                         noticeList
+                ));
+    }
+
+    @GetMapping("/{noticeId}")
+    @Override
+    public ResponseEntity<ResponseDto<NoticeResponseDto>> noticeDetail(
+            @PathVariable Long noticeId){
+
+        NoticeResponseDto noticeDetail = noticeService.getNoticeDetail(noticeId);
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "성공적으로 공지 상세 내용을 불러왔습니다.",
+                        noticeDetail
                 ));
     }
 
