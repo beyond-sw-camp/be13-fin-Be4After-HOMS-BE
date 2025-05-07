@@ -48,7 +48,7 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 삭제
     @Transactional
     @Override
-    public void delete(Long noticeId) {
+    public void deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
     }
 }

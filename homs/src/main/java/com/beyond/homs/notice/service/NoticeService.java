@@ -16,5 +16,5 @@ public interface NoticeService {
 
     // 공지사항 삭제
     @Transactional
-    void delete(Long noticeId);
+    void deleteNotice(Long noticeId);
 }

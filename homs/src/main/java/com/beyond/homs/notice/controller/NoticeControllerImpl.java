@@ -8,7 +8,9 @@ import com.beyond.homs.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,19 @@ import java.util.List;
 @RequestMapping("/api/v1/notice")
 public class NoticeControllerImpl implements NoticeController {
     private final NoticeService noticeService;
+
+    @Override
+    @GetMapping("/")
+    public ResponseEntity<ResponseDto<List<NoticeListDto>>> noticeList(){
+
+        List<NoticeListDto> noticeList = noticeService.getNotices();
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "모든 공지사항을 불러왔습니다.",
+                        noticeList
+                ));
+    }
 
     @Override
     @PostMapping("/create")
@@ -37,17 +52,17 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
+    @DeleteMapping("/delete/{noticeId}")
     @Override
-    @GetMapping("/")
-    public ResponseEntity<ResponseDto<List<NoticeListDto>>> noticeList(){
+    public ResponseEntity<ResponseDto<Void>> deleteNotice(
+            @PathVariable Long noticeId){
+        noticeService.deleteNotice(noticeId);
 
-        List<NoticeListDto> noticeList = noticeService.getNotices();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        new ResponseDto<>(
-                                HttpStatus.OK.value(),
-                                "모든 공지사항을 불러왔습니다.",
-                                noticeList
-                        ));
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "공지사항이 성공적으로 삭제되었습니다.",
+                        null
+                ));
     }
 }
