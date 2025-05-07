@@ -1,13 +1,12 @@
 package com.beyond.homs.notice.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
-import com.beyond.homs.notice.dto.CreateNoticeDto;
+import com.beyond.homs.notice.dto.noticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,7 +20,13 @@ public interface NoticeController {
 
     @Operation(summary = "공지사항 생성", description = "공지사항을 생성합니다.")
     ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-            @RequestBody CreateNoticeDto createNoticeDto
+            @RequestBody noticeRequestDto noticeRequestDto
+    )throws Exception;
+
+    @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다.")
+    ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
+            @PathVariable Long noticeId,
+            @RequestBody noticeRequestDto noticeRequestDto
     )throws Exception;
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제합니다.")

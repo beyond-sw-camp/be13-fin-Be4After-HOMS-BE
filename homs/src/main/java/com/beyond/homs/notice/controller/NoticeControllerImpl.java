@@ -1,7 +1,7 @@
 package com.beyond.homs.notice.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
-import com.beyond.homs.notice.dto.CreateNoticeDto;
+import com.beyond.homs.notice.dto.noticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.service.NoticeService;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +41,9 @@ public class NoticeControllerImpl implements NoticeController {
     @Override
     @PostMapping("/create")
     public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-        @RequestBody CreateNoticeDto createNoticeDto){
+        @RequestBody noticeRequestDto noticeRequestDto){
 
-        NoticeResponseDto notice = noticeService.createNotice(createNoticeDto);
+        NoticeResponseDto notice = noticeService.createNotice(noticeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
                     new ResponseDto<>(
@@ -50,6 +51,22 @@ public class NoticeControllerImpl implements NoticeController {
                             "공지사항이 성공적으로 생성되었습니다.",
                             notice
                 ));
+    }
+
+    @PutMapping("/update/{noticeId}")
+    @Override
+    public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
+            @PathVariable Long noticeId,
+            @RequestBody noticeRequestDto noticeRequestDto){
+        NoticeResponseDto notice = noticeService.updateNotice(noticeId, noticeRequestDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                    new ResponseDto<>(
+                            HttpStatus.OK.value(),
+                            "공지사항이 성공적으로 수정되었습니다.",
+                            notice
+                    ));
     }
 
     @DeleteMapping("/delete/{noticeId}")

@@ -1,6 +1,6 @@
 package com.beyond.homs.notice.service;
 
-import com.beyond.homs.notice.dto.CreateNoticeDto;
+import com.beyond.homs.notice.dto.noticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.entity.Notice;
@@ -28,11 +28,11 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 등록
     @Transactional
     @Override
-    public NoticeResponseDto createNotice(CreateNoticeDto createNoticeDto) {
+    public NoticeResponseDto createNotice(noticeRequestDto noticeRequestDto) {
 
         Notice notice = Notice.builder()
-                .title(createNoticeDto.getTitle())
-                .content(createNoticeDto.getContent())
+                .title(noticeRequestDto.getTitle())
+                .content(noticeRequestDto.getContent())
                 .build();
         Notice saveNotice = noticeRepository.save(notice);
 
@@ -42,6 +42,25 @@ public class NoticeServiceImpl implements NoticeService {
                 .content(saveNotice.getContent())
                 .createdAt(saveNotice.getCreatedAt())
                 .updatedAt(notice.getUpdatedAt())
+                .build();
+    }
+
+    // 공지사항 수정
+    @Transactional
+    @Override
+    public NoticeResponseDto updateNotice(Long noticeId, noticeRequestDto requestDto) {
+        Notice post = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+
+        post.update(requestDto.getTitle(), requestDto.getContent());
+        noticeRepository.save(post);
+
+        return NoticeResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
 

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateNoticeDto {
+public class noticeRequestDto {
     private String title;
 
     private String content;

@@ -1,5 +1,6 @@
 package com.beyond.homs.notice.entity;
 
+import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -42,6 +43,11 @@ public class Notice {
 
     @Builder
     public Notice(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
     }

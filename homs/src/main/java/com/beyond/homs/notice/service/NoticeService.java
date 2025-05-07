@@ -1,6 +1,6 @@
 package com.beyond.homs.notice.service;
 
-import com.beyond.homs.notice.dto.CreateNoticeDto;
+import com.beyond.homs.notice.dto.noticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,11 @@ public interface NoticeService {
 
     // 공지사항 등록
     @Transactional
-    NoticeResponseDto createNotice(CreateNoticeDto createNoticeDto);
+    NoticeResponseDto createNotice(noticeRequestDto noticeRequestDto);
+
+    // 공지사항 수정
+    @Transactional
+    NoticeResponseDto updateNotice(Long noticeId, noticeRequestDto requestDto);
 
     // 공지사항 삭제
     @Transactional
