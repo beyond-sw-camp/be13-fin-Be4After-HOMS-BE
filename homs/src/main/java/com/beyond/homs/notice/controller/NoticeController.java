@@ -17,31 +17,21 @@ import java.util.List;
 public interface NoticeController {
 
     @Operation(summary = "공지사항 목록 조회", description = "공지사항 목록을 조회합니다.")
-    ResponseEntity<ResponseDto<List<NoticeListDto>>> noticeList()throws Exception;
+    ResponseEntity<ResponseDto<List<NoticeListDto>>> noticeList();
 
     @Operation(summary = "공지사항 상세 조회", description = "공지사항을 상세 조회합니다.")
     ResponseEntity<ResponseDto<NoticeResponseDto>> noticeDetail(
-            @PathVariable Long noticeId
-    )throws Exception;
+            @PathVariable Long noticeId);
 
     @Operation(summary = "공지사항 생성", description = "공지사항을 생성합니다.")
     ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-            @RequestBody noticeRequestDto noticeRequestDto
-    )throws Exception;
+            @RequestBody noticeRequestDto noticeRequestDto);
 
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다.")
     ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,
-            @RequestBody noticeRequestDto noticeRequestDto
-    )throws Exception;
+            @RequestBody noticeRequestDto noticeRequestDto);
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제합니다.")
-    ResponseEntity<ResponseDto<Void>> deleteNotice(@PathVariable Long noticeId)throws Exception;
+    ResponseEntity<ResponseDto<Void>> deleteNotice(@PathVariable Long noticeId);
 }
-
-/**
- * create database homs;
- * CREATE USER `beyond`@`%` IDENTIFIED BY 'beyond';
- * GRANT ALL PRIVILEGES ON homs.* TO `beyond`@`%`;
- * FLUSH PRIVILEGES;
- */
