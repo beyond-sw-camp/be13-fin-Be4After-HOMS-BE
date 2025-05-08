@@ -1,7 +1,7 @@
 package com.beyond.homs.notice.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
-import com.beyond.homs.notice.dto.noticeRequestDto;
+import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.service.NoticeService;
@@ -52,10 +52,10 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @Override
     @PostMapping("/create")
+    @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-        @RequestBody noticeRequestDto noticeRequestDto){
+            @RequestBody NoticeRequestDto noticeRequestDto){
 
         NoticeResponseDto notice = noticeService.createNotice(noticeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -71,7 +71,7 @@ public class NoticeControllerImpl implements NoticeController {
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,
-            @RequestBody noticeRequestDto noticeRequestDto){
+            @RequestBody NoticeRequestDto noticeRequestDto){
         NoticeResponseDto notice = noticeService.updateNotice(noticeId, noticeRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
