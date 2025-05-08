@@ -1,5 +1,6 @@
-package com.beyond.homs.product.entity;
+package com.beyond.homs.menu.entity;
 
+import com.beyond.homs.company.entity.Department;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,32 +14,30 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "menu")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = {"parent","children"})
-public class ProductCategory {
+public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    @Column(name = "category_id")
-    private Long categoryId;
+    @Column(name = "menu_id")
+    private Long menuId;
 
-    @Column(name = "category_name", nullable = false)
-    private String categoryName;
+    @Column(name = "menu_name", nullable = false)
+    private String menuName;
 
     @Column(name = "sort_no")
     private int sortNo;
@@ -47,21 +46,26 @@ public class ProductCategory {
     private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "category_id_parent", nullable = true)
-    private ProductCategory parent;
+    @JoinColumn(name = "menu_id_parent", nullable = true)
+    private Menu parent;
 
     @OneToMany(mappedBy = "parent",
-               fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL,
-               orphanRemoval = true)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @OrderBy("sortNo ASC")
-    private List<ProductCategory> children = new ArrayList<>();
+    private List<Menu> children = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dept_id")
+    private Department department;
 
     @Builder
-    public ProductCategory(String categoryName, int sortNo, boolean active, ProductCategory parent) {
-        this.categoryName = categoryName;
+    public Menu(String menuName, int sortNo, boolean active, Menu parent, Department department) {
+        this.menuName = menuName;
         this.sortNo = sortNo;
         this.active = active;
         this.parent = parent;
+        this.department = department;
     }
 }

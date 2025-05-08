@@ -48,7 +48,7 @@ public class Order {
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id2")
+    @JoinColumn(name = "order_id2", referencedColumnName = "order_id")
     private Order orderId2;
 
     @Column(name = "reject_reason", length = 1024)
