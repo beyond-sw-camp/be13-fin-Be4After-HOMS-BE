@@ -1,5 +1,6 @@
 package com.beyond.homs.product.service;
 
+import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
     // 상품 목록 조회
-    List<ProductResponseDto> getProducts();
+    List<ProductListDto> getProducts();
 
     // 공지사항 상세 조회
     ProductResponseDto getProductDetail(Long productId);

@@ -1,5 +1,6 @@
 package com.beyond.homs.product.service;
 
+import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import com.beyond.homs.product.entity.Product;
@@ -19,9 +20,9 @@ public class ProductServiceImpl implements ProductService{
 
     // 상품 목록 조회
     @Override
-    public List<ProductResponseDto> getProducts() {
+    public List<ProductListDto> getProducts() {
         return productRepository.findAll().stream()
-                .map(ProductResponseDto::new)
+                .map(ProductListDto::new)
                 .collect(Collectors.toList());
     }
 

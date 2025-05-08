@@ -1,6 +1,7 @@
 package com.beyond.homs.product.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,7 @@ import java.util.List;
 @Tag(name = "상품관리 API", description = "상품관리 API 목록")
 public interface ProductController {
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
-    ResponseEntity<ResponseDto<List<ProductResponseDto>>> productList();
+    ResponseEntity<ResponseDto<List<ProductListDto>>> productList();
 
     @Operation(summary = "상품 상세 조회", description = "상품을 상세 조회합니다.")
     ResponseEntity<ResponseDto<ProductResponseDto>> productDetail(

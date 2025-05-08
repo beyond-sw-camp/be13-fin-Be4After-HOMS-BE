@@ -1,6 +1,7 @@
 package com.beyond.homs.product.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.service.ProductService;
@@ -26,9 +27,9 @@ public class ProductControllerImpl implements ProductController {
 
     @GetMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<List<ProductResponseDto>>> productList(){
+    public ResponseEntity<ResponseDto<List<ProductListDto>>> productList(){
 
-        List<ProductResponseDto> productList = productService.getProducts();
+        List<ProductListDto> productList = productService.getProducts();
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
