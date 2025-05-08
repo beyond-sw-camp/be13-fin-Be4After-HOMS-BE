@@ -67,7 +67,7 @@ public class Company {
     private Country country;
 
     @Builder
-    Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean isContinueStatus, boolean isApproveStatus, Country country) {
+    public Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean isContinueStatus, boolean isApproveStatus, Country country) {
         this.companyName = companyName;
         this.registrationNumber = registrationNumber;
         this.representName = representName;
