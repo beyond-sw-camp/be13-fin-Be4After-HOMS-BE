@@ -1,5 +1,6 @@
 package com.beyond.homs.product.entity;
 
+import com.beyond.homs.product.dto.ProductRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,11 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "product")
@@ -43,6 +42,13 @@ public class Product {
         this.productName = productName;
         this.productFeature = productFeature;
         this.productUsage = productUsage;
+        this.category = category;
+    }
+
+    public void update(ProductRequestDto requestDto, ProductCategory category) {
+        this.productName = requestDto.getProductName();
+        this.productFeature = requestDto.getProductFeature();
+        this.productUsage = requestDto.getProductUsage();
         this.category = category;
     }
 }
