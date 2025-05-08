@@ -1,6 +1,6 @@
 package com.beyond.homs.notice.service;
 
-import com.beyond.homs.notice.dto.noticeRequestDto;
+import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.entity.Notice;
@@ -43,7 +43,7 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 등록
     @Transactional
     @Override
-    public NoticeResponseDto createNotice(noticeRequestDto noticeRequestDto) {
+    public NoticeResponseDto createNotice(NoticeRequestDto noticeRequestDto) {
 
         Notice notice = Notice.builder()
                 .title(noticeRequestDto.getTitle())
@@ -63,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 수정
     @Transactional
     @Override
-    public NoticeResponseDto updateNotice(Long noticeId, noticeRequestDto requestDto) {
+    public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) {
         Notice post = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
 
