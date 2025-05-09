@@ -29,7 +29,9 @@
 <details>
 <summary><strong>📂 ERD(Entity-Relationship Diagram)</strong></summary>
 
-![HOMS](https://github.com/user-attachments/assets/024fa5d6-e332-485c-96e0-880bc61cc6ef)
+
+![HOMS](https://github.com/user-attachments/assets/4fa1ee25-da66-4c62-b368-d034c1be44e3)
+
 
 
 </details>
