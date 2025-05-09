@@ -17,6 +17,8 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
+![Web App Reference Architecture(1)](https://github.com/user-attachments/assets/8cfca09d-1022-4763-b5a7-ee527905f6b1)
+
 </details>
 
 <details>
