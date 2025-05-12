@@ -1,5 +1,6 @@
 package com.beyond.homs.product.entity;
 
+import com.beyond.homs.product.dto.ProductCategoryRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,12 +14,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class ProductCategory {
     private int sortNo;
 
     @Column(name = "is_active")
-    private boolean active;
+    private boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "category_id_parent", nullable = true)
@@ -63,5 +62,11 @@ public class ProductCategory {
         this.sortNo = sortNo;
         this.active = active;
         this.parent = parent;
+    }
+
+    public void update(ProductCategoryRequestDto requestDto) {
+        this.categoryName = requestDto.getCategoryName();
+        this.sortNo = requestDto.getSortNo();
+        this.active = requestDto.isActive();
     }
 }
