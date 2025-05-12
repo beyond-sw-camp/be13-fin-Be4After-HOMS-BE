@@ -45,14 +45,11 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto createProduct(ProductRequestDto requestDto){
 
-        ProductCategory category = productRepository.findProductByProductId(
-                requestDto.getCategoryId()).getFirst().getCategory();
-
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
                 .productFeature(requestDto.getProductFeature())
                 .productUsage(requestDto.getProductUsage())
-                .category(category)
+                // .category(requestDto.getCategoryId())
                 .build();
         Product saveProduct = productRepository.save(product);
 

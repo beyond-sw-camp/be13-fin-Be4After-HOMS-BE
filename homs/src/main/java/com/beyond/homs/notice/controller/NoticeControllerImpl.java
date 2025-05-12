@@ -6,6 +6,10 @@ import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,16 +28,18 @@ import java.util.List;
 public class NoticeControllerImpl implements NoticeController {
     private final NoticeService noticeService;
 
-    @Override
     @GetMapping("/")
-    public ResponseEntity<ResponseDto<List<NoticeListDto>>> noticeList(){
+    @Override
+    public ResponseEntity<ResponseDto<Page<NoticeListDto>>> noticeList(
+            @RequestParam(required = false) String title,
+            @PageableDefault(size = 10, page = 0, sort = "id" , direction = Sort.Direction.DESC) Pageable pageable){
 
-        List<NoticeListDto> noticeList = noticeService.getNotices();
+        Page<NoticeListDto> noticeSearch = noticeService.getNotices(title,pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
                         "모든 공지사항 목록을 불러왔습니다.",
-                        noticeList
+                        noticeSearch
                 ));
     }
 

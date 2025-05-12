@@ -6,11 +6,10 @@ import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.entity.Notice;
 import com.beyond.homs.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,10 +18,9 @@ public class NoticeServiceImpl implements NoticeService {
     
     // 공지사항 목록 조회
     @Override
-    public List<NoticeListDto> getNotices() {
-        return noticeRepository.findAll().stream()
-                .map(NoticeListDto::new)
-                .collect(Collectors.toList());
+    public Page<NoticeListDto> getNotices(String title, Pageable pageable) {
+
+        return noticeRepository.searchNotice(title, pageable);
     }
 
     // 공지사항 상세 조회
