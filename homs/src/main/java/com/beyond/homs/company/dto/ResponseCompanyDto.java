@@ -14,8 +14,8 @@ public record ResponseCompanyDto(
         String representManagerName,
         String representManagerEmail,
         LocalDateTime createdAt,
-        Boolean isContinueStatus,
-        Boolean isApprovedStatus,
+        boolean continueStatus,
+        boolean approvedStatus,
         Long countryId
 ) {
     public static ResponseCompanyDto fromCompany(Company company) {
