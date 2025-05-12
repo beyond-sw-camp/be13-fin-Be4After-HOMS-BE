@@ -17,6 +17,7 @@ public class FileStorageService {
     private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
     private final String UPLOAD_DIR = "C:\\be4after\\";
 
+    // 파일 업로드
     public String uploadFile(MultipartFile file, String path) throws IOException {
         if (file == null || file.isEmpty()) {
             System.out.println("업로드할 파일이 없음");
@@ -52,6 +53,41 @@ public class FileStorageService {
 
         } catch (IOException e) {
             logger.error("파일 저장 오류: {}, 경로: {}, 에러 메시지: {}", originalFilename, targetLocation, e.getMessage());
+            throw e;
+        }
+    }
+    
+    // 파일 업데이트
+    public String updateFile(MultipartFile file, String path, String originalFilePath) throws IOException {
+        // 원본 이미지가 있다면
+        if (originalFilePath != null) {
+            // 만약에 파일을 업로드 하지 않았다면 그대로 유지
+            if(file == null || file.isEmpty()){
+                return originalFilePath;
+            }
+            // 원본 이미지 제거 후 갱신
+            else {
+                removeFile(originalFilePath);
+                return uploadFile(file, path);
+            }
+        }
+        // 원본 이미지가 없다면
+        return uploadFile(file, path);
+    }
+
+    // 파일 삭제
+    public void removeFile(String path) throws IOException {
+        Path filePath = Paths.get(path);
+
+        try {
+            // 파일이 존재하면 삭제 없으면 무시
+            if(Files.exists(filePath)) {
+                logger.info("삭제할 파일의 경로: {}", filePath);
+                Files.delete(filePath);
+            }
+
+        } catch (IOException e) {
+            logger.error("파일 삭제 오류 !! 경로: {}, 에러 메시지: {}", filePath, e.getMessage());
             throw e;
         }
     }

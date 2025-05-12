@@ -12,11 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @Service
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
     private final FileStorageService fileStorageService;
+    private final String filePath = "notice";
 
     // 공지사항 목록 조회
     @Override
@@ -44,23 +47,14 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 등록
     @Transactional
     @Override
-    public NoticeResponseDto createNotice(NoticeRequestDto requestDto) {
+    public NoticeResponseDto createNotice(NoticeRequestDto requestDto) throws IOException {
 
-        // String filePath = null;
-        //
-        // // 파일 업로드가 되었다면
-        // if (file != null) {
-        //     try {
-        //         filePath = fileStorageService.uploadFile(file, "notice");
-        //     } catch (IOException e) {
-        //         System.out.println("문제가 발생했습니다 : " + e);
-        //     }
-        // }
+        String uploadFilePath = fileStorageService.uploadFile(requestDto.getFile(), filePath);
 
         Notice notice = Notice.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
-                .image_path(requestDto.getFilePath())
+                .image_path(uploadFilePath)
                 .build();
         Notice saveNotice = noticeRepository.save(notice);
 
@@ -77,21 +71,24 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 수정
     @Transactional
     @Override
-    public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) {
+    public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) throws IOException {
         Notice post = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
 
-        // String filePath;
-        // try {
-        //     filePath = fileStorageService.uploadFile(file,"notice");
-        // } catch (IOException e) {
-        //     filePath = "null";
-        // }
+        String updateFilePath = fileStorageService.updateFile(requestDto.getFile(), filePath, post.getImage_path());
+        
+        // 각 값이 빈값이면 이전값을 채워넣음
+        if (requestDto.getTitle() == null) {
+            requestDto.setTitle(post.getTitle());
+        }
+        if (requestDto.getContent() == null) {
+            requestDto.setContent(post.getContent());
+        }
 
         post.update(
                 requestDto.getTitle(),
                 requestDto.getContent(),
-                requestDto.getFilePath());
+                updateFilePath);
         noticeRepository.save(post);
 
         return NoticeResponseDto.builder()
@@ -108,6 +105,18 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public void deleteNotice(Long noticeId) {
+        Notice post = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+
+        // 이미지가 있다면 삭제
+        if (post.getImage_path() != null) {
+            try {
+                fileStorageService.removeFile(post.getImage_path());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         noticeRepository.deleteById(noticeId);
     }
 }

@@ -70,10 +70,9 @@ public class NoticeControllerImpl implements NoticeController {
             @RequestParam(required = false) String content,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
-        String uploadFilePath = fileStorageService.uploadFile(file, "notice");
-        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, uploadFilePath);
-
+        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, file);
         NoticeResponseDto notice = noticeService.createNotice(requestDto);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
                     new ResponseDto<>(
@@ -83,7 +82,7 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @PutMapping("/update/{noticeId}")
+    @PutMapping(value = "/update/{noticeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,
@@ -91,9 +90,7 @@ public class NoticeControllerImpl implements NoticeController {
             @RequestParam(required = false) String content,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
-        String uploadFilePath = fileStorageService.uploadFile(file, "notice");
-        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, uploadFilePath);
-
+        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, file);
         NoticeResponseDto notice = noticeService.updateNotice(noticeId, requestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
