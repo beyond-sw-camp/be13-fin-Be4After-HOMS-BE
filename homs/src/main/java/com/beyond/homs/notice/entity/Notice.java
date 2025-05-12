@@ -1,6 +1,5 @@
 package com.beyond.homs.notice.entity;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -33,6 +32,9 @@ public class Notice {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String image_path;
+
     @Column(name = "created_at", updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
@@ -42,13 +44,15 @@ public class Notice {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Notice(String title, String content) {
+    public Notice(String title, String content, String image_path) {
         this.title = title;
         this.content = content;
+        this.image_path = image_path;
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, String image_path) {
         this.title = title;
         this.content = content;
+        this.image_path = image_path;
     }
 }

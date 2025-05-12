@@ -1,6 +1,7 @@
 package com.beyond.homs.notice.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.common.service.FileStorageService;
 import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
@@ -11,22 +12,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/notice")
 public class NoticeControllerImpl implements NoticeController {
     private final NoticeService noticeService;
+    private final FileStorageService fileStorageService;
 
     @GetMapping("/")
     @Override
@@ -57,12 +63,17 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-            @RequestBody NoticeRequestDto noticeRequestDto){
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
-        NoticeResponseDto notice = noticeService.createNotice(noticeRequestDto);
+        String uploadFilePath = fileStorageService.uploadFile(file, "notice");
+        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, uploadFilePath);
+
+        NoticeResponseDto notice = noticeService.createNotice(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
                     new ResponseDto<>(
@@ -76,8 +87,14 @@ public class NoticeControllerImpl implements NoticeController {
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,
-            @RequestBody NoticeRequestDto noticeRequestDto){
-        NoticeResponseDto notice = noticeService.updateNotice(noticeId, noticeRequestDto);
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+
+        String uploadFilePath = fileStorageService.uploadFile(file, "notice");
+        NoticeRequestDto requestDto = new NoticeRequestDto(title, content, uploadFilePath);
+
+        NoticeResponseDto notice = noticeService.updateNotice(noticeId, requestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(

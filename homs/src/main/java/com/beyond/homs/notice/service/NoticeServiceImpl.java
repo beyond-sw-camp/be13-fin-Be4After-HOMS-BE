@@ -1,5 +1,6 @@
 package com.beyond.homs.notice.service;
 
+import com.beyond.homs.common.service.FileStorageService;
 import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
@@ -15,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
-    
+    private final FileStorageService fileStorageService;
+
     // 공지사항 목록 조회
     @Override
     public Page<NoticeListDto> getNotices(String title, Pageable pageable) {
@@ -33,6 +35,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .image_path(post.getImage_path())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
@@ -41,11 +44,23 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 등록
     @Transactional
     @Override
-    public NoticeResponseDto createNotice(NoticeRequestDto noticeRequestDto) {
+    public NoticeResponseDto createNotice(NoticeRequestDto requestDto) {
+
+        // String filePath = null;
+        //
+        // // 파일 업로드가 되었다면
+        // if (file != null) {
+        //     try {
+        //         filePath = fileStorageService.uploadFile(file, "notice");
+        //     } catch (IOException e) {
+        //         System.out.println("문제가 발생했습니다 : " + e);
+        //     }
+        // }
 
         Notice notice = Notice.builder()
-                .title(noticeRequestDto.getTitle())
-                .content(noticeRequestDto.getContent())
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .image_path(requestDto.getFilePath())
                 .build();
         Notice saveNotice = noticeRepository.save(notice);
 
@@ -53,6 +68,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .id(saveNotice.getId())
                 .title(saveNotice.getTitle())
                 .content(saveNotice.getContent())
+                .image_path(saveNotice.getImage_path())
                 .createdAt(saveNotice.getCreatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
@@ -65,13 +81,24 @@ public class NoticeServiceImpl implements NoticeService {
         Notice post = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
 
-        post.update(requestDto.getTitle(), requestDto.getContent());
+        // String filePath;
+        // try {
+        //     filePath = fileStorageService.uploadFile(file,"notice");
+        // } catch (IOException e) {
+        //     filePath = "null";
+        // }
+
+        post.update(
+                requestDto.getTitle(),
+                requestDto.getContent(),
+                requestDto.getFilePath());
         noticeRepository.save(post);
 
         return NoticeResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .image_path(post.getImage_path())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
