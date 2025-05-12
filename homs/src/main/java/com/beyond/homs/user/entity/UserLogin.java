@@ -29,5 +29,5 @@ public class UserLogin {
     private String passwordHash;
 
     @Column(name = "is_locked_out", nullable = false)
-    private boolean isLockedOut;
+    private boolean lockedOut;
 }
