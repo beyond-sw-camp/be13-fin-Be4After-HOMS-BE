@@ -1,5 +1,7 @@
 package com.beyond.homs.product.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
@@ -29,7 +31,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto getProductDetail(Long productId){
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
         return ProductResponseDto.builder()
                 .productId(product.getProductId())
@@ -46,7 +48,7 @@ public class ProductServiceImpl implements ProductService{
     public ProductResponseDto createProduct(ProductRequestDto requestDto){
 
         ProductCategory productCategory = productCategoryRepository.findById(requestDto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.CATEGORY_NOT_FOUND));
 
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
@@ -70,10 +72,10 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto){
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
         ProductCategory productCategory = productCategoryRepository.findById(requestDto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.CATEGORY_NOT_FOUND));
 
         product.update(requestDto,productCategory);
         productRepository.save(product);
@@ -93,7 +95,7 @@ public class ProductServiceImpl implements ProductService{
     public void deleteProduct(Long productId){
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
         productRepository.deleteById(productId);
     }
