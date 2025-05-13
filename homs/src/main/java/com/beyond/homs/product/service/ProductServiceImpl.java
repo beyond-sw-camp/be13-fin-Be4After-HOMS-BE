@@ -5,25 +5,24 @@ import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.entity.ProductCategory;
+import com.beyond.homs.product.repository.ProductCategoryRepository;
 import com.beyond.homs.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
     // 상품 목록 조회
     @Override
-    public List<ProductListDto> getProducts() {
-        return productRepository.findAll().stream()
-                .map(ProductListDto::new)
-                .collect(Collectors.toList());
+    public Page<ProductListDto> getProducts(String name, Long category, Pageable pageable) {
+        return productRepository.searchProduct(name,category,pageable);
     }
 
     // 상품목록 상세 조회
@@ -37,6 +36,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(product.getProductName())
                 .productFeature(product.getProductFeature())
                 .productUsage(product.getProductUsage())
+                .category(product.getCategory())
                 .build();
     }
 
@@ -45,11 +45,14 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto createProduct(ProductRequestDto requestDto){
 
+        ProductCategory productCategory = productCategoryRepository.findById(requestDto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다."));
+
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
                 .productFeature(requestDto.getProductFeature())
                 .productUsage(requestDto.getProductUsage())
-                // .category(requestDto.getCategoryId())
+                .category(productCategory)
                 .build();
         Product saveProduct = productRepository.save(product);
 
@@ -58,7 +61,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(saveProduct.getProductName())
                 .productFeature(saveProduct.getProductFeature())
                 .productUsage(saveProduct.getProductUsage())
-                // .category(saveProduct.getCategory())
+                .category(saveProduct.getCategory())
                 .build();
     }
 
@@ -69,10 +72,10 @@ public class ProductServiceImpl implements ProductService{
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
 
-        ProductCategory category = productRepository.findProductByProductId(
-                requestDto.getCategoryId()).getFirst().getCategory();
+        ProductCategory productCategory = productCategoryRepository.findById(requestDto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다."));
 
-        product.update(requestDto,category);
+        product.update(requestDto,productCategory);
         productRepository.save(product);
 
         return ProductResponseDto.builder()
@@ -80,6 +83,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(product.getProductName())
                 .productFeature(product.getProductFeature())
                 .productUsage(product.getProductUsage())
+                .category(product.getCategory())
                 .build();
     }
 
@@ -87,6 +91,10 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public void deleteProduct(Long productId){
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
+
         productRepository.deleteById(productId);
     }
 }

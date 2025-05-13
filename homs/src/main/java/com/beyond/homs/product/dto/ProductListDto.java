@@ -1,17 +1,27 @@
 package com.beyond.homs.product.dto;
 
 import com.beyond.homs.product.entity.Product;
+import com.beyond.homs.product.entity.ProductCategory;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 public class ProductListDto {
 
-    private final String productName;
+    private Long productId;
 
-    private final Long categoryId;
+    private String productName;
 
-    public ProductListDto(Product product) {
-        this.productName = product.getProductName();
-        this.categoryId =  product.getCategory().getCategoryId();
+    private SimpleProductCategoryResponseDto category;
+
+    public ProductListDto(Long productId, String productName, ProductCategory category) {
+        this.productId = productId;
+        this.productName = productName;
+        this.category = SimpleProductCategoryResponseDto.builder()
+                .categoryId(category.getCategoryId())
+                .categoryName(category.getCategoryName())
+                .build();
     }
 }

@@ -6,6 +6,9 @@ import com.beyond.homs.product.dto.ProductResponseDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +29,12 @@ public class ProductControllerImpl implements ProductController {
 
     @GetMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<List<ProductListDto>>> productList(){
+    public ResponseEntity<ResponseDto<Page<ProductListDto>>> productList(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long category,
+            @PageableDefault(size = 10, page = 0) Pageable pageable){
 
-        List<ProductListDto> productList = productService.getProducts();
+        Page<ProductListDto> productList = productService.getProducts(name,category,pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
