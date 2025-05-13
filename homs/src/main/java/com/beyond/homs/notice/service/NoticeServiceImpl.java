@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
-    private final String filePath = "notice";
 
     // 공지사항 목록 조회
     @Override

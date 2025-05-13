@@ -32,4 +32,9 @@ public class Warehouse {
         this.warehouseName = warehouseName;
         this.location = location;
     }
+
+    public void update(String warehouseName, String location) {
+        this.warehouseName = warehouseName;
+        this.location = location;
+    }
 }

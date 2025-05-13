@@ -36,7 +36,11 @@ public enum ExceptionMessage {
 
     // 상품 관리
     PRODUCT_NOT_FOUND("C001","해당 상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    CATEGORY_NOT_FOUND("C001","해당 카테고리를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    CATEGORY_NOT_FOUND("C001","해당 카테고리를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
+    // 창고 관리
+    WAREHOUSE_NOT_FOUND("W001","해당 창고를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+
 
     private final String code;
     private final String message;

@@ -30,11 +30,11 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<Page<ProductListDto>>> productList(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String productName,
             @RequestParam(required = false) Long category,
             @PageableDefault(size = 10, page = 0) Pageable pageable){
 
-        Page<ProductListDto> productList = productService.getProducts(name,category,pageable);
+        Page<ProductListDto> productList = productService.getProducts(productName,category,pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
