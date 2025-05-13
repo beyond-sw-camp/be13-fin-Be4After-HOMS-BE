@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-
 @RequiredArgsConstructor
 @Service
 public class NoticeServiceImpl implements NoticeService {
@@ -66,7 +64,7 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 수정
     @Transactional
     @Override
-    public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto)  {
+    public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) {
         Notice post = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
         
