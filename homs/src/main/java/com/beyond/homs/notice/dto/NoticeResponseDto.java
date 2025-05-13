@@ -18,7 +18,7 @@ public class NoticeResponseDto {
 
     private String content;
 
-    private String image_path;
+    private String imagePath;
 
     private LocalDateTime createdAt;
 

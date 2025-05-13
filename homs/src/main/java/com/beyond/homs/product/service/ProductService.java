@@ -11,7 +11,7 @@ public interface ProductService {
     // 상품 목록 조회
     List<ProductListDto> getProducts();
 
-    // 공지사항 상세 조회
+    // 상품목록 상세 조회
     ProductResponseDto getProductDetail(Long productId);
 
     // 상품 기본 정보 등록

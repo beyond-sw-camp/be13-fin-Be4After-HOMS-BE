@@ -33,7 +33,7 @@ public class Notice {
     private String content;
 
     @Column
-    private String image_path;
+    private String imagePath;
 
     @Column(name = "created_at", updatable = false)
     @CreatedDate
@@ -47,12 +47,12 @@ public class Notice {
     public Notice(String title, String content) {
         this.title = title;
         this.content = content;
-        // this.image_path = image_path;
+        // this.imagePath = imagePath;
     }
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        // this.image_path = image_path;
+        // this.imagePath = imagePath;
     }
 }

@@ -36,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .image_path(post.getImage_path())
+                .imagePath(post.getImagePath())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
@@ -57,7 +57,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .id(saveNotice.getId())
                 .title(saveNotice.getTitle())
                 .content(saveNotice.getContent())
-                .image_path(saveNotice.getImage_path())
+                .imagePath(saveNotice.getImagePath())
                 .createdAt(saveNotice.getCreatedAt())
                 .updatedAt(notice.getUpdatedAt())
                 .build();
@@ -87,7 +87,7 @@ public class NoticeServiceImpl implements NoticeService {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .image_path(post.getImage_path())
+                .imagePath(post.getImagePath())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
