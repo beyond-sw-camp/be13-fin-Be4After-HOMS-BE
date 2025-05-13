@@ -33,7 +33,7 @@ public class LoginAttemptHistory {
     private String passwordHash;
 
     @Column(name = "is_login_success", nullable = false)
-    private boolean isLoginSuccess;
+    private boolean loginSuccess;
 
     @Column(name = "attempt_at", nullable = false)
     @CreatedDate
@@ -44,9 +44,9 @@ public class LoginAttemptHistory {
     private UserLogin userLogin;
 
     @Builder
-    public LoginAttemptHistory(String passwordHash, boolean isLoginSuccess, UserLogin userLogin) {
+    public LoginAttemptHistory(String passwordHash, boolean loginSuccess, UserLogin userLogin) {
         this.passwordHash = passwordHash;
-        this.isLoginSuccess = isLoginSuccess;
+        this.loginSuccess = loginSuccess;
         this.userLogin = userLogin;
     }
 }

@@ -60,17 +60,17 @@ public class Company {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_continue_status", nullable = false)
-    private boolean isContinueStatus;
+    private boolean continueStatus;
 
     @Column(name = "is_approve_status", nullable = false)
-    private boolean isApproveStatus;
+    private boolean approveStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
     private Country country;
 
     @Builder
-    public Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean isContinueStatus, boolean isApproveStatus, Country country) {
+    public Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean continueStatus, boolean approveStatus, Country country) {
         this.companyName = companyName;
         this.registrationNumber = registrationNumber;
         this.representName = representName;
@@ -78,8 +78,8 @@ public class Company {
         this.representPhone = representPhone;
         this.representManagerName = representManagerName;
         this.representManagerEmail = representManagerEmail;
-        this.isContinueStatus = isContinueStatus;
-        this.isApproveStatus = isApproveStatus;
+        this.continueStatus = continueStatus;
+        this.approveStatus = approveStatus;
         this.country = country;
     }
 }
