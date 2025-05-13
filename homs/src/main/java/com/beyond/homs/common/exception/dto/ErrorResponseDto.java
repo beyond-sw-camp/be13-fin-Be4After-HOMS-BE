@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Data
@@ -19,7 +17,7 @@ public class ErrorResponseDto {
 
     private final LocalDateTime time;
 
-    private String stackTrace;
+    private String errorCode;
 
     private List<ValidationError> validErrors;
 
@@ -30,10 +28,4 @@ public class ErrorResponseDto {
         private final String message;
     }
 
-    public void addValidationError(String field, String message) {
-        if(Objects.isNull(validErrors)) {
-            validErrors = new ArrayList<>();
-        }
-        validErrors.add(new ValidationError(field, message));
-    }
 }

@@ -1,25 +1,20 @@
 package com.beyond.homs.common.exception.handler;
 
 import com.beyond.homs.common.exception.dto.ErrorResponseDto;
+import com.beyond.homs.common.exception.exceptions.BaseException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
 @RestControllerAdvice
@@ -34,40 +29,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                              HttpStatusCode statusCode,
                                                              WebRequest request){
         return buildErrorResponse(ex, ex.getMessage(), HttpStatus.valueOf(statusCode.value()), request);
-        
     }
-    
+
     // 커스텀 예외 DTO의 형태로 응답을 생성하기 위한 메서드
     private ResponseEntity<Object> buildErrorResponse(Exception exception,
                                                       String message,
                                                       HttpStatus httpStatus,
                                                       WebRequest request) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(httpStatus.value(), message, LocalDateTime.now());
+        if (exception instanceof BaseException) {
+            errorResponseDto.setErrorCode(((BaseException) exception).getErrorCode());
+        }
         return ResponseEntity.status(httpStatus).body(errorResponseDto);
     }
 
-    // 403 Access Denied Exception
-    @ExceptionHandler(AccessDeniedException.class)
-    @Hidden
-    @ResponseStatus(HttpStatus.FORBIDDEN) // 403 Forbidden
-    public ResponseEntity<Object> handleAllUncaughtException(AccessDeniedException exception, WebRequest request) {
-        log.error("Access denied", exception);
-        return buildErrorResponse(exception, "Access denied", HttpStatus.FORBIDDEN, request);
-    }
-
-    // 412 Validate Exception
-    @Override
-    @Hidden
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY) // 403 Forbidden
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                               HttpHeaders headers,
-                                                               HttpStatusCode status,
-                                                               WebRequest request) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Validation error. Check 'errors' field for details", LocalDateTime.now());
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorResponseDto.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return ResponseEntity.unprocessableEntity().body(errorResponseDto);
+    // 사용자 정의 예외 처리
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<Object> handleBaseException(BaseException ex, WebRequest request) {
+        log.error("BaseException: {}", ex.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ex.getStatus().value(), ex.getMessage(), LocalDateTime.now());
+        errorResponseDto.setErrorCode(ex.getErrorCode());
+        return ResponseEntity.status(ex.getStatus()).body(errorResponseDto);
     }
 
     // 모든 예외에 대한 Handler

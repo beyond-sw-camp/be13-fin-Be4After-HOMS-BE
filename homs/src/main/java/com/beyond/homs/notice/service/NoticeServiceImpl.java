@@ -1,5 +1,7 @@
 package com.beyond.homs.notice.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.service.FileStorageService;
 import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
@@ -32,8 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeResponseDto getNoticeDetail(Long noticeId){
         Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
-
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
         return NoticeResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -73,7 +74,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) throws IOException {
         Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
 
         String updateFilePath = fileStorageService.updateFile(requestDto.getFile(), filePath, post.getImage_path());
         
@@ -106,7 +107,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public void deleteNotice(Long noticeId) {
         Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
 
         // 이미지가 있다면 삭제
         if (post.getImage_path() != null) {
