@@ -3,6 +3,11 @@ spring:
     name: elk-example
   profiles:
     include: mariadb
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
 server:
   port: 8088
 springdoc:

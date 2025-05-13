@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class NoticeRequestDto {
     private String title;
 

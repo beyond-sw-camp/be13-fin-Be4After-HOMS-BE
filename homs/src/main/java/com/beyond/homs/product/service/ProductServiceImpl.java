@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService{
                 .collect(Collectors.toList());
     }
 
-    // 공지사항 상세 조회
+    // 상품목록 상세 조회
     @Override
     public ProductResponseDto getProductDetail(Long productId){
         Product product = productRepository.findById(productId)
@@ -45,14 +45,11 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDto createProduct(ProductRequestDto requestDto){
 
-        ProductCategory category = productRepository.findProductByProductId(
-                requestDto.getCategoryId()).getFirst().getCategory();
-
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
                 .productFeature(requestDto.getProductFeature())
                 .productUsage(requestDto.getProductUsage())
-                .category(category)
+                // .category(requestDto.getCategoryId())
                 .build();
         Product saveProduct = productRepository.save(product);
 
