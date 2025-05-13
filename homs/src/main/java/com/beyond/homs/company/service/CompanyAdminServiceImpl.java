@@ -19,23 +19,6 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
     private final CountryRepository countryRepository;
 
     @Override
-    public void enrollmentCompany(CompanyDto enrollmentCompanyDto) {
-        Company company = Company.builder()
-                .companyName(enrollmentCompanyDto.companyName())
-                .registrationNumber(enrollmentCompanyDto.registrationNumber())
-                .representName(enrollmentCompanyDto.representName())
-                .representCall(enrollmentCompanyDto.representCall())
-                .representPhone(enrollmentCompanyDto.representPhone())
-                .representManagerName(enrollmentCompanyDto.representManagerName())
-                .representManagerEmail(enrollmentCompanyDto.representManagerEmail())
-                .continueStatus(false)
-                .approveStatus(false)
-                .country(countryRepository.findByCountryName(enrollmentCompanyDto.country()))
-                .build();
-        companyRepository.save(company);
-    }
-
-    @Override
     public void grantCompany(Long companyId) {
          Company company = companyRepository.findById(companyId)
                  .orElseThrow(() -> new RuntimeException("Company not found"));

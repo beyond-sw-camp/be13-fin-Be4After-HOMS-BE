@@ -8,6 +8,7 @@ import com.beyond.homs.company.entity.Country;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.CountryRepository;
 import com.beyond.homs.company.service.CompanyAdminService;
+import com.beyond.homs.company.service.CompanyService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 public class CompanyAdminServiceTest {
+    @Autowired
+    private CompanyService companyService;
+
     @Autowired
     private CompanyAdminService companyAdminService;
 
@@ -59,7 +63,7 @@ public class CompanyAdminServiceTest {
                 "adr@abc.com"
         );
 
-        companyAdminService.enrollmentCompany(companyDto);
+        companyService.enrollmentCompany(companyDto);
         List<Company> companies = companyRepository.findAll();
         assertThat(companies).hasSize(1);
         assertThat(companies.getFirst().getCompanyName()).isEqualTo("Test Company");
@@ -77,7 +81,7 @@ public class CompanyAdminServiceTest {
                 "Adrian",
                 "adr@abc.com"
         );
-        companyAdminService.enrollmentCompany(companyDto);
+        companyService.enrollmentCompany(companyDto);
         List<ResponseCompanyDto> companies = companyAdminService.getCompanyList();
         assertThat(companies).hasSize(1);
         Long companyId = companies.getFirst().companyId();
@@ -100,7 +104,7 @@ public class CompanyAdminServiceTest {
                 "Adrian",
                 "adr@abc.com"
         );
-        companyAdminService.enrollmentCompany(companyDto);
+        companyService.enrollmentCompany(companyDto);
         List<ResponseCompanyDto> companies = companyAdminService.getCompanyList();
 
         Long companyId = companies.getFirst().companyId();
@@ -123,7 +127,7 @@ public class CompanyAdminServiceTest {
                 "adr@abc.com"
         );
 
-        companyAdminService.enrollmentCompany(companyDto);
+        companyService.enrollmentCompany(companyDto);
         List<ResponseCompanyDto> companies = companyAdminService.getCompanyList();
         Long companyId = companies.getFirst().companyId();
 

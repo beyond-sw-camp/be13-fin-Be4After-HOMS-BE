@@ -30,18 +30,6 @@ import java.util.List;
 public class CompanyAdminControllerImpl implements CompanyAdminController {
     private final CompanyAdminService companyAdminService;
 
-    @PostMapping
-    @Override
-    public ResponseEntity<ResponseDto<Void>> enrollmentCompany(@RequestBody @Valid CompanyDto enrollmentCompanyDto) {
-        companyAdminService.enrollmentCompany(enrollmentCompanyDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto<>(
-                                HttpStatus.CREATED.value(),
-                                "Company enrollment success",
-                                null
-                        ));
-    }
-
     @PutMapping("/grant/{companyId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> grantCompany(@PathVariable @Positive Long companyId) {

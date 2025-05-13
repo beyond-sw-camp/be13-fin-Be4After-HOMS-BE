@@ -10,11 +10,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "거래처 API", description = "거래처 API 목록")
+@Tag(name = "거래처 API(관리자)", description = "거래처 API 목록")
 public interface CompanyAdminController {
-    @Operation(summary = "거래처 등록", description = "거래처를 등록합니다.")
-    ResponseEntity<ResponseDto<Void>> enrollmentCompany(CompanyDto enrollmentCompanyDto);
-
     @Operation(summary = "거래처 승인", description = "거래처를 승인합니다.")
     ResponseEntity<ResponseDto<Void>> grantCompany(Long companyId);
 

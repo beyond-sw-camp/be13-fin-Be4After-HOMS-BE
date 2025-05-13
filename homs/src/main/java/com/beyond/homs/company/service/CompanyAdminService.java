@@ -6,8 +6,6 @@ import com.beyond.homs.company.dto.ResponseCompanyDto;
 import java.util.List;
 
 public interface CompanyAdminService {
-    void enrollmentCompany(CompanyDto enrollmentCompanyDto);
-
     void grantCompany(Long companyId);
 
     List<ResponseCompanyDto> getCompanyList();
