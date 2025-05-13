@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum CountryEnum {
-    KOREA("korea"),
-    USA("usa");
+    KOREA("KOREA"),
+    USA("USA");
 
     @Getter
     private final String country;

@@ -5,7 +5,7 @@ import com.beyond.homs.company.entity.Company;
 import java.time.LocalDateTime;
 
 public record ResponseCompanyDto(
-        Long CompanyId,
+        Long companyId,
         String companyName,
         String registrationNumber,
         String representName,
@@ -29,8 +29,8 @@ public record ResponseCompanyDto(
                 company.getRepresentManagerName(),
                 company.getRepresentManagerEmail(),
                 company.getCreatedAt(),
-                true,
-                true,
+                company.isContinueStatus(),
+                company.isApproveStatus(),
                 company.getCountry().getCountryId()
         );
     }

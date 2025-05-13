@@ -16,5 +16,5 @@ public interface CompanyAdminService {
 
     void updateTransactionStatus(Long companyId, Boolean status);
 
-    void updateCompany(Long companyId, CompanyDto updateCompanyDto);
+    void updateCompany(Long companyId, CompanyDto companyDto);
 }

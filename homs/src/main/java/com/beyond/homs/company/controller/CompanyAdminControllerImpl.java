@@ -6,10 +6,13 @@ import com.beyond.homs.company.dto.ResponseCompanyDto;
 import com.beyond.homs.company.dto.UpdateTransactionStatusDto;
 import com.beyond.homs.company.service.CompanyAdminService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/admin/company")
+@Validated
 @RequiredArgsConstructor
 public class CompanyAdminControllerImpl implements CompanyAdminController {
     private final CompanyAdminService companyAdminService;
@@ -40,7 +44,7 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @PutMapping("/grant/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<Void>> grantCompany(@PathVariable @NotBlank Long companyId) {
+    public ResponseEntity<ResponseDto<Void>> grantCompany(@PathVariable @Positive Long companyId) {
         companyAdminService.grantCompany(companyId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
@@ -76,7 +80,7 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @PutMapping("/status/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<Void>> updateTransactionStatus(@PathVariable @NotBlank Long companyId,
+    public ResponseEntity<ResponseDto<Void>> updateTransactionStatus(@PathVariable @Positive Long companyId,
                                                                      @RequestBody @Valid UpdateTransactionStatusDto updateTransactionStatusDto) {
         companyAdminService.updateTransactionStatus(companyId, updateTransactionStatusDto.isApprovedStatus());
         return ResponseEntity.ok(

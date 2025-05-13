@@ -2,11 +2,13 @@ package com.beyond.homs.company.service;
 
 import com.beyond.homs.company.dto.CompanyDto;
 import com.beyond.homs.company.dto.ResponseCompanyDto;
+import com.beyond.homs.company.dto.UpdateCompanyDto;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
                 .representManagerEmail(enrollmentCompanyDto.representManagerEmail())
                 .continueStatus(false)
                 .approveStatus(false)
-                .country(countryRepository.findByCountryName(enrollmentCompanyDto.country().getValue()))
+                .country(countryRepository.findByCountryName(enrollmentCompanyDto.country()))
                 .build();
         companyRepository.save(company);
     }
@@ -39,7 +41,8 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
                  .orElseThrow(() -> new RuntimeException("Company not found"));
 
         company.setApproveStatus(true);
-        companyRepository.save(company);
+        company.setContinueStatus(true);
+        companyRepository.saveAndFlush(company);
     }
 
     @Override
@@ -61,14 +64,24 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
     public void updateTransactionStatus(Long companyId, Boolean status) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        company.setApproveStatus(status);
-        companyRepository.save(company);
+        company.setContinueStatus(status);
+        companyRepository.saveAndFlush(company);
     }
 
     @Override
-    public void updateCompany(Long companyId, CompanyDto updateCompanyDto) {
+    public void updateCompany(Long companyId, CompanyDto companyDto) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
+        UpdateCompanyDto updateCompanyDto = new UpdateCompanyDto(
+                countryRepository.findByCountryName(companyDto.country()),
+                companyDto.companyName(),
+                companyDto.registrationNumber(),
+                companyDto.representName(),
+                companyDto.representCall(),
+                companyDto.representPhone(),
+                companyDto.representManagerName(),
+                companyDto.representManagerEmail()
+        );
         company.setFromDto(updateCompanyDto);
         companyRepository.save(company);
     }
