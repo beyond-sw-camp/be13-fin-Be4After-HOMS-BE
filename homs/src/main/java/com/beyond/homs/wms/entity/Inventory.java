@@ -38,6 +38,7 @@ public class Inventory {
 
     @Builder
     public Inventory(Warehouse warehouse, Product product, Long quantity) {
+        this.id = new InventoryId(warehouse.getWarehouseId(),product.getProductId());
         this.warehouse = warehouse;
         this.product = product;
         this.quantity = quantity;

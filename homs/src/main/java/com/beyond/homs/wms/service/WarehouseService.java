@@ -1,5 +1,6 @@
 package com.beyond.homs.wms.service;
 
+import com.beyond.homs.wms.dto.InventoryRequestDto;
 import com.beyond.homs.wms.dto.WarehouseRequestDto;
 import com.beyond.homs.wms.dto.WarehouseResponseDto;
 import org.springframework.transaction.annotation.Transactional;
