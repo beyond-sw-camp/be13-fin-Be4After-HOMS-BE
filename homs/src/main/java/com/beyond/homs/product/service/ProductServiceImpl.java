@@ -9,6 +9,7 @@ import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.entity.ProductCategory;
 import com.beyond.homs.product.repository.ProductCategoryRepository;
 import com.beyond.homs.product.repository.ProductRepository;
+import com.beyond.homs.wms.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
+    private final InventoryRepository inventoryRepository;
 
     // 상품 목록 조회
     @Override
@@ -40,6 +42,12 @@ public class ProductServiceImpl implements ProductService{
                 .productUsage(product.getProductUsage())
                 .category(product.getCategory())
                 .build();
+    }
+
+    // 해당 상품의 총 재고 수량
+    @Override
+    public Long getProductQuantity(Long productId){
+        return inventoryRepository.sumQuantityByProductId(productId);
     }
 
     // 상품 기본 정보 등록

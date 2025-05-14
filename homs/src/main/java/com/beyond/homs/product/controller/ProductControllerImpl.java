@@ -57,6 +57,19 @@ public class ProductControllerImpl implements ProductController {
                 ));
     }
 
+    @GetMapping("/{productId}/inventory")
+    @Override
+    public ResponseEntity<ResponseDto<Long>> productQuantity(
+            @PathVariable Long productId){
+
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "해당 상품의 모든 재고수량을 불러왔습니다.",
+                        productService.getProductQuantity(productId)
+                ));
+    }
+
     @PostMapping("/create")
     @Override
     public ResponseEntity<ResponseDto<ProductResponseDto>> createProduct(
