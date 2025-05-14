@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDto {
     private Long productId;
@@ -22,12 +20,17 @@ public class ProductResponseDto {
 
     private String productUsage;
 
-    // private ProductCategory category;
+    private SimpleProductCategoryResponseDto category;
 
-    public ProductResponseDto(Product product) {
-        this.productId = product.getProductId();
-        this.productName = product.getProductName();
-        this.productFeature = product.getProductFeature();
-        this.productUsage = product.getProductUsage();
+    @Builder
+    public ProductResponseDto(Long productId, String productName, String productFeature, String productUsage, ProductCategory category) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productFeature = productFeature;
+        this.productUsage = productUsage;
+        this.category = SimpleProductCategoryResponseDto.builder()
+                .categoryId(category.getCategoryId())
+                .categoryName(category.getCategoryName())
+                .build();
     }
 }

@@ -42,13 +42,13 @@ public class Product {
         this.productName = productName;
         this.productFeature = productFeature;
         this.productUsage = productUsage;
-        // this.category = category;
+        this.category = category;
     }
 
     public void update(ProductRequestDto requestDto, ProductCategory category) {
         this.productName = requestDto.getProductName();
         this.productFeature = requestDto.getProductFeature();
         this.productUsage = requestDto.getProductUsage();
-        // this.category = category;
+        this.category = category;
     }
 }

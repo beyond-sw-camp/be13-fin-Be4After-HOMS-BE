@@ -32,7 +32,11 @@ public enum ExceptionMessage {
     // 주문 관련 에러 (예시)
     ORDER_NOT_FOUND("O001", "해당 주문을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     ORDER_ITEM_NOT_FOUND("O002", "해당 주문 상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    INSUFFICIENT_STOCK("O003", "재고가 부족합니다.", HttpStatus.CONFLICT);
+    INSUFFICIENT_STOCK("O003", "재고가 부족합니다.", HttpStatus.CONFLICT),
+
+    // 상품 관리
+    PRODUCT_NOT_FOUND("C001","해당 상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CATEGORY_NOT_FOUND("C001","해당 카테고리를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
