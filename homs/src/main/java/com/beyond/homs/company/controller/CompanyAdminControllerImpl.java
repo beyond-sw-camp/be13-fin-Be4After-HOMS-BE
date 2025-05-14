@@ -34,8 +34,7 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
     @Override
     public ResponseEntity<ResponseDto<Void>> grantCompany(@PathVariable @Positive Long companyId) {
         companyAdminService.grantCompany(companyId);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto<>(
+        return ResponseEntity.ok(new ResponseDto<>(
                         HttpStatus.CREATED.value(),
                         "Company enrollment success",
                         null

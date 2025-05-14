@@ -3,6 +3,7 @@ package com.beyond.homs.user.entity;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.entity.Department;
 import com.beyond.homs.user.data.UserRole;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -71,6 +72,11 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "dept_id", nullable = false)
     private Department department;
+
+    @OneToOne(mappedBy="user",
+            cascade= CascadeType.ALL,
+            orphanRemoval=true)
+    private UserLogin userLogin;
 
     @Builder
     public User(String userName, String managerName, String managerEmail, String managerPhone
