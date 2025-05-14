@@ -52,6 +52,10 @@ public class JwtAuthProvider {
         return "refresh:" + sub;
     }
 
+    public String getRefreshToken(String sub) {
+        return redisTemplate.opsForValue().get(createRefreshKey(sub));
+    }
+
     public void addBlackList(String accessToken) {
         redisTemplate.opsForValue()
                 .set(createBlackListKey(accessToken), "true", ACCESS_TOKEN_EXP, TimeUnit.MILLISECONDS);
@@ -63,5 +67,13 @@ public class JwtAuthProvider {
 
     private String createBlackListKey(String accessToken) {
         return "blacklist:" + accessToken;
+    }
+
+    public String resolveToken(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
     }
 }
