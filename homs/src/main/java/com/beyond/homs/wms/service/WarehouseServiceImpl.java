@@ -2,11 +2,15 @@ package com.beyond.homs.wms.service;
 
 import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.wms.dto.WarehouseDetailDto;
 import com.beyond.homs.wms.dto.WarehouseRequestDto;
 import com.beyond.homs.wms.dto.WarehouseResponseDto;
 import com.beyond.homs.wms.entity.Warehouse;
+import com.beyond.homs.wms.repository.InventoryRepository;
 import com.beyond.homs.wms.repository.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
+    private final InventoryRepository inventoryRepository;
 
     // 모든 창고 리스트 가져오기
     @Override
@@ -33,6 +38,15 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     // 창고 상세
     // 이 부분은 창고에 어떤 상품들이 들어있는지 알 필요가 있음 (추후에 추가)
+    @Override
+    public Page<WarehouseDetailDto> getWarehouseInventorys(
+            Long warehouseId, String productName, String categoryName, Pageable pageable){
+
+        warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new CustomException(ExceptionMessage.WAREHOUSE_NOT_FOUND));
+
+        return warehouseRepository.searchInventory(warehouseId,productName,categoryName,pageable);
+    }
 
     // 창고 추가
     @Transactional
