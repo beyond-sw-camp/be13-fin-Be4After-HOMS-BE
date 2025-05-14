@@ -72,7 +72,7 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @PutMapping(value = "/update/{noticeId}")
+    @PutMapping("/update/{noticeId}")
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,

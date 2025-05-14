@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
@@ -15,6 +16,9 @@ import java.io.Serializable;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InventoryId implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5759357705865431705L;
+
     @EqualsAndHashCode.Include
     @Column(name = "warehouse_id")
     private Long warehouseId;

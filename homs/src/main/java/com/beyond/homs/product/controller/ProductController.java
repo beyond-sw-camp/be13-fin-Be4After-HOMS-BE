@@ -31,6 +31,10 @@ public interface ProductController {
     ResponseEntity<ResponseDto<ProductResponseDto>> productDetail(
             @PathVariable Long productId);
 
+    @Operation(summary = "상품 모든 재고 조회", description = "상품의 모든 재고를 조회합니다.")
+    ResponseEntity<ResponseDto<Long>> productQuantity(
+            @PathVariable Long productId);
+
     @Operation(summary = "상품 기본 정보 등록", description = "상품 기본 정보를 등록합니다.")
     ResponseEntity<ResponseDto<ProductResponseDto>> createProduct(
             @RequestBody ProductRequestDto productRequestDto);
