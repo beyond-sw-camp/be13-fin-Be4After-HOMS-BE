@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class JwtProvider {
+public class JwtAuthProvider {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final RedisTemplate<String, String> redisTemplate;
@@ -22,7 +22,7 @@ public class JwtProvider {
     @Value("${springboot.jwt.issuer}")
     private String issuer;
 
-    public JwtProvider(
+    public JwtAuthProvider(
             JwtService jwtService,
             UserDetailsService userDetailsService,
             RedisTemplate<String, String> redisTemplate) {

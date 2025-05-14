@@ -1,6 +1,6 @@
 package com.beyond.homs;
 
-import com.beyond.homs.auth.jwt.JwtProvider;
+import com.beyond.homs.auth.jwt.JwtAuthProvider;
 import com.beyond.homs.common.jwt.JwtService;
 import com.beyond.homs.user.data.UserRole;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class JwtProviderTest {
     @Autowired
-    private JwtProvider jwtProvider;
+    private JwtAuthProvider jwtProvider;
 
     @Autowired
     private JwtService jwtService;

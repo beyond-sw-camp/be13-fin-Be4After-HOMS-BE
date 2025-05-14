@@ -1,0 +1,50 @@
+package com.beyond.homs.auth.service;
+
+import com.beyond.homs.auth.dto.TokenResponseDto;
+import com.beyond.homs.auth.jwt.JwtAuthProvider;
+import com.beyond.homs.user.entity.User;
+import com.beyond.homs.user.entity.UserLogin;
+import com.beyond.homs.user.repository.UserLoginRepository;
+import com.beyond.homs.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserLoginRepository userLoginRepository;
+
+    private final JwtAuthProvider jwtProvider;
+
+    @Override
+    public TokenResponseDto login(String username, String password) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserLogin userLogin = userLoginRepository.findById(user.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(password, userLogin.getPasswordHash())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        return new TokenResponseDto(
+                jwtProvider.createAccessToken(user.getUserId().toString(), user.getRole()),
+                jwtProvider.createRefreshToken(user.getUserId().toString())
+        );
+    }
+
+    @Override
+    public void logout(String bearerToken) {
+
+    }
+
+    @Override
+    public TokenResponseDto refresh(String bearerToken) {
+        return null;
+    }
+}
