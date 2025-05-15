@@ -35,9 +35,11 @@ public class SecurityConfig {
                                 "/api-docs/**",          // Swagger 관련 경로 허용
                                 "/swagger-ui/**",        // Swagger UI 경로 허용
                                 "/v3/api-docs/**",       // OpenAPI 문서 경로 허용
-                                "/swagger-resources/**"  // Swagger 리소스 허용
+                                "/swagger-resources/**",  // Swagger 리소스 허용
+                                "/api/v1/auth/signin"
                         ).permitAll()               // 위 경로는 모두 허용
-                        .anyRequest().permitAll()  // 나머지 요청도 모두 허용 (개발 단계에서)
+//                        .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
+                                .anyRequest().permitAll() // 개발 이후 삭제
                 )
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화 (테스트 환경에서만 사용)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용

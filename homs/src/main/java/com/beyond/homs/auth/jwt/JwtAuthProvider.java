@@ -86,7 +86,6 @@ public class JwtAuthProvider {
         return  accessToken != null
                 && jwtService.validateToken(accessToken)
                 && !isBlackList(accessToken)
-                && isValidIssuer(accessToken)
-                && hasRole(accessToken);
+                && isValidIssuer(accessToken);
     }
 }
