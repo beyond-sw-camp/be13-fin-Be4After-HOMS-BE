@@ -59,7 +59,7 @@ public class WarehouseControllerImpl implements WarehouseController {
                 ));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<WarehouseResponseDto>> createWarehouse(
             @RequestBody WarehouseRequestDto requestDto){
@@ -74,7 +74,7 @@ public class WarehouseControllerImpl implements WarehouseController {
                 ));
     }
 
-    @PutMapping("/update/{warehouseId}")
+    @PutMapping("/{warehouseId}")
     @Override
     public ResponseEntity<ResponseDto<WarehouseResponseDto>> updateWarehouse(
             @PathVariable Long warehouseId,
@@ -90,7 +90,7 @@ public class WarehouseControllerImpl implements WarehouseController {
                         ));
     }
 
-    @DeleteMapping("/delete/{warehouseId}")
+    @DeleteMapping("/{warehouseId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteWarehouse(
             @PathVariable Long warehouseId){

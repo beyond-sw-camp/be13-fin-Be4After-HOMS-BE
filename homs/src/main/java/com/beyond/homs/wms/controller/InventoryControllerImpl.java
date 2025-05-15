@@ -19,7 +19,7 @@ public class InventoryControllerImpl implements InventoryController {
 
     private final InventoryService inventoryService;
 
-    @PostMapping("/set")
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<InventoryResponseDto>> createInventory(
             @RequestBody InventoryRequestDto requestDto){
