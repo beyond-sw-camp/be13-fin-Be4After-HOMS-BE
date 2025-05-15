@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JwtAuthProvider {
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
     private final RedisTemplate<String, String> redisTemplate;
     private static final long ACCESS_TOKEN_EXP = 1000L * 60L * 15L;
     private static final long REFRESH_TOKEN_EXP = 1000L * 60L * 60L * 24L;
@@ -24,10 +23,8 @@ public class JwtAuthProvider {
 
     public JwtAuthProvider(
             JwtService jwtService,
-            UserDetailsService userDetailsService,
             RedisTemplate<String, String> redisTemplate) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
         this.redisTemplate = redisTemplate;
     }
 
@@ -75,5 +72,21 @@ public class JwtAuthProvider {
         }
 
         return null;
+    }
+
+    public boolean isValidIssuer(String accessToken) {
+        return jwtService.getClaims(accessToken).get("iss").equals(issuer);
+    }
+
+    private boolean hasRole(String accessToken) {
+        return jwtService.getClaims(accessToken).get("role") != null;
+    }
+
+    public boolean isValidAccessToken(String accessToken) {
+        return  accessToken != null
+                && jwtService.validateToken(accessToken)
+                && !isBlackList(accessToken)
+                && isValidIssuer(accessToken)
+                && hasRole(accessToken);
     }
 }
