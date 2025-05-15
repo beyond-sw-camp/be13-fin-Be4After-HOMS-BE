@@ -30,11 +30,11 @@ public class ProductControllerImpl implements ProductController {
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<Page<ProductListDto>>> productList(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String productName,
             @RequestParam(required = false) Long category,
             @PageableDefault(size = 10, page = 0) Pageable pageable){
 
-        Page<ProductListDto> productList = productService.getProducts(name,category,pageable);
+        Page<ProductListDto> productList = productService.getProducts(productName,category,pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
@@ -57,7 +57,20 @@ public class ProductControllerImpl implements ProductController {
                 ));
     }
 
-    @PostMapping("/create")
+    @GetMapping("/{productId}/inventory")
+    @Override
+    public ResponseEntity<ResponseDto<Long>> productQuantity(
+            @PathVariable Long productId){
+
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "해당 상품의 모든 재고수량을 불러왔습니다.",
+                        productService.getProductQuantity(productId)
+                ));
+    }
+
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<ProductResponseDto>> createProduct(
             @RequestBody ProductRequestDto productRequestDto) {
@@ -71,7 +84,7 @@ public class ProductControllerImpl implements ProductController {
                     ));
     }
 
-    @PutMapping("/update/{productId}")
+    @PutMapping("/{productId}")
     @Override
     public ResponseEntity<ResponseDto<ProductResponseDto>> updateProduct(
             @PathVariable Long productId,
@@ -85,7 +98,7 @@ public class ProductControllerImpl implements ProductController {
             ));
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteProduct(
             @PathVariable Long productId){

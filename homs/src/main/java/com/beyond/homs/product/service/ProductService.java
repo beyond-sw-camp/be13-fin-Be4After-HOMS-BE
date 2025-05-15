@@ -14,6 +14,9 @@ public interface ProductService {
     // 상품목록 상세 조회
     ProductResponseDto getProductDetail(Long productId);
 
+    // 해당 상품의 총 재고 수량
+    Long getProductQuantity(Long productId);
+
     // 상품 기본 정보 등록
     @Transactional
     ProductResponseDto createProduct(ProductRequestDto requestDto);
