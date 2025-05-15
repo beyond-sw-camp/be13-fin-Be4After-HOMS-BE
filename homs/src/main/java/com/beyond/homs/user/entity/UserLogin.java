@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "user_login")
@@ -27,6 +28,7 @@ public class UserLogin {
     private User user;
 
 
+    @Setter
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

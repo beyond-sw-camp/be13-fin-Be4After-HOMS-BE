@@ -65,7 +65,6 @@ public class UserAdminServiceImpl implements UserAdminService {
     public void updateUser(Long userId, UpdateUserDto updateUserDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
-        System.out.println(updateUserDto);
         user.setManagerName(updateUserDto.managerName());
         user.setManagerEmail(updateUserDto.managerEmail());
         user.setManagerPhone(updateUserDto.managerPhone());
@@ -82,7 +81,6 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Override
     public UserResponseDto getUser(Long userId) {
-        System.out.println("getUser called with userId: " + userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
         return UserResponseDto.fromUser(user);
