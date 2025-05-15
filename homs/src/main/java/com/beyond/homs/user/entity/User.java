@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -50,12 +51,15 @@ public class User implements UserDetails {
     @Column(name = "user_name",nullable = false, unique = true)
     private String userName;
 
+    @Setter
     @Column(name = "manager_name",nullable = false)
     private String managerName;
 
+    @Setter
     @Column(name = "manager_email",nullable = false)
     private String managerEmail;
 
+    @Setter
     @Column(name = "manager_phone",nullable = false)
     private String managerPhone;
 

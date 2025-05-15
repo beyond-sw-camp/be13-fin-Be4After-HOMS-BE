@@ -6,10 +6,10 @@ import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.DepartmentRepository;
 import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.dto.CreateUserDto;
-import com.beyond.homs.user.entity.PasswordHistory;
+import com.beyond.homs.user.dto.UpdateUserDto;
+import com.beyond.homs.user.dto.UserResponseDto;
 import com.beyond.homs.user.entity.User;
 import com.beyond.homs.user.entity.UserLogin;
-import com.beyond.homs.user.repository.PasswordHistoryRepository;
 import com.beyond.homs.user.repository.UserLoginRepository;
 import com.beyond.homs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserAdminServiceImpl implements UserAdminService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final DepartmentRepository departmentRepository;
@@ -33,10 +33,8 @@ public class UserServiceImpl implements UserService {
     public void createUser(CreateUserDto createUserDto) {
         userRepository.findByUserName(createUserDto.userName())
                 .ifPresent(user -> {
-                    throw new RuntimeException("User already exists");
+                    throw new RuntimeException("User name already exists");
                 });
-
-        System.out.println("createUserDto = *********" + createUserDto.companyId());
 
         Company company = companyRepository.findById(createUserDto.companyId())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
@@ -55,13 +53,43 @@ public class UserServiceImpl implements UserService {
                 .build();
         User savedUser = userRepository.save(user);
 
-        List<UserLogin> userLogins = userLoginRepository.findAll();
-
         UserLogin userLogin = UserLogin.builder()
                 .user(savedUser)
                 .passwordHash(passwordEncoder.encode(createUserDto.password()))
                 .lockedOut(false)
                 .build();
         userLoginRepository.save(userLogin);
+    }
+
+    @Override
+    public void updateUser(Long userId, UpdateUserDto updateUserDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new RuntimeException("User not found"));
+        System.out.println(updateUserDto);
+        user.setManagerName(updateUserDto.managerName());
+        user.setManagerEmail(updateUserDto.managerEmail());
+        user.setManagerPhone(updateUserDto.managerPhone());
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<UserResponseDto> getUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponseDto::fromUser)
+                .toList();
+    }
+
+    @Override
+    public UserResponseDto getUser(Long userId) {
+        System.out.println("getUser called with userId: " + userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new RuntimeException("User not found"));
+        return UserResponseDto.fromUser(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
