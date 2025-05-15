@@ -70,7 +70,7 @@ public class ProductControllerImpl implements ProductController {
                 ));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<ProductResponseDto>> createProduct(
             @RequestBody ProductRequestDto productRequestDto) {
@@ -84,7 +84,7 @@ public class ProductControllerImpl implements ProductController {
                     ));
     }
 
-    @PutMapping("/update/{productId}")
+    @PutMapping("/{productId}")
     @Override
     public ResponseEntity<ResponseDto<ProductResponseDto>> updateProduct(
             @PathVariable Long productId,
@@ -98,7 +98,7 @@ public class ProductControllerImpl implements ProductController {
             ));
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteProduct(
             @PathVariable Long productId){
