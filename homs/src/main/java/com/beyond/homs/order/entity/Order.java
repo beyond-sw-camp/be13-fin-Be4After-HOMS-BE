@@ -146,10 +146,10 @@ public class Order {
             }
             cursor = cursor.getParentOrder();
         }
-        // 3) 비즈니스 상태 제약 예시
-        if (this.approved) {
-            throw new IllegalStateException("승인된 주문은 부모 주문을 변경할 수 없습니다.");
-        }
+        // 3) 비즈니스 상태 제약
+//        if (this.approved) {
+//            throw new IllegalStateException("승인된 주문은 부모 주문을 변경할 수 없습니다.");
+//        }
         this.parentOrder = parent;
     }
 
