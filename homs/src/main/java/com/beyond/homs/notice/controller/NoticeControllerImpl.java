@@ -57,7 +57,7 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
             @RequestBody NoticeRequestDto requestDto){
@@ -72,7 +72,7 @@ public class NoticeControllerImpl implements NoticeController {
                 ));
     }
 
-    @PutMapping("/update/{noticeId}")
+    @PutMapping("/{noticeId}")
     @Override
     public ResponseEntity<ResponseDto<NoticeResponseDto>> updateNotice(
             @PathVariable Long noticeId,
@@ -88,7 +88,7 @@ public class NoticeControllerImpl implements NoticeController {
                     ));
     }
 
-    @DeleteMapping("/delete/{noticeId}")
+    @DeleteMapping("/{noticeId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteNotice(
             @PathVariable Long noticeId){
