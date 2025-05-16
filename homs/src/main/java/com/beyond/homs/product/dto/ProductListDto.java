@@ -24,13 +24,14 @@ public class ProductListDto {
         this.productQuantity = productQuantity;
         SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder()
                 .categoryId(category.getCategoryId())
-                .categoryName(category.getCategoryName());
+                .processName(category.getCategoryName());
 
-        // 부모 카테고리가 있는 경우에만 upperCategoryName 설정
+        // 하위 카테고리 있으면 할당
         if (category.getParent() != null) {
-            builder.upperCategoryName(category.getParent().getCategoryName());
-        } else {
-            builder.upperCategoryName(null); // 부모가 없으면 null 설정
+            builder.categoryName(category.getParent().getCategoryName());
+            if (category.getParent().getParent() != null) {
+                builder.upperCategoryName(category.getParent().getParent().getCategoryName());
+            }
         }
 
         this.category = builder.build();

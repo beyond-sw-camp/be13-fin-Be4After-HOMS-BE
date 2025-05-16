@@ -30,13 +30,13 @@ public class ProductResponseDto {
         this.productUsage = productUsage;
         SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder()
                 .categoryId(category.getCategoryId())
-                .categoryName(category.getCategoryName());
+                .processName(category.getCategoryName());
 
         // 하위 카테고리 있으면 할당
         if (category.getParent() != null) {
-            builder.upperCategoryName(category.getParent().getCategoryName());
+            builder.categoryName(category.getParent().getCategoryName());
             if (category.getParent().getParent() != null) {
-                builder.processName(category.getParent().getParent().getCategoryName());
+                builder.upperCategoryName(category.getParent().getParent().getCategoryName());
             }
         }
 
