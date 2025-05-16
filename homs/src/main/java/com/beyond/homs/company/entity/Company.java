@@ -1,18 +1,24 @@
 package com.beyond.homs.company.entity;
 
+import com.beyond.homs.company.dto.CompanyDto;
+import com.beyond.homs.company.dto.UpdateCompanyDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -59,15 +65,30 @@ public class Company {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Setter
     @Column(name = "is_continue_status", nullable = false)
     private boolean continueStatus;
 
+    @Setter
     @Column(name = "is_approve_status", nullable = false)
     private boolean approveStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", referencedColumnName = "country_id")
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
+
+    public void setFromDto(UpdateCompanyDto companyDto) {
+        this.companyName = companyDto.companyName();
+        this.registrationNumber = companyDto.registrationNumber();
+        this.representName = companyDto.representName();
+        this.representCall = companyDto.representCall();
+        this.representPhone = companyDto.representPhone();
+        this.representManagerName = companyDto.representManagerName();
+        this.representManagerEmail = companyDto.representManagerEmail();
+        this.continueStatus = false;
+        this.approveStatus = false;
+        this.country = companyDto.country();
+    }
 
     @Builder
     public Company(String companyName, String registrationNumber, String representName, String representCall, String representPhone, String representManagerName, String representManagerEmail, boolean continueStatus, boolean approveStatus, Country country) {
