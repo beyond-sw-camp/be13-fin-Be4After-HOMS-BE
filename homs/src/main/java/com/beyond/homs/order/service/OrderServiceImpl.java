@@ -41,6 +41,8 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new EntityNotFoundException(
                             "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
         }
+
+        System.out.println(requestDto.getOrderStatus());
         // 2-2) 엔티티 생성
         Order order = Order.builder()
                 .orderCode(requestDto.getOrderCode())
@@ -48,6 +50,7 @@ public class OrderServiceImpl implements OrderService {
                 .approved(requestDto.isApproved())
                 .rejectReason(requestDto.getRejectReason())
                 .parentOrder(parent)
+                .orderStatus(requestDto.getOrderStatus())
                 // .user(user)
 //                .deliveryAddress(addr)
                 .build();
@@ -85,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         // 주문 정보 업데이트
         order.updateOrderCode(requestDto.getOrderCode());
         order.updateDueDate(requestDto.getDueDate());
+        order.updateOrderStatus(requestDto.getOrderStatus());
 
         // 승인 / 거절 분기 처리
         if (requestDto.isApproved()) {
