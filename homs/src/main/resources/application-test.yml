@@ -17,6 +17,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+springboot:
+  jwt:
+    secret: h1o2n3gg5i6l7d8o9n0g;h1o2n3gg5i6l7d8o9n0g
+    issuer: be4after
 
 
 
