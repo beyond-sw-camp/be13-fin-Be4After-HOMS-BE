@@ -11,9 +11,15 @@ public class SimpleProductCategoryResponseDto {
 
     private String categoryName;
 
+    private String upperCategoryName;
+
+    private String processName;
+
     @Builder
-    public SimpleProductCategoryResponseDto(Long categoryId, String categoryName) {
+    public SimpleProductCategoryResponseDto(Long categoryId, String categoryName, String upperCategoryName, String processName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.upperCategoryName = upperCategoryName;
+        this.processName = processName;
     }
 }
