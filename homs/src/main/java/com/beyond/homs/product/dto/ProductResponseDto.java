@@ -29,17 +29,21 @@ public class ProductResponseDto {
         this.productFeature = productFeature;
         this.productUsage = productUsage;
         SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder()
-                .categoryId(category.getCategoryId())
-                .processName(category.getCategoryName());
-
-        // 하위 카테고리 있으면 할당
-        if (category.getParent() != null) {
-            builder.categoryName(category.getParent().getCategoryName());
-            if (category.getParent().getParent() != null) {
-                builder.upperCategoryName(category.getParent().getParent().getCategoryName());
-            }
+                .categoryId(category.getCategoryId());
+        switch(category.getSortNo()){
+            case 1:
+                builder.productDomain(category.getCategoryName());
+                break;
+            case 2:
+                builder.productDomain(category.getParent().getCategoryName());
+                builder.productCategory(category.getCategoryName());
+                break;
+            case 3:
+                builder.productDomain(category.getParent().getParent().getCategoryName());
+                builder.productCategory(category.getParent().getCategoryName());
+                builder.manufacturingProcess(category.getCategoryName());
+                break;
         }
-
         this.category = builder.build();
     }
 }
