@@ -11,22 +11,22 @@ public class NoticeListDto {
 
     private final String title;
 
-    private final LocalDateTime createTime;
+    private final LocalDateTime createdAt;
 
-    private final LocalDateTime updateTime;
+    private final LocalDateTime updatedAt;
 
     // JPQL에서 사용될 생성자 추가
-    public NoticeListDto(Long id, String title, LocalDateTime createTime, LocalDateTime updateTime) {
+    public NoticeListDto(Long id, String title, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public NoticeListDto(Notice notice) {
         this.id = notice.getId();
         this.title = notice.getTitle();
-        this.createTime = notice.getCreatedAt();
-        this.updateTime = notice.getUpdatedAt();
+        this.createdAt = notice.getCreatedAt();
+        this.updatedAt = notice.getUpdatedAt();
     }
 }
