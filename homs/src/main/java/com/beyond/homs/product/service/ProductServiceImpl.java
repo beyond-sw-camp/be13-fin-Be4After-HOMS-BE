@@ -25,8 +25,8 @@ public class ProductServiceImpl implements ProductService{
 
     // 상품 목록 조회
     @Override
-    public Page<ProductListDto> getProducts(String name, Long category, Pageable pageable) {
-        return productRepository.searchProductWithInventory(name,category,pageable);
+    public Page<ProductListDto> getProducts(String name, String productDomain, String productCategory, Pageable pageable) {
+        return productRepository.searchProductWithInventory(name,productDomain,productCategory,pageable);
     }
 
     // 상품목록 상세 조회

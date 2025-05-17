@@ -23,8 +23,9 @@ import java.util.List;
 public interface ProductController {
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
     ResponseEntity<ResponseDto<Page<ProductListDto>>> productList(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String productName,
+            @RequestParam(required = false) String productDomain,
+            @RequestParam(required = false) String productCategory,
             @PageableDefault(size = 10, page = 0) Pageable pageable);
 
     @Operation(summary = "상품 상세 조회", description = "상품을 상세 조회합니다.")

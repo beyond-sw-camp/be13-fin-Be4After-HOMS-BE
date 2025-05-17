@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductService {
     // 상품 목록 조회
-    Page<ProductListDto> getProducts(String name, Long category, Pageable pageable);
+    Page<ProductListDto> getProducts(String name, String productDomain, String productCategory, Pageable pageable);
 
     // 상품목록 상세 조회
     ProductResponseDto getProductDetail(Long productId);
