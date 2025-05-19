@@ -37,17 +37,17 @@ public interface OrderController {
 
     @Operation(summary = "주문 코드로 조회", description = "orderCode로 단건 조회합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> getOrderByCode(
-            @PathVariable String orderCode
+            @PathVariable("orderCode") String orderCode
     );
 
     @Operation(summary = "사용자별 주문 조회", description = "userId에 속한 모든 주문을 조회합니다.")
     ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrdersByUser(
-            @PathVariable Long userId
+            @PathVariable("userId") Long userId
     );
 
     @Operation(summary = "하위 주문 조회", description = "parentOrderId의 모든 하위 주문을 조회합니다.")
     ResponseEntity<ResponseDto<List<OrderResponseDto>>> getChildOrders(
-            @PathVariable Long parentOrderId
+            @PathVariable("parentOrderId") Long parentOrderId
     );
 
 }

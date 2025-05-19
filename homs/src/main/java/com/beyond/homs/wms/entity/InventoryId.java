@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InventoryId implements Serializable {
     @Serial
-    private static final long serialVersionUID = 5759357705865431705L;
+    private static final long serialVersionUID = 1L;
 
     @EqualsAndHashCode.Include
     @Column(name = "warehouse_id")
