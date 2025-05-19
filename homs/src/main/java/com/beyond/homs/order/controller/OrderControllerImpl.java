@@ -25,7 +25,7 @@ import java.util.List;
 public class OrderControllerImpl implements OrderController {
     private final OrderService orderService;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Override
     public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
             @Valid @RequestBody OrderRequestDto requestDto) {
@@ -61,7 +61,7 @@ public class OrderControllerImpl implements OrderController {
         ));
     }
 
-    @PutMapping("/update/{orderId}")
+    @PutMapping("/{orderId}")
     @Override
     public ResponseEntity<ResponseDto<OrderResponseDto>> updateOrder(
             @PathVariable Long orderId,
@@ -74,7 +74,7 @@ public class OrderControllerImpl implements OrderController {
         ));
     }
 
-    @DeleteMapping("/delete/{orderId}")
+    @DeleteMapping("/{orderId}")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteOrder(
             @PathVariable Long orderId) {

@@ -6,25 +6,34 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
-@NoArgsConstructor
+@Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItemId implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id",nullable = false)
-    private Product product;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
-    private Order order;
+    @EqualsAndHashCode.Include
+    @Column(name = "order_id")
+    private Long orderId;
+
+    @EqualsAndHashCode.Include
+    @Column(name = "product_id")
+    private Long productId;
 
     @Builder
-    public OrderItemId(Product product, Order order) {
-        this.product = product;
-        this.order = order;
+    public OrderItemId(Long productId, Long orderId) {
+        this.productId = productId;
+        this.orderId = orderId;
     }
 }
