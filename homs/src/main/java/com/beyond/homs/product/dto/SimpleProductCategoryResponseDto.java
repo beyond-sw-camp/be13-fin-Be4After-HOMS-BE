@@ -9,11 +9,17 @@ import lombok.NoArgsConstructor;
 public class SimpleProductCategoryResponseDto {
     private Long categoryId;
 
-    private String categoryName;
+    private String productDomain;
+
+    private String productCategory;
+
+    private String manufacturingProcess;
 
     @Builder
-    public SimpleProductCategoryResponseDto(Long categoryId, String categoryName) {
+    public SimpleProductCategoryResponseDto(Long categoryId, String productDomain, String productCategory, String manufacturingProcess) {
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
+        this.productDomain = productDomain;
+        this.productCategory = productCategory;
+        this.manufacturingProcess = manufacturingProcess;
     }
 }
