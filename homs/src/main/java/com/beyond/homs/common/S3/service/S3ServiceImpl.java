@@ -34,4 +34,10 @@ public class S3ServiceImpl implements S3Service {
     public Resource downloadFile(String key) {
         return s3Operations.download(S3_BUCKET, key);
     }
+
+    // 삭제 메서드
+    @Override
+    public void deleteFile(String key) {
+        s3Operations.deleteObject(S3_BUCKET, key);
+    }
 }

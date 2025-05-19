@@ -9,4 +9,7 @@ public interface S3Service {
     void uploadFile(MultipartFile file, String key) throws IOException;
 
     Resource downloadFile(String key);
+
+    // 삭제 메서드
+    void deleteFile(String key);
 }
