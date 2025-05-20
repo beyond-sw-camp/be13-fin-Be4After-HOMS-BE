@@ -3,15 +3,15 @@ package com.beyond.homs.settlement.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
+import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
+import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
 import com.beyond.homs.settlement.dto.SettlementResponseDto;
+import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
 import com.beyond.homs.settlement.service.SettlementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,5 +42,39 @@ public class SettlementControllerImpl implements SettlementController {
                 HttpStatus.OK.value(),
                 "사용자별 정산 조회 성공",
                 list));
+    }
+
+    @GetMapping("/{orderId}/companyInfo")
+    @Override
+    public ResponseEntity<ResponseDto<SettlementCompanyInfoDto>> getCompanyInfoByOrder(
+            @PathVariable("orderId") Long orderId) {
+        SettlementCompanyInfoDto dto = settlementService.getCompanyInfoByOrderId(orderId);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "주문별 거래처 조회",
+                dto));
+    }
+
+    @GetMapping("/{orderId}/orderInfo")
+    @Override
+    public ResponseEntity<ResponseDto<List<SettlementOrderInfoDto>>> getOrderInfo(
+            @PathVariable("orderId") Long orderId) {
+        List<SettlementOrderInfoDto> list = settlementService.getOrderInfo(orderId);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "주문별 주문 상품 조회",
+                list));
+
+    }
+
+    @PutMapping("/update")
+    @Override
+    public ResponseEntity<ResponseDto<String>> updateSettlementStatus(@RequestBody SettlementUpdateRequestDto requestDto) {
+        settlementService.updateSettlementStatus(requestDto);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "정산 상태가 SETTLED로 업데이트되었습니다.",
+                "SUCCESS"
+        ));
     }
 }

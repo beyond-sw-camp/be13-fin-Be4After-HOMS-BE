@@ -55,4 +55,8 @@ public class Settlement {
         this.isSettled = isSettled;
         this.order = order;
     }
+
+    public void updateSettleStatus(SettleStatusEnum isSettled) {
+        this.isSettled = isSettled;
+    }
 }

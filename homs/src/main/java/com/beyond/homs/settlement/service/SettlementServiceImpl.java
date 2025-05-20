@@ -1,10 +1,18 @@
 package com.beyond.homs.settlement.service;
 
+import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.order.entity.Order;
-import com.beyond.homs.settlement.dto.SettlementRequestDto;
+import com.beyond.homs.order.entity.OrderItem;
+import com.beyond.homs.order.repository.OrderItemRepository;
+import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.settlement.data.SettleStatusEnum;
+import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
+import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
 import com.beyond.homs.settlement.dto.SettlementResponseDto;
+import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
 import com.beyond.homs.settlement.entity.Settlement;
 import com.beyond.homs.settlement.repository.SettlementRepository;
+import com.beyond.homs.wms.entity.DeliveryAddress;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +25,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class SettlementServiceImpl implements SettlementService {
     public final SettlementRepository settlementRepository;
-
-//    @Override
-//    @Transactional
-//    public  SettlementResponseDto createSettlement(SettlementRequestDto requestDto) {
-//        Order order = orderService.findById(requestDto.getOrderId());
-//    }
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     public List<SettlementResponseDto> getAllSettlement() {
@@ -38,6 +42,48 @@ public class SettlementServiceImpl implements SettlementService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public SettlementCompanyInfoDto getCompanyInfoByOrderId(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다. ID=" + orderId));
+        DeliveryAddress deliveryAddress = order.getDeliveryAddress();
+
+        Company company = order.getUser().getCompany();
+
+        return new SettlementCompanyInfoDto(
+                company.getCompanyName(),
+                company.getRegistrationNumber(),
+                company.getRepresentName(),
+                deliveryAddress.getDetailedAddress()
+        );
+    }
+
+    @Override
+    public List<SettlementOrderInfoDto> getOrderInfo(Long orderId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을수 없습니다 ID=" + orderId));
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_OrderId(orderId);
+        return orderItems.stream()
+                .map(orderItem -> {
+                    var product = orderItem.getProduct();
+                    return SettlementOrderInfoDto.builder()
+                            .productName(product.getProductName())
+                            .quantity(orderItem.getQuantity())
+                            .orderDate(order.getOrderDate())
+                            .build();
+                }).toList();
+    }
+
+    @Override
+    @Transactional
+    public void updateSettlementStatus(SettlementUpdateRequestDto requestDto) {
+        Settlement settlement = settlementRepository.findById(requestDto.getSettlementId())
+                .orElseThrow(() -> new IllegalArgumentException("정산 정보를 찾을 수 없습니다."));
+
+        settlement.updateSettleStatus(SettleStatusEnum.SETTLED);
+    }
+
     private SettlementResponseDto toSettlementResponse(Settlement settlement) {
         return new SettlementResponseDto(
                 settlement.getId(),
@@ -48,7 +94,7 @@ public class SettlementServiceImpl implements SettlementService {
                 settlement.getSettlementDate(),
                 settlement.getIsSettled().name(),
                 settlement.getTaxInvoice()
-
         );
     }
+
 }
