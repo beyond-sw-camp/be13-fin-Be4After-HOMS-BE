@@ -1,6 +1,7 @@
-package com.beyond.homs.common.S3.controller;
+package com.beyond.homs.common.s3.controller;
 
-import com.beyond.homs.common.S3.service.S3Service;
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.s3.service.S3Service;
 import io.awspring.cloud.s3.S3Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,32 +75,34 @@ public class S3ControllerImpl implements S3Controller {
     // 이미지 받아와서 출력 (스트리밍)
     @GetMapping("/view")
     @Override
-    public ResponseEntity<byte[]> streamImage( @RequestParam String key ) {
+    public ResponseEntity<byte[]> streamImage( @RequestParam String key ) throws IOException {
 
         Resource resource = s3Service.downloadFile(key);
 
-        if (resource instanceof S3Resource && resource.exists()) {
-            S3Resource s3Resource = (S3Resource) resource;
-            String contentType = s3Resource.contentType();
+        return s3Service.getImageView(resource);
+    }
 
-            try (InputStream inputStream = s3Resource.getInputStream()) {
-                // 이미지를 바이트 배열로 읽어오기
-                byte[] imageBytes = inputStream.readAllBytes();
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.parseMediaType(contentType));
-                // Cache-Control 헤더를 추가하여 브라우저 캐싱을 관리.
-                headers.setCacheControl("public, max-age=31536000"); // 1년 캐싱
-
-                return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
-
-            } catch (IOException e) {
-                // 이미지 읽기 실패 처리
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-        }else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PostMapping("/upload-multiple")
+    @Override
+    public ResponseEntity<?> uploadMultipleFiles(
+            // @RequestParam의 "value"는 프론트엔드의 FormData.append("name", file)의 "name"과 일치해야 합니다.
+            @RequestParam(value = "s3Image", required = false) MultipartFile s3Image,
+            @RequestParam(value = "s3Msds", required = false) MultipartFile s3Msds,
+            @RequestParam(value = "s3Tds1", required = false) MultipartFile s3Tds1,
+            @RequestParam(value = "s3Tds2", required = false) MultipartFile s3Tds2,
+            @RequestParam(value = "s3Property", required = false) MultipartFile s3Property,
+            @RequestParam(value = "s3Guide", required = false) MultipartFile s3Guide) {
+        try {
+            // S3Service의 uploadProductFiles 메서드를 호출
+            Map<String, String> uploadedUrls = s3Service.uploadProductFiles(
+                    s3Image, s3Msds, s3Tds1, s3Tds2, s3Property, s3Guide);
+            return ResponseEntity.ok(uploadedUrls);
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "서버 오류: " + e.getMessage()));
         }
     }
 }

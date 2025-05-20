@@ -1,5 +1,7 @@
 package com.beyond.homs.product.service;
 
+import com.beyond.homs.product.dto.ProductFileRequestDto;
+import com.beyond.homs.product.dto.ProductFileResponseDto;
 import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
@@ -28,4 +30,16 @@ public interface ProductService {
     // 상품 삭제
     @Transactional
     void deleteProduct(Long productId);
+
+    /*------ 파일 관련 --------*/
+    // 파일 조회
+    ProductFileResponseDto getProductFile(Long productId);
+
+    // 파일 저장
+    @Transactional
+    void uploadProductFile(ProductFileRequestDto requestDto);
+
+    // 파일 수정
+    @Transactional
+    void updateProductFile(ProductFileRequestDto requestDto);
 }
