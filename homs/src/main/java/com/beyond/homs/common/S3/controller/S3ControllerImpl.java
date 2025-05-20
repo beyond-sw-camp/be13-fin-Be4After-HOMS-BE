@@ -2,7 +2,6 @@ package com.beyond.homs.common.S3.controller;
 
 import com.beyond.homs.common.S3.service.S3Service;
 import io.awspring.cloud.s3.S3Resource;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +35,8 @@ public class S3ControllerImpl implements S3Controller {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패: " + e.getMessage());
         }
-        return ResponseEntity.ok().body("업로드 성공");
+        // 파일 경로 반환
+        return ResponseEntity.ok().body(key);
     }
 
     @GetMapping("/download")
@@ -70,23 +69,22 @@ public class S3ControllerImpl implements S3Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 실패 "+e.getMessage());
         }
     }
-    
+
     // 이미지 받아와서 출력 (스트리밍)
-    @GetMapping("/image/{key}")
+    @GetMapping("/view")
     @Override
-    public ResponseEntity<byte[]> streamImage(
-            @Parameter(description = "이미지 키")
-            @PathVariable String key) {
+    public ResponseEntity<byte[]> streamImage( @RequestParam String key ) {
+
         Resource resource = s3Service.downloadFile(key);
 
         if (resource instanceof S3Resource && resource.exists()) {
             S3Resource s3Resource = (S3Resource) resource;
             String contentType = s3Resource.contentType();
-            
+
             try (InputStream inputStream = s3Resource.getInputStream()) {
                 // 이미지를 바이트 배열로 읽어오기
                 byte[] imageBytes = inputStream.readAllBytes();
-                
+
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.parseMediaType(contentType));
                 // Cache-Control 헤더를 추가하여 브라우저 캐싱을 관리.

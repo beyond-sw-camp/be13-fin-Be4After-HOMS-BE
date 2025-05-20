@@ -26,15 +26,13 @@ public interface S3Controller {
             @RequestParam("key") String key);
 
     @Operation(summary = "파일 다운로드", description = "S3에 파일을 다운로드합니다.")
-    @GetMapping("/download")
     ResponseEntity<Resource> downloadFile(
             @RequestParam("key") String key);
 
     @Operation(summary = "파일 삭제", description = "S3에 파일을 삭제합니다.")
-    @DeleteMapping("/delete")
     ResponseEntity<String> deleteFile(@RequestParam("key") String key);
 
-    @Operation(summary = "이미지 출력", description = "S3에 이미지를 받아와서 화면에 출력합니다.")
-    @GetMapping("/image/{key}")
-    ResponseEntity<byte[]> streamImage(@PathVariable String key);
+    @Operation(summary = "이미지 출력", description = "S3에서 이미지 받아와서 출력합니다.")
+    ResponseEntity<byte[]> streamImage(
+            @RequestParam String key);
 }
