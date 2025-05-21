@@ -17,7 +17,7 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
-![Web App Reference Architecture(1)](https://github.com/user-attachments/assets/8cfca09d-1022-4763-b5a7-ee527905f6b1)
+![제목 없는 다이어그램 drawio](https://github.com/user-attachments/assets/3363ffb6-81e4-45e3-a0f4-248f4e68b059)
 
 </details>
 
@@ -27,6 +27,7 @@
 [WBS 바로가기](https://docs.google.com/spreadsheets/d/1IPizdsH3qvIH6CO-poGY1lSNPvnwErczsBrQjVnF3JU/edit?usp=sharing)
 
 </details>
+
 
 <details>
 <summary><strong>📂 ERD(Entity-Relationship Diagram)</strong></summary>
