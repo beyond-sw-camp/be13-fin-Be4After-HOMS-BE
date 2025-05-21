@@ -163,4 +163,11 @@ public class ProductServiceImpl implements ProductService{
         productFileRepository.save(productFile);
     }
 
+    // 파일 삭제
+    // @Transactional
+    // @Override
+    // public void deleteProductFile(ProductFileRequestDto requestDto)
+    // {
+    //
+    // }
 }

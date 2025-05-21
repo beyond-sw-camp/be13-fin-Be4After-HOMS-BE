@@ -120,7 +120,7 @@ public class ProductControllerImpl implements ProductController {
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
-                        "해당 상품의 모든 재고수량을 불러왔습니다.",
+                        "해당 상품에 연결된 파일을 가져왔습니다.",
                         productService.getProductFile(productId)
                 ));
     }
