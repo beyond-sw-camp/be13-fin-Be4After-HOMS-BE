@@ -2,6 +2,7 @@ package com.beyond.homs.settlement.entity;
 
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.settlement.data.SettleStatusEnum;
+import com.beyond.homs.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -49,8 +50,13 @@ public class Settlement {
     private SettleStatusEnum isSettled;
 
     @Builder
-    public Settlement(String taxInvoice, SettleStatusEnum isSettled) {
+    public Settlement(String taxInvoice, SettleStatusEnum isSettled, Order order) {
         this.taxInvoice = taxInvoice;
+        this.isSettled = isSettled;
+        this.order = order;
+    }
+
+    public void updateSettleStatus(SettleStatusEnum isSettled) {
         this.isSettled = isSettled;
     }
 }
