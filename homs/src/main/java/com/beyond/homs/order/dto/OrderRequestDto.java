@@ -18,7 +18,7 @@ public class OrderRequestDto {
 
     private final OrderStatusEnum orderStatus;
 
-//    private final Long userId;
+    private final Long userId;
 
     private final Long parentOrderId;
 
