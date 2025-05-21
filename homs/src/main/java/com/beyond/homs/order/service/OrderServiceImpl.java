@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
                             "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
         }
 
-        System.out.println(requestDto.getOrderStatus());
+
         // 2-2) 엔티티 생성
         Order order = Order.builder()
                 .orderCode(requestDto.getOrderCode())
