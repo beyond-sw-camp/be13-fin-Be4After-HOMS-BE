@@ -20,6 +20,7 @@ public interface S3Service {
 
     // 상품관리 다중 업로드
     Map<String, String> uploadProductFiles(
+            Long productId,
             MultipartFile s3Image,
             MultipartFile s3Msds,
             MultipartFile s3Tds1,

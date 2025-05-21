@@ -86,6 +86,7 @@ public class S3ServiceImpl implements S3Service {
     // 상품관리 다중 업로드
     @Override
     public Map<String, String> uploadProductFiles(
+            Long productId,
             MultipartFile s3Image,
             MultipartFile s3Msds,
             MultipartFile s3Tds1,
@@ -130,16 +131,16 @@ public class S3ServiceImpl implements S3Service {
                 String fieldName = entry.getKey();
                 MultipartFile file = entry.getValue();
 
-                String s3FolderPath; // 각 파일 종류에 맞는 S3 폴더 경로 결정
-                switch (fieldName) {
-                    case "s3Image": s3FolderPath = "product-images/"; break;
-                    case "s3Msds": s3FolderPath = "product-documents/msds/"; break;
-                    case "s3Tds1": s3FolderPath = "product-documents/tds1/"; break;
-                    case "s3Tds2": s3FolderPath = "product-documents/tds2/"; break;
-                    case "s3Property": s3FolderPath = "product-documents/property/"; break;
-                    case "s3Guide": s3FolderPath = "product-documents/guide/"; break;
-                    default: s3FolderPath = "other-product-files/"; break; // 예상치 못한 필드명
-                }
+                String s3FolderPath = "product/"+productId+"/"; // 각 파일 종류에 맞는 S3 폴더 경로 결정
+                // switch (fieldName) {
+                //     case "s3Image": s3FolderPath = "product-images/"; break;
+                //     case "s3Msds": s3FolderPath = "product-documents/msds/"; break;
+                //     case "s3Tds1": s3FolderPath = "product-documents/tds1/"; break;
+                //     case "s3Tds2": s3FolderPath = "product-documents/tds2/"; break;
+                //     case "s3Property": s3FolderPath = "product-documents/property/"; break;
+                //     case "s3Guide": s3FolderPath = "product-documents/guide/"; break;
+                //     default: s3FolderPath = "other-product-files/"; break; // 예상치 못한 필드명
+                // }
 
                 // S3에 저장될 고유한 키(경로 + 파일명)를 생성
                 String s3Key = generateS3Key(s3FolderPath, Objects.requireNonNullElse(file.getOriginalFilename(), "unknown"));
