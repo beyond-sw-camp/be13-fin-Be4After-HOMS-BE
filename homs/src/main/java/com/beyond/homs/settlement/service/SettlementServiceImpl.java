@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SettlementServiceImpl implements SettlementService {
-    public final SettlementRepository settlementRepository;
+    private final SettlementRepository settlementRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
@@ -43,7 +43,6 @@ public class SettlementServiceImpl implements SettlementService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public SettlementCompanyInfoDto getCompanyInfoByOrderId(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다. ID=" + orderId));
