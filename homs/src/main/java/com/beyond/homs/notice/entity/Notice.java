@@ -44,15 +44,15 @@ public class Notice {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Notice(String title, String content) {
+    public Notice(String title, String content, String imagePath) {
         this.title = title;
         this.content = content;
-        // this.imagePath = imagePath;
+        this.imagePath = imagePath;
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, String imagePath) {
         this.title = title;
         this.content = content;
-        // this.imagePath = imagePath;
+        this.imagePath = imagePath;
     }
 }

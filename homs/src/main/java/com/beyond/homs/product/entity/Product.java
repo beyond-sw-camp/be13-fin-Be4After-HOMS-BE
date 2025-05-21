@@ -1,5 +1,6 @@
 package com.beyond.homs.product.entity;
 
+import com.beyond.homs.product.dto.ProductFileRequestDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.wms.entity.Inventory;
 import jakarta.persistence.CascadeType;
