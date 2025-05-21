@@ -39,8 +39,10 @@ public enum ExceptionMessage {
     CATEGORY_NOT_FOUND("C001","해당 카테고리를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 창고 관리
-    WAREHOUSE_NOT_FOUND("W001","해당 창고를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    WAREHOUSE_NOT_FOUND("W001","해당 창고를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
+    // 파일 관리
+    UNSUPPORTED_FILE_TYPE("F001", "지원되지 않는 파일 타입입니다.", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;

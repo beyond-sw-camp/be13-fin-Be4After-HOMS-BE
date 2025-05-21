@@ -47,6 +47,7 @@ public class NoticeServiceImpl implements NoticeService {
         Notice notice = Notice.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
+                .imagePath(requestDto.getImagePath())
                 .build();
         Notice saveNotice = noticeRepository.save(notice);
 
@@ -74,10 +75,14 @@ public class NoticeServiceImpl implements NoticeService {
         if (requestDto.getContent() == null) {
             requestDto.setContent(post.getContent());
         }
+        if (requestDto.getImagePath() == null) {
+            requestDto.setImagePath(post.getImagePath());
+        }
 
         post.update(
                 requestDto.getTitle(),
-                requestDto.getContent());
+                requestDto.getContent(),
+                requestDto.getImagePath());
         noticeRepository.save(post);
 
         return NoticeResponseDto.builder()
