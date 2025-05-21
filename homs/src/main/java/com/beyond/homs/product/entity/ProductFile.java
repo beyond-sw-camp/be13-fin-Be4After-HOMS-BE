@@ -1,5 +1,6 @@
 package com.beyond.homs.product.entity;
 
+import com.beyond.homs.product.dto.ProductFileRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,11 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "productfile")
@@ -47,12 +46,22 @@ public class ProductFile {
     private String s3Guide;
 
     @Builder
-    public ProductFile(String s3Image, String s3Msds, String s3Tds1, String s3Tds2, String s3Property, String s3Guide) {
+    public ProductFile(Product product ,String s3Image, String s3Msds, String s3Tds1, String s3Tds2, String s3Property, String s3Guide) {
+        this.product = product;
         this.s3Image = s3Image;
         this.s3Msds = s3Msds;
         this.s3Tds1 = s3Tds1;
         this.s3Tds2 = s3Tds2;
         this.s3Property = s3Property;
         this.s3Guide = s3Guide;
+    }
+
+    public void update(ProductFileRequestDto requestDto) {
+        this.s3Image = requestDto.getS3Image();
+        this.s3Msds = requestDto.getS3Msds();
+        this.s3Tds1 = requestDto.getS3Tds1();
+        this.s3Tds2 = requestDto.getS3Tds2();
+        this.s3Property = requestDto.getS3Property();
+        this.s3Guide = requestDto.getS3Guide();
     }
 }

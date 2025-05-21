@@ -1,6 +1,8 @@
 package com.beyond.homs.product.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.product.dto.ProductFileRequestDto;
+import com.beyond.homs.product.dto.ProductFileResponseDto;
 import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.dto.ProductResponseDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
@@ -31,10 +33,11 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public ResponseEntity<ResponseDto<Page<ProductListDto>>> productList(
             @RequestParam(required = false) String productName,
-            @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String productDomain,
+            @RequestParam(required = false) String productCategory,
             @PageableDefault(size = 10, page = 0) Pageable pageable){
 
-        Page<ProductListDto> productList = productService.getProducts(productName,category,pageable);
+        Page<ProductListDto> productList = productService.getProducts(productName,productDomain,productCategory,pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
@@ -107,4 +110,36 @@ public class ProductControllerImpl implements ProductController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    // -------- 파일 부분 ----------
+
+    @GetMapping("/files/{productId}")
+    @Override
+    public ResponseEntity<ResponseDto<ProductFileResponseDto>> productFileList(
+            @PathVariable Long productId) {
+
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "해당 상품의 모든 재고수량을 불러왔습니다.",
+                        productService.getProductFile(productId)
+                ));
+    }
+
+    @PostMapping("/files")
+    @Override
+    public ResponseEntity<String> uploadProductFile(
+            @RequestBody ProductFileRequestDto requestDto){
+        productService.uploadProductFile(requestDto);
+
+        return ResponseEntity.ok("파일 경로가 저장됨");
+    }
+
+    @PutMapping("/files")
+    @Override
+    public ResponseEntity<String> updateProductFile(
+            @RequestBody ProductFileRequestDto requestDto){
+        productService.updateProductFile(requestDto);
+
+        return ResponseEntity.ok("파일이 성공적으로 수정되었습니다.");
+    }
 }
