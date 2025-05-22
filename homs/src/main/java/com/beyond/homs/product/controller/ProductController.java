@@ -61,7 +61,11 @@ public interface ProductController {
     ResponseEntity<String> uploadProductFile(
             @RequestBody ProductFileRequestDto requestDto);
 
-    @PutMapping("/files")
+    @Operation(summary = "상품 파일 수정", description = "해당 상품 관련 파일의 경로를 수정합니다.")
     ResponseEntity<String> updateProductFile(
             @RequestBody ProductFileRequestDto requestDto);
+
+    @Operation(summary = "상품 파일 삭제", description = "해당 상품 관련 파일의 경로를 삭제합니다.")
+    ResponseEntity<String> deleteProductFile(
+            @PathVariable Long productId);
 }

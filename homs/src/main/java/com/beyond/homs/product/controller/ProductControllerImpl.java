@@ -142,4 +142,13 @@ public class ProductControllerImpl implements ProductController {
 
         return ResponseEntity.ok("파일이 성공적으로 수정되었습니다.");
     }
+
+    @DeleteMapping("/files/{productId}")
+    @Override
+    public ResponseEntity<String> deleteProductFile(
+            @PathVariable Long productId){
+        productService.deleteProductFile(productId);
+
+        return ResponseEntity.ok("파일이 성공적으로 삭제되었습니다.");
+    }
 }
