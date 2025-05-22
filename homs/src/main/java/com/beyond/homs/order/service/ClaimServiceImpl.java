@@ -1,5 +1,6 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.order.data.ClaimStatusEnum;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
 import com.beyond.homs.order.entity.Claim;
@@ -11,6 +12,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +52,22 @@ public class ClaimServiceImpl implements ClaimService {
 
         // 5) 응답 DTO 변환
         return toResponseDto(saved);
+    }
+
+    @Override
+    public List<ClaimResponseDto> getClaims(Long orderId) {
+        return claimRepository.findAllByOrderItem_OrderItemId_OrderId(orderId).stream()
+                .map(this::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Long claimId, ClaimStatusEnum newStatus) {
+        Claim claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new EntityNotFoundException("Claim not found: " + claimId));
+        claim.updateStatus(newStatus);
+        // 영속성 컨텍스트가 관리하므로 별도 save() 호출 불필요
     }
 
     private ClaimResponseDto toResponseDto(Claim claim) {
