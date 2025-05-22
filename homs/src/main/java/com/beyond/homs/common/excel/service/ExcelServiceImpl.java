@@ -183,9 +183,7 @@ public class ExcelServiceImpl implements ExcelService {
                 // 최소 수량
                 Cell cell4 = row.getCell(startColIndex + 4);
                 if (cell4 == null) cell4 = row.createCell(startColIndex + 4);
-                cell4.setCellValue(product.getCategory().getCategoryName());
-
-
+                cell4.setCellValue(product.getProductMinQuantity());
 
             }
         }

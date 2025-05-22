@@ -14,13 +14,16 @@ public class ProductListDto {
 
     private String productName;
 
+    private Long productMinQuantity;
+
     private Long productQuantity;
 
     private SimpleProductCategoryResponseDto category;
 
-    public ProductListDto(Long productId, String productName, Long productQuantity, ProductCategory category) {
+    public ProductListDto(Long productId, String productName, Long productMinQuantity, Long productQuantity, ProductCategory category) {
         this.productId = productId;
         this.productName = productName;
+        this.productMinQuantity = productMinQuantity;
         this.productQuantity = productQuantity;
         SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder()
                 .categoryId(category.getCategoryId());
