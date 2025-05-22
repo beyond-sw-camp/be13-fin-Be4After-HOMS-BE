@@ -40,4 +40,5 @@ public class ProductListDto {
         }
         this.category = builder.build();
     }
+
 }

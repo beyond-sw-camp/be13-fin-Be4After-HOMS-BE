@@ -29,3 +29,7 @@ springdoc:
     path: /api-docs
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+excel:
+  template:
+    path: templates/excel_templates.xlsx
