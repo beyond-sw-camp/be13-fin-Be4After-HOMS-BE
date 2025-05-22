@@ -28,19 +28,24 @@ public class ProductResponseDto {
         this.productName = productName;
         this.productFeature = productFeature;
         this.productUsage = productUsage;
-        SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder()
-                .categoryId(category.getCategoryId());
+        SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder();
         switch(category.getSortNo()){
             case 1:
+                builder.domainId(category.getCategoryId());
                 builder.productDomain(category.getCategoryName());
                 break;
             case 2:
+                builder.domainId(category.getParent().getCategoryId());
                 builder.productDomain(category.getParent().getCategoryName());
+                builder.categoryId(category.getCategoryId());
                 builder.productCategory(category.getCategoryName());
                 break;
             case 3:
+                builder.domainId(category.getParent().getParent().getCategoryId());
                 builder.productDomain(category.getParent().getParent().getCategoryName());
+                builder.categoryId(category.getParent().getCategoryId());
                 builder.productCategory(category.getParent().getCategoryName());
+                builder.processId(category.getCategoryId());
                 builder.manufacturingProcess(category.getCategoryName());
                 break;
         }

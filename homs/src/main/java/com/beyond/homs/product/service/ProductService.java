@@ -42,4 +42,8 @@ public interface ProductService {
     // 파일 수정
     @Transactional
     void updateProductFile(ProductFileRequestDto requestDto);
+
+    // 파일 삭제
+    @Transactional
+    void deleteProductFile(Long productId);
 }

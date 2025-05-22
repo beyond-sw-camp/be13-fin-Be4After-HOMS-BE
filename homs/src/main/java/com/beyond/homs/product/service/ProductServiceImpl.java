@@ -27,7 +27,6 @@ public class ProductServiceImpl implements ProductService{
     private final ProductFileRepository productFileRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final InventoryRepository inventoryRepository;
-
     // 상품 목록 조회
     @Override
     public Page<ProductListDto> getProducts(String name, String productDomain, String productCategory, Pageable pageable) {
@@ -163,4 +162,11 @@ public class ProductServiceImpl implements ProductService{
         productFileRepository.save(productFile);
     }
 
+    // 파일 삭제
+    @Transactional
+    @Override
+    public void deleteProductFile(Long productId)
+    {
+        productFileRepository.deleteById(productId);
+    }
 }

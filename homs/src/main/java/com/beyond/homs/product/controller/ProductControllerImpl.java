@@ -120,7 +120,7 @@ public class ProductControllerImpl implements ProductController {
         return ResponseEntity.ok(
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
-                        "해당 상품의 모든 재고수량을 불러왔습니다.",
+                        "해당 상품에 연결된 파일을 가져왔습니다.",
                         productService.getProductFile(productId)
                 ));
     }
@@ -141,5 +141,14 @@ public class ProductControllerImpl implements ProductController {
         productService.updateProductFile(requestDto);
 
         return ResponseEntity.ok("파일이 성공적으로 수정되었습니다.");
+    }
+
+    @DeleteMapping("/files/{productId}")
+    @Override
+    public ResponseEntity<String> deleteProductFile(
+            @PathVariable Long productId){
+        productService.deleteProductFile(productId);
+
+        return ResponseEntity.ok("파일이 성공적으로 삭제되었습니다.");
     }
 }
