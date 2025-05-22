@@ -15,6 +15,20 @@ spring:
           timeout: 5000
           starttls:
             enable: true
+  #  servlet:
+#    multipart:
+#      enabled: true
+#      max-file-size: 10MB
+#      max-request-size: 50MB
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      region:
+        static: ${AWS_S3_REGION}
 server:
   port: 8088
 springdoc:
@@ -27,3 +41,7 @@ springdoc:
     path: /api-docs
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+excel:
+  template:
+    path: templates/excel_templates.xlsx

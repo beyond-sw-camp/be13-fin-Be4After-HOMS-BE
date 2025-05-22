@@ -17,6 +17,8 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
+![제목 없는 다이어그램 drawio](https://github.com/user-attachments/assets/3363ffb6-81e4-45e3-a0f4-248f4e68b059)
+
 </details>
 
 <details>
@@ -26,10 +28,13 @@
 
 </details>
 
+
 <details>
 <summary><strong>📂 ERD(Entity-Relationship Diagram)</strong></summary>
 
-![HOMS](https://github.com/user-attachments/assets/024fa5d6-e332-485c-96e0-880bc61cc6ef)
+
+![HOMS](https://github.com/user-attachments/assets/4fa1ee25-da66-4c62-b368-d034c1be44e3)
+
 
 
 </details>
