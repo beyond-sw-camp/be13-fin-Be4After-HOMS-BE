@@ -14,7 +14,7 @@ public class OrderResponseDto {
 
     private final String orderCode;
 
-//    private final String companyName;
+    private final String companyName;
 
 //    private final String deliveryName;
 
