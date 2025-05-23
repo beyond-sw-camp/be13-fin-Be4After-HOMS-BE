@@ -52,4 +52,8 @@ public class Claim {
         this.details = details;
         this.status = status;
     }
+
+    public void updateStatus(ClaimStatusEnum newStatus) {
+        this.status = newStatus;
+    }
 }

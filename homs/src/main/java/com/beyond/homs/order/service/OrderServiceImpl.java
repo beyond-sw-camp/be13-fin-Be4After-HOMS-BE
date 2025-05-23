@@ -6,6 +6,7 @@ import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.user.entity.User;
 // import com.beyond.homs.user.repository.UserRepository;
+import com.beyond.homs.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,16 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
 //    private final DeliveryAddressRepository addressRepository;
 
     @Override
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
         // 1) 사용자 조회
-//        User user = userRepository.findById(requestDto.getUserId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        "해당 유저를 찾을 수 없습니다. userId=" + requestDto.getUserId()));
+        User user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 유저를 찾을 수 없습니다. userId=" + requestDto.getUserId()));
 //        DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
 //                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
 
@@ -51,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
                 .rejectReason(requestDto.getRejectReason())
                 .parentOrder(parent)
                 .orderStatus(requestDto.getOrderStatus())
-                // .user(user)
+                .user(user)
 //                .deliveryAddress(addr)
                 .build();
 //                .linkParent(parent);
@@ -149,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
         return new OrderResponseDto(
                 order.getOrderId(),
                 order.getOrderCode(),
-//                order.getUser().getCompany().getCompanyName(),
+                order.getUser().getCompany().getCompanyName(),
 //                order.getDeliveryAddress().getDeliveryName(),
                 order.getOrderDate(),
                 order.getDueDate(),
