@@ -2,11 +2,13 @@ package com.beyond.homs.order.service;
 
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
+import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.entity.OrderItemId;
 import com.beyond.homs.order.repository.OrderItemRepository;
 import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,11 +30,12 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    public OrderItemResponseDto addOrderItem(OrderItemRequestDto requestDto) {
+    public OrderItemResponseDto addOrderItem(Long orderId, OrderItemRequestDto requestDto) {
+
         // 1) 주문 조회
-        Order order = orderRepository.findById(requestDto.getOrderId())
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Order not found: " + requestDto.getOrderId()));
+                        "Order not found: " + orderId));
 
         // 2) 상품 조회
         Product product = productRepository.findById(requestDto.getProductId())
@@ -89,10 +92,37 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     private OrderItemResponseDto toResponseDto(OrderItem orderItem) {
+
+        Product product = orderItem.getProduct();
+        Order order = orderItem.getOrder();
+
+        Long parentOrderId = null;
+        if (order.getParentOrder() != null) {
+            parentOrderId = order.getParentOrder().getOrderId();
+        }
+
+        ProductListDto productListDto = new ProductListDto(
+                product.getProductId(),
+                product.getProductName(),
+                product.getProductMinQuantity(),
+                orderItem.getQuantity(),
+                product.getCategory()
+        );
+
+        OrderResponseDto orderResponseDto = OrderResponseDto.builder()
+                .orderId(order.getOrderId())
+                .orderCode(order.getOrderCode())
+                .orderDate(order.getOrderDate())
+                .dueDate(order.getDueDate())
+                .approved(order.isApproved())
+                .parentOrderId(parentOrderId)
+                .rejectReason(order.getRejectReason())
+                .orderStatus(order.getOrderStatus())
+                .build();
+
         return new OrderItemResponseDto(
-                orderItem.getOrder().getOrderId(),
-                orderItem.getProduct().getProductId(),
-                orderItem.getQuantity()
+                orderResponseDto,
+                productListDto
         );
     }
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public interface OrderItemController {
 
     @Operation(summary = "주문 상품 추가", description = "주문 상품을 추가합니다.")
     ResponseEntity<ResponseDto<OrderItemResponseDto>> addOrderItem(
+            @PathVariable Long orderId,
             @Valid @RequestBody OrderItemRequestDto requestDto);
 
     @Operation(summary = "주문목록 상품 전체 조회", description = "모든 주문목록 상품을 조회합니다.")

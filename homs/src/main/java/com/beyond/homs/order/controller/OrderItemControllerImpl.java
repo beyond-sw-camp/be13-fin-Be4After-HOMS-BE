@@ -3,7 +3,6 @@ package com.beyond.homs.order.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,9 @@ public class OrderItemControllerImpl implements OrderItemController {
     @PostMapping("/{orderId}")
     @Override
     public ResponseEntity<ResponseDto<OrderItemResponseDto>> addOrderItem(
+            @PathVariable Long orderId,
             @Valid @RequestBody OrderItemRequestDto requestDto) {
-        OrderItemResponseDto dto = orderItemService.addOrderItem(requestDto);
+        OrderItemResponseDto dto = orderItemService.addOrderItem(orderId,requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
                         HttpStatus.CREATED.value(),

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface OrderItemService {
-    OrderItemResponseDto addOrderItem(@Valid OrderItemRequestDto requestDto);
+    OrderItemResponseDto addOrderItem(Long orderId, @Valid OrderItemRequestDto requestDto);
 
     List<OrderItemResponseDto> getOrderItems(Long orderId);
 

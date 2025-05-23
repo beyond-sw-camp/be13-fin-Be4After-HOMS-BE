@@ -27,9 +27,8 @@ public class OrderControllerImpl implements OrderController {
 
     @PostMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
-            @Valid @RequestBody OrderRequestDto requestDto) {
-        OrderResponseDto dto = orderService.createOrder(requestDto);
+    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder() {
+        OrderResponseDto dto = orderService.createOrder();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
                         HttpStatus.CREATED.value(),

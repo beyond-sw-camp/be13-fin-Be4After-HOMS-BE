@@ -4,7 +4,6 @@ import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
-import com.beyond.homs.user.entity.User;
 // import com.beyond.homs.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.beyond.homs.order.data.OrderStatusEnum.BEFORE;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,10 +24,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 //    private final UserRepository userRepository;
 //    private final DeliveryAddressRepository addressRepository;
+    private final OrderNumberGenerator orderNumberGenerator;
 
     @Override
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+    public OrderResponseDto createOrder() {
         // 1) 사용자 조회
 //        User user = userRepository.findById(requestDto.getUserId())
 //                .orElseThrow(() -> new EntityNotFoundException(
@@ -35,22 +37,26 @@ public class OrderServiceImpl implements OrderService {
 //                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
 
         // 2-1) 재귀
-        Order parent = null;
-        if (requestDto.getParentOrderId() != null) {
-            parent = orderRepository.findById(requestDto.getParentOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
-        }
+        // Order parent = null;
+        // if (requestDto.getParentOrderId() != null) {
+        //     parent = orderRepository.findById(requestDto.getParentOrderId())
+        //             .orElseThrow(() -> new EntityNotFoundException(
+        //                     "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
+        // }
 
 
         // 2-2) 엔티티 생성
         Order order = Order.builder()
-                .orderCode(requestDto.getOrderCode())
-                .dueDate(requestDto.getDueDate())
-                .approved(requestDto.isApproved())
-                .rejectReason(requestDto.getRejectReason())
-                .parentOrder(parent)
-                .orderStatus(requestDto.getOrderStatus())
+                // .orderCode(requestDto.getOrderCode())
+                // .dueDate(requestDto.getDueDate())
+                // .approved(requestDto.isApproved())
+                // .orderStatus(requestDto.getOrderStatus())
+                .orderCode(orderNumberGenerator.generateOrderNumber())
+                .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
+                .approved(true) // 초기 상태는 true
+                // .rejectReason(requestDto.getRejectReason()) // 빈값
+                // .parentOrder(parent) // 빈값
+                .orderStatus(BEFORE) // 고정값
                 // .user(user)
 //                .deliveryAddress(addr)
                 .build();
@@ -156,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
                 order.isApproved(),
                 order.getParentOrder() != null ? order.getParentOrder().getOrderId() : null,
                 order.getRejectReason(),
-                order.getOrderStatus().name()
+                order.getOrderStatus()
         );
     }
 }
