@@ -1,13 +1,9 @@
 package com.beyond.homs.product.dto;
 
-import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.entity.ProductCategory;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -20,14 +16,17 @@ public class ProductResponseDto {
 
     private String productUsage;
 
+    private Long productMinQuantity;
+
     private SimpleProductCategoryResponseDto category;
 
     @Builder
-    public ProductResponseDto(Long productId, String productName, String productFeature, String productUsage, ProductCategory category) {
+    public ProductResponseDto(Long productId, String productName, String productFeature, String productUsage, Long productMinQuantity, ProductCategory category) {
         this.productId = productId;
         this.productName = productName;
         this.productFeature = productFeature;
         this.productUsage = productUsage;
+        this.productMinQuantity = productMinQuantity;
         SimpleProductCategoryResponseDto.SimpleProductCategoryResponseDtoBuilder builder = SimpleProductCategoryResponseDto.builder();
         switch(category.getSortNo()){
             case 1:

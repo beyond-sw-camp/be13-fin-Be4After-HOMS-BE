@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT NEW com.beyond.homs.product.dto.ProductListDto(p.productId, p.productName, SUM(i.quantity), p.category) " +
+    @Query("SELECT NEW com.beyond.homs.product.dto.ProductListDto(p.productId, p.productName, p.productMinQuantity, SUM(i.quantity), p.category) " +
             "FROM Product p " +
             "LEFT JOIN p.inventories i " + // 재고가 없는 상품도 목록에 포함
             "WHERE (:name IS NULL OR p.productName LIKE %:name%) " +

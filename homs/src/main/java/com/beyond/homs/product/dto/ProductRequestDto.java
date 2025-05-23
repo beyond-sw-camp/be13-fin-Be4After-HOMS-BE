@@ -17,5 +17,7 @@ public class ProductRequestDto {
 
     private String productUsage;
 
+    private Long productMinQuantity;
+
     private Long categoryId;
 }

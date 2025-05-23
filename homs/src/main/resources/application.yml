@@ -3,6 +3,18 @@ spring:
     name: elk-example
   profiles:
     include: mariadb
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail.username}
+    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
   #  servlet:
 #    multipart:
 #      enabled: true
@@ -29,3 +41,7 @@ springdoc:
     path: /api-docs
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+excel:
+  template:
+    path: templates/excel_templates.xlsx

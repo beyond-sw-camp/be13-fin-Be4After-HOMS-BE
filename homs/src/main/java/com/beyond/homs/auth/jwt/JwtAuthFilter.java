@@ -22,6 +22,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // 인증이 필요 없는 엔드 포인트
+        return path.startsWith("/api/v1/auth/signin") || path.startsWith("/api/v1/auth/refresh");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtAuthProvider.resolveToken(request.getHeader("Authorization"));
         if (jwtAuthProvider.isValidAccessToken(token)) {
