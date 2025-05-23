@@ -27,6 +27,7 @@ dependencies {
     configurations.all {
         // 모든 configuration(testCompileClasspath, runtimeClasspath 등)에 적용
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
@@ -48,11 +49,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
 
+// 메일서버와 연결해서 메일을 발송하는데 필요한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
     // aws s3
     implementation ('io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
-    
+
     // 엑셀 관련
     implementation ('org.springframework.boot:spring-boot-starter-thymeleaf'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
