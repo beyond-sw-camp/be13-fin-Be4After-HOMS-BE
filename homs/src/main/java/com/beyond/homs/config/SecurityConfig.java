@@ -35,11 +35,12 @@ public class SecurityConfig {
                                 "/api-docs/**",          // Swagger 관련 경로 허용
                                 "/swagger-ui/**",        // Swagger UI 경로 허용
                                 "/v3/api-docs/**",       // OpenAPI 문서 경로 허용
-                                "/swagger-resources/**",  // Swagger 리소스 허용
-                                "/api/v1/auth/signin"
+                                "/swagger-resources/**"  // Swagger 리소스 허용
                         ).permitAll()               // 위 경로는 모두 허용
-//                        .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
-                                .anyRequest().permitAll() // 개발 이후 삭제
+                                .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
+//                                .anyRequest().permitAll() // 개발 이후 삭제
                 )
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화 (테스트 환경에서만 사용)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
@@ -67,11 +68,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of("*")); // 모든 Origin 허용 (개발 단계에서만 사용)
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // 모든 Origin 허용 (개발 단계에서만 사용)
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(java.util.List.of("*")); // 모든 헤더 허용
         configuration.setExposedHeaders(java.util.List.of("Authorization", "Link", "X-Total-Count")); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
-        configuration.setAllowCredentials(false); // 인증 정보 포함 여부 설정
+        configuration.setAllowCredentials(true); // 인증 정보 포함 여부 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
