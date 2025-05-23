@@ -15,5 +15,5 @@ public interface OrderItemService {
 
     void deleteOrderItem(Long orderId, Long productId);
 
-    OrderItemResponseDto updateOrderItem(Long orderId, Long productId, OrderItemRequestDto requestDto);
+    OrderItemResponseDto updateOrderItem(Long orderId, Long productId, Long quantity);
 }

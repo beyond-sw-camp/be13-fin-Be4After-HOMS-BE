@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -37,6 +38,6 @@ public interface OrderItemController {
     ResponseEntity<ResponseDto<OrderItemResponseDto>> updateOrderItem(
             @PathVariable("orderId") Long orderId,
             @PathVariable("productId") Long productId,
-            @Valid @RequestBody OrderItemRequestDto requestDto);
+            @RequestParam Long quantity);
 
 }

@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
                 // .orderStatus(requestDto.getOrderStatus())
                 .orderCode(orderNumberGenerator.generateOrderNumber())
                 .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
-                .approved(true) // 초기 상태는 true
+                .approved(false)
                 // .rejectReason(requestDto.getRejectReason()) // 빈값
                 // .parentOrder(parent) // 빈값
                 .orderStatus(BEFORE) // 고정값

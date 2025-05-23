@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -69,8 +70,8 @@ public class OrderItemControllerImpl implements OrderItemController {
     public ResponseEntity<ResponseDto<OrderItemResponseDto>> updateOrderItem(
             @PathVariable Long orderId,
             @PathVariable Long productId,
-            @Valid @RequestBody OrderItemRequestDto requestDto) {
-        OrderItemResponseDto dto = orderItemService.updateOrderItem(orderId, productId, requestDto);
+            @RequestParam Long quantity) {
+        OrderItemResponseDto dto = orderItemService.updateOrderItem(orderId, productId, quantity);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문 상품이 성공적으로 수정되었습니다.",

@@ -76,7 +76,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    public OrderItemResponseDto updateOrderItem(Long orderId, Long productId, OrderItemRequestDto requestDto) {
+    public OrderItemResponseDto updateOrderItem(Long orderId, Long productId, Long quantity) {
         OrderItemId key = OrderItemId.builder()
                 .orderId(orderId)
                 .productId(productId)
@@ -86,7 +86,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "OrderItem not found: orderId=" + orderId + ", productId=" + productId));
 
-        existing.changeQuantity(requestDto.getQuantity());
+        existing.changeQuantity(quantity);
         // Dirty Checking 으로 자동 반영됨
         return toResponseDto(existing);
     }
