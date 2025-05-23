@@ -66,6 +66,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(requestDto.getProductName())
                 .productFeature(requestDto.getProductFeature())
                 .productUsage(requestDto.getProductUsage())
+                .productMinQuantity(requestDto.getProductMinQuantity())
                 .category(productCategory)
                 .build();
         Product saveProduct = productRepository.save(product);
@@ -75,6 +76,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(saveProduct.getProductName())
                 .productFeature(saveProduct.getProductFeature())
                 .productUsage(saveProduct.getProductUsage())
+                .productMinQuantity(saveProduct.getProductMinQuantity())
                 .category(saveProduct.getCategory())
                 .build();
     }
@@ -97,6 +99,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(product.getProductName())
                 .productFeature(product.getProductFeature())
                 .productUsage(product.getProductUsage())
+                .productMinQuantity(product.getProductMinQuantity())
                 .category(product.getCategory())
                 .build();
     }
