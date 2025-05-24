@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,32 +29,40 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    @Override
     @Transactional
-    public OrderItemResponseDto addOrderItem(Long orderId, OrderItemRequestDto requestDto) {
+    @Override
+    public List<OrderItemResponseDto> addOrderItem(Long orderId, List<OrderItemRequestDto> requestDtos) {
 
         // 1) 주문 조회
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Order not found: " + orderId));
 
-        // 2) 상품 조회
-        Product product = productRepository.findById(requestDto.getProductId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Product not found: " + requestDto.getProductId()));
+        // 2) 각 OrderItemRequestDto에 대해 처리
+        List<OrderItemResponseDto> responseDtos = new ArrayList<>();
+    
+        // 2-1) 상품 조회
+        for (OrderItemRequestDto requestDto : requestDtos){
+            Product product = productRepository.findById(requestDto.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Product not found: " + requestDto.getProductId()));
+            
+            // 2-2) OrderItem 생성 (EmbeddedId는 엔티티 내부에서 자동 생성)
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .order(order)
+                    .quantity(requestDto.getQuantity())
+                    .build();
 
-        // 3) OrderItem 생성 (EmbeddedId는 엔티티 내부에서 자동 생성)
-        OrderItem orderItem = OrderItem.builder()
-                .product(product)
-                .order(order)
-                .quantity(requestDto.getQuantity())
-                .build();
+            // 2-3) 저장
+            OrderItem saved = orderItemRepository.save(orderItem);
 
-        // 4) 저장
-        OrderItem saved = orderItemRepository.save(orderItem);
-
-        // 5) DTO 변환 후 반환
-        return toResponseDto(saved);
+            // 2-4) DTO 변환 후 반환
+            responseDtos.add(toResponseDto(saved));
+        }
+        
+        // 3) 응답 DTO 반환
+        return responseDtos;
     }
 
     @Override
@@ -63,15 +72,17 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     @Transactional
-    public void deleteOrderItem(Long orderId, Long productId) {
-        // 복합키를 직접 생성
-        OrderItemId key = OrderItemId.builder()
-                .orderId(orderId)
-                .productId(productId)
-                .build();
-        orderItemRepository.deleteById(key);
+    @Override
+    public void deleteOrderItem(Long orderId, List<Long> productIds) {
+        for (Long productId : productIds) {
+            // 복합키를 직접 생성
+            OrderItemId key = OrderItemId.builder()
+                    .orderId(orderId)
+                    .productId(productId)
+                    .build();
+            orderItemRepository.deleteById(key);
+        }
     }
 
     @Override

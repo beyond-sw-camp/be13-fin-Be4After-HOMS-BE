@@ -28,10 +28,10 @@ public class OrderItemControllerImpl implements OrderItemController {
 
     @PostMapping("/{orderId}")
     @Override
-    public ResponseEntity<ResponseDto<OrderItemResponseDto>> addOrderItem(
+    public ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> addOrderItem(
             @PathVariable Long orderId,
-            @Valid @RequestBody OrderItemRequestDto requestDto) {
-        OrderItemResponseDto dto = orderItemService.addOrderItem(orderId,requestDto);
+            @Valid @RequestBody List<OrderItemRequestDto> requestDto) {
+        List<OrderItemResponseDto> dto = orderItemService.addOrderItem(orderId,requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
                         HttpStatus.CREATED.value(),
@@ -52,12 +52,12 @@ public class OrderItemControllerImpl implements OrderItemController {
         ));
     }
 
-    @DeleteMapping("/{orderId}/out/{productId}")
+    @DeleteMapping("/{orderId}/out")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteOrderItem(
             @PathVariable Long orderId,
-            @PathVariable Long productId) {
-        orderItemService.deleteOrderItem(orderId, productId);
+            @RequestParam List<Long> productIds) {
+        orderItemService.deleteOrderItem(orderId, productIds);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문 상품이 성공적으로 삭제되었습니다.",

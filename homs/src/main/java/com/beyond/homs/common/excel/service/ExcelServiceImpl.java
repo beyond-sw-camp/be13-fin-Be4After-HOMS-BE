@@ -31,20 +31,6 @@ public class ExcelServiceImpl implements ExcelService {
     @Value("${excel.template.path}")
     private String EXCEL_TEMPLATE_PATH;
 
-    // 빈 행 확인
-    private boolean isRowEmpty(Row row, DataFormatter dataFormatter) {
-        if (row == null) {
-            return true;
-        }
-        for (int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++) {
-            Cell cell = row.getCell(cellNum);
-            if (cell != null && !dataFormatter.formatCellValue(cell).trim().isEmpty()) {
-                return false; // 데이터가 있는 셀을 찾았으므로 행은 비어있지 않음
-            }
-        }
-        return true; // 모든 셀이 비어있거나 데이터가 없음
-    }
-
     // 엑셀 업로드
     @Override
     public List<ExcelOrderDto> excelUpload(MultipartFile file) throws IOException {
@@ -109,7 +95,7 @@ public class ExcelServiceImpl implements ExcelService {
         }
     }
 
-    // 엑셀 다운로드
+    // 엑셀 템플릿 다운로드
     @Override
     public Resource excelDownload(Boolean list) {
         Workbook workbook;
@@ -199,4 +185,19 @@ public class ExcelServiceImpl implements ExcelService {
 
         return new ByteArrayResource(outputStream.toByteArray());
     }
+
+    // 빈 행 확인
+    private boolean isRowEmpty(Row row, DataFormatter dataFormatter) {
+        if (row == null) {
+            return true;
+        }
+        for (int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++) {
+            Cell cell = row.getCell(cellNum);
+            if (cell != null && !dataFormatter.formatCellValue(cell).trim().isEmpty()) {
+                return false; // 데이터가 있는 셀을 찾았으므로 행은 비어있지 않음
+            }
+        }
+        return true; // 모든 셀이 비어있거나 데이터가 없음
+    }
+
 }
