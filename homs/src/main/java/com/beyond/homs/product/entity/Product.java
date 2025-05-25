@@ -1,6 +1,5 @@
 package com.beyond.homs.product.entity;
 
-import com.beyond.homs.product.dto.ProductFileRequestDto;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.wms.entity.Inventory;
 import jakarta.persistence.CascadeType;
@@ -40,6 +39,9 @@ public class Product {
     @Column(columnDefinition = "TEXT", name = "product_usage")
     private String productUsage;
 
+    @Column(name = "product_min_quantity")
+    private Long productMinQuantity;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory category;
@@ -49,10 +51,11 @@ public class Product {
     private List<Inventory> inventories = new ArrayList<>();
 
     @Builder
-    public Product(String productName, String productFeature, String productUsage, ProductCategory category) {
+    public Product(String productName, String productFeature, String productUsage, Long productMinQuantity, ProductCategory category) {
         this.productName = productName;
         this.productFeature = productFeature;
         this.productUsage = productUsage;
+        this.productMinQuantity = productMinQuantity;
         this.category = category;
     }
 
@@ -60,6 +63,7 @@ public class Product {
         this.productName = requestDto.getProductName();
         this.productFeature = requestDto.getProductFeature();
         this.productUsage = requestDto.getProductUsage();
+        this.productMinQuantity = requestDto.getProductMinQuantity();
         this.category = category;
     }
 }
