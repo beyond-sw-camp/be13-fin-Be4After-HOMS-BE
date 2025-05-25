@@ -11,5 +11,5 @@ public interface ExcelService  {
     List<ExcelOrderDto> excelUpload(MultipartFile file) throws IOException;
 
     // 엑셀 다운로드
-    Resource excelDownload(Boolean list);
+    Resource excelDownload(String type, Long orderId);
 }

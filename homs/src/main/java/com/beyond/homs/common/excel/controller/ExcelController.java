@@ -20,5 +20,7 @@ public interface ExcelController {
     List<ExcelOrderDto> uploadExcel(@RequestParam("file") MultipartFile file) throws IOException;
 
     @Operation(summary = "엑셀 파일 다운로드", description = "엑셀 파일을 다운로드 합니다.")
-    ResponseEntity<Resource> downloadExcel(@PathVariable Boolean list);
+    ResponseEntity<Resource> downloadExcel(
+            @RequestParam String type,
+            @RequestParam(required = false) Long orderId);
 }
