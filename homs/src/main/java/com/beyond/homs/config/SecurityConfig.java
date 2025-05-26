@@ -38,6 +38,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**"  // Swagger 리소스 허용
                         ).permitAll()               // 위 경로는 모두 허용
                                 .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user").permitAll()
+                                // 다운로드, 이미지 보기 허용
+                                .requestMatchers("/api/v1/excel/download/**","/api/v1/files/view/**","/api/v1/files/download/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
 //                                .anyRequest().permitAll() // 개발 이후 삭제

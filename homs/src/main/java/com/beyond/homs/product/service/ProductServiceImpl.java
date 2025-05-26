@@ -46,6 +46,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(product.getProductName())
                 .productFeature(product.getProductFeature())
                 .productUsage(product.getProductUsage())
+                .productMinQuantity(product.getProductMinQuantity())
                 .category(product.getCategory())
                 .build();
     }

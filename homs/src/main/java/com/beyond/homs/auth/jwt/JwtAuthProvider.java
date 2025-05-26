@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtAuthProvider {
     private final JwtService jwtService;
     private final RedisTemplate<String, String> redisTemplate;
-    private static final long ACCESS_TOKEN_EXP = 1000L * 60L * 15L;
+    private static final long ACCESS_TOKEN_EXP = 100000L * 6000L * 1500L;
     private static final long REFRESH_TOKEN_EXP = 1000L * 60L * 60L * 24L;
 
     @Value("${springboot.jwt.issuer}")

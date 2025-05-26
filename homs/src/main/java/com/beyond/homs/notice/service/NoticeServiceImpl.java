@@ -84,7 +84,6 @@ public class NoticeServiceImpl implements NoticeService {
 
         // 현재 유저의 권한을 가져옴
         UserRole role = SecurityUtil.getCurrentUserRole();
-
         if(role != UserRole.ROLE_ADMIN){
             throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
         }
@@ -120,16 +119,14 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public void deleteNotice(Long noticeId) {
-        Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
-
         // 현재 유저의 권한을 가져옴
         UserRole role = SecurityUtil.getCurrentUserRole();
-
         if(role != UserRole.ROLE_ADMIN){
             throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
         }
 
+        noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
         noticeRepository.deleteById(noticeId);
     }
 }

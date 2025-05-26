@@ -6,6 +6,8 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
+import com.beyond.homs.order.entity.Order;
+import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.order.service.OrderItemService;
 import com.beyond.homs.user.data.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,8 @@ public class ExcelServiceImpl implements ExcelService {
 
     private final ExcelGenerator excelGenerator;
     private final OrderItemService orderItemService;
-    
+    private final OrderRepository orderRepository;
+
     @Value("${excel.template.path}")
     private String EXCEL_TEMPLATE_PATH;
 
@@ -42,9 +46,12 @@ public class ExcelServiceImpl implements ExcelService {
     @Override
     public List<OrderItemResponseDto> excelUpload(MultipartFile file, Long orderId) throws IOException {
 
-        // 현재 유저의 권한을 가져옴
-        UserRole role = SecurityUtil.getCurrentUserRole();
-        if(role != UserRole.ROLE_ADMIN){
+        // 주문자와 같은 userId일 경우에만 주문이 가능함
+        Long currentUserId = SecurityUtil.getCurrentUserId();
+        List<Order> byOrderId = orderRepository.findByOrderId(orderId);
+        Long userId = byOrderId.getFirst().getUser().getUserId();
+
+        if(!Objects.equals(userId, currentUserId)){
             throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
         }
 
