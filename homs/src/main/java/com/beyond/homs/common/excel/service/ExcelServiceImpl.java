@@ -1,9 +1,13 @@
 package com.beyond.homs.common.excel.service;
 
 import com.beyond.homs.common.excel.data.ExcelTypeEnum;
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
 import com.beyond.homs.order.service.OrderItemService;
+import com.beyond.homs.user.data.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -37,6 +41,12 @@ public class ExcelServiceImpl implements ExcelService {
     // 엑셀 업로드
     @Override
     public List<OrderItemResponseDto> excelUpload(MultipartFile file, Long orderId) throws IOException {
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
 
         DataFormatter dataFormatter = new DataFormatter();
 
