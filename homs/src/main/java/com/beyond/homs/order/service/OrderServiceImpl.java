@@ -5,6 +5,8 @@ import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 // import com.beyond.homs.user.repository.UserRepository;
+import com.beyond.homs.user.entity.User;
+import com.beyond.homs.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import static com.beyond.homs.order.data.OrderStatusEnum.BEFORE;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
 //    private final DeliveryAddressRepository addressRepository;
     private final OrderNumberGenerator orderNumberGenerator;
 
@@ -30,19 +32,19 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDto createOrder() {
         // 1) 사용자 조회
-//        User user = userRepository.findById(requestDto.getUserId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        "해당 유저를 찾을 수 없습니다. userId=" + requestDto.getUserId()));
-//        DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
-//                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
-
-        // 2-1) 재귀
-        // Order parent = null;
-        // if (requestDto.getParentOrderId() != null) {
-        //     parent = orderRepository.findById(requestDto.getParentOrderId())
-        //             .orElseThrow(() -> new EntityNotFoundException(
-        //                     "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
-        // }
+//         User user = userRepository.findById(requestDto.getUserId())
+//                 .orElseThrow(() -> new EntityNotFoundException(
+//                         "해당 유저를 찾을 수 없습니다. userId=" + requestDto.getUserId()));
+// //        DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
+// //                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
+//
+//         // 2-1) 재귀
+//         Order parent = null;
+//         if (requestDto.getParentOrderId() != null) {
+//             parent = orderRepository.findById(requestDto.getParentOrderId())
+//                     .orElseThrow(() -> new EntityNotFoundException(
+//                             "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
+//         }
 
 
         // 2-2) 엔티티 생성
@@ -152,16 +154,16 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderResponseDto toResponseDto(Order order) {
         return new OrderResponseDto(
-                order.getOrderId(),
-                order.getOrderCode(),
-//                order.getUser().getCompany().getCompanyName(),
-//                order.getDeliveryAddress().getDeliveryName(),
-                order.getOrderDate(),
-                order.getDueDate(),
-                order.isApproved(),
-                order.getParentOrder() != null ? order.getParentOrder().getOrderId() : null,
-                order.getRejectReason(),
-                order.getOrderStatus()
+            order.getOrderId(),
+            order.getOrderCode(),
+            order.getUser().getCompany().getCompanyName(),
+            // order.getDeliveryAddress().getDeliveryName(),
+            order.getOrderDate(),
+            order.getDueDate(),
+            order.isApproved(),
+            order.getParentOrder() != null ? order.getParentOrder().getOrderId() : null,
+            order.getRejectReason(),
+            order.getOrderStatus()
         );
     }
 }
