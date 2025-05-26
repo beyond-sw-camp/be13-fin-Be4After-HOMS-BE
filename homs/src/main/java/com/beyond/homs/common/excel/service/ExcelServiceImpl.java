@@ -1,6 +1,9 @@
 package com.beyond.homs.common.excel.service;
 
-import com.beyond.homs.common.excel.dto.ExcelOrderDto;
+import com.beyond.homs.common.excel.data.ExcelTypeEnum;
+import com.beyond.homs.order.dto.OrderItemRequestDto;
+import com.beyond.homs.order.dto.OrderItemResponseDto;
+import com.beyond.homs.order.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -26,13 +29,14 @@ import java.util.List;
 public class ExcelServiceImpl implements ExcelService {
 
     private final ExcelGenerator excelGenerator;
+    private final OrderItemService orderItemService;
     
     @Value("${excel.template.path}")
     private String EXCEL_TEMPLATE_PATH;
 
     // 엑셀 업로드
     @Override
-    public List<ExcelOrderDto> excelUpload(MultipartFile file) throws IOException {
+    public List<OrderItemResponseDto> excelUpload(MultipartFile file, Long orderId) throws IOException {
 
         DataFormatter dataFormatter = new DataFormatter();
 
@@ -47,7 +51,7 @@ public class ExcelServiceImpl implements ExcelService {
                 throw new IllegalArgumentException("Excel 파일만 업로드 가능합니다.");
             }
 
-            List<ExcelOrderDto> orderDto = new ArrayList<>();
+            List<OrderItemRequestDto> orderDto = new ArrayList<>();
 
             // Excel 파일 처리
             // try-with-resources 구문으로 변경하여 Workbook이 자동으로 닫히도록 합니다.
@@ -75,16 +79,13 @@ public class ExcelServiceImpl implements ExcelService {
                     }
 
                     // 행 들은 리스트 객체로 구성
-                    orderDto.add(ExcelOrderDto.builder()
+                    orderDto.add(OrderItemRequestDto.builder()
                             .productId((long) row.getCell(1).getNumericCellValue()) // 순번
-                            .productDomain(row.getCell(2).getStringCellValue())
-                            .productCategory(row.getCell(3).getStringCellValue())
-                            .productName(dataFormatter.formatCellValue(row.getCell(4)))
-                            .productQuantity((long) row.getCell(5).getNumericCellValue())
+                            .quantity((long) row.getCell(5).getNumericCellValue()) // 수량
                             .build());
                 }
 
-                return orderDto;
+                return orderItemService.addOrderItem(orderId,orderDto);
             }
         } catch (IOException e) {
             throw new IOException("파일 처리 중 오류가 발생했습니다: " + e.getMessage(), e);
@@ -96,7 +97,7 @@ public class ExcelServiceImpl implements ExcelService {
 
     // 엑셀 템플릿 다운로드
     @Override
-    public Resource excelDownload(String type, Long orderId) {
+    public Resource excelDownload(ExcelTypeEnum type, Long orderId) {
         Workbook workbook;
 
         try (InputStream templateStream = new ClassPathResource(EXCEL_TEMPLATE_PATH).getInputStream()) {
@@ -108,11 +109,14 @@ public class ExcelServiceImpl implements ExcelService {
         }
         
         // 데이터 저장
-        if (type != null) {
-            if(orderId != null) {
-                workbook = excelGenerator.setAllProductList(workbook,orderId);
-            } else{
-                workbook = excelGenerator.setAllProductList(workbook);
+        switch (type) {
+            case ALL -> workbook = excelGenerator.setAllProductList(workbook);
+            case ORDER -> {
+                if (orderId != null){
+                    workbook = excelGenerator.setAllProductList(workbook,orderId);
+                } else {
+                    throw new RuntimeException("주문 번호가 없습니다!!");
+                }
             }
         }
 

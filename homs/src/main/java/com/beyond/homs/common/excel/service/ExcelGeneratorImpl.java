@@ -2,7 +2,6 @@ package com.beyond.homs.common.excel.service;
 
 import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.repository.OrderItemRepository;
-import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.repository.ProductRepository;
@@ -116,10 +115,10 @@ public class ExcelGeneratorImpl implements ExcelGenerator {
             if (cell3 == null) cell3 = row.createCell(startColIndex + 3);
             cell3.setCellValue(product.getProductName());
 
-            // 최소 수량
+            // 주문 수량
             Cell cell4 = row.getCell(startColIndex + 4);
             if (cell4 == null) cell4 = row.createCell(startColIndex + 4);
-            cell4.setCellValue(product.getProductMinQuantity());
+            cell4.setCellValue(product.getProductQuantity());
 
         }
         return workbook;
