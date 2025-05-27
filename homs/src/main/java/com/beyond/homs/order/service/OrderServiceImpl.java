@@ -1,12 +1,12 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.common.util.SecurityUtil;
+import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.user.entity.User;
-// import com.beyond.homs.user.repository.UserRepository;
-import com.beyond.homs.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,52 +16,56 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.beyond.homs.order.data.OrderStatusEnum.BEFORE;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
 //    private final DeliveryAddressRepository addressRepository;
+    private final OrderNumberGenerator orderNumberGenerator;
+    private final CompanyRepository companyRepository;
 
     @Override
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+    public OrderResponseDto createOrder() {
         // 1) 사용자 조회
-        User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "해당 유저를 찾을 수 없습니다. userId=" + requestDto.getUserId()));
+        User currentUser = SecurityUtil.getCurrentUser();
+
 //        DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
 //                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
-
-        // 2-1) 재귀
-        Order parent = null;
-        if (requestDto.getParentOrderId() != null) {
-            parent = orderRepository.findById(requestDto.getParentOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
-        }
-
+//
+//         // 2-1) 재귀
+//         Order parent = null;
+//         if (requestDto.getParentOrderId() != null) {
+//             parent = orderRepository.findById(requestDto.getParentOrderId())
+//                     .orElseThrow(() -> new EntityNotFoundException(
+//                             "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
+//         }
 
         // 2-2) 엔티티 생성
         Order order = Order.builder()
-                .orderCode(requestDto.getOrderCode())
-                .dueDate(requestDto.getDueDate())
-                .approved(requestDto.isApproved())
-                .rejectReason(requestDto.getRejectReason())
-                .parentOrder(parent)
-                .orderStatus(requestDto.getOrderStatus())
-                .user(user)
+                .orderCode(orderNumberGenerator.generateOrderNumber())
+                .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
+                .approved(false)
+                .orderStatus(BEFORE) // 고정값
+                .user(currentUser)
 //                .deliveryAddress(addr)
                 .build();
 //                .linkParent(parent);
 
-        // 3) 저장
+        // 3-1) 저장
         Order saved = orderRepository.save(order);
 
+        // 3-2) 연관관계가 Lazy로 설정되어 있기 때문에 company를 불러오기도 전에 종료되는 문제가 있음
+        // 이를 해결하기 위해서 연관 관계에 속한 데이터를 미리 가져옴
+        Order fullOrder = orderRepository.findByIdWithUserAndCompany(saved.getOrderId())
+                .orElseThrow(() -> new EntityNotFoundException("생성된 주문을 찾을 수 없습니다. ID: " + saved.getOrderId()));
+
         // 4) DTO 변환 후 반환
-        return toResponseDto(saved);
+        return toResponseDto(fullOrder);
     }
 
     @Override
@@ -145,19 +149,18 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-
     private OrderResponseDto toResponseDto(Order order) {
         return new OrderResponseDto(
-                order.getOrderId(),
-                order.getOrderCode(),
-                order.getUser().getCompany().getCompanyName(),
-//                order.getDeliveryAddress().getDeliveryName(),
-                order.getOrderDate(),
-                order.getDueDate(),
-                order.isApproved(),
-                order.getParentOrder() != null ? order.getParentOrder().getOrderId() : null,
-                order.getRejectReason(),
-                order.getOrderStatus().name()
+            order.getOrderId(),
+            order.getOrderCode(),
+            order.getUser().getCompany().getCompanyName(),
+            // order.getDeliveryAddress().getDeliveryName(),
+            order.getOrderDate(),
+            order.getDueDate(),
+            order.isApproved(),
+            order.getParentOrder() != null ? order.getParentOrder().getOrderId() : null,
+            order.getRejectReason(),
+            order.getOrderStatus()
         );
     }
 }

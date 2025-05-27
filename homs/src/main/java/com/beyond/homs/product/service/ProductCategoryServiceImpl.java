@@ -46,7 +46,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
         ProductCategory productCategory = ProductCategory.builder()
                 .categoryName(requestDto.getCategoryName())
                 .sortNo(requestDto.getSortNo())
-                .active(requestDto.isActive())
                 .parent(parent)
                 .build();
 
@@ -56,7 +55,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
                 .categoryId(saved.getCategoryId())
                 .categoryName(saved.getCategoryName())
                 .sortNo(saved.getSortNo())
-                .active(saved.isActive())
                 .parentId(saved.getParent() != null ? saved.getParent().getCategoryId() : null)
                 .build();
     }
@@ -67,14 +65,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
         ProductCategory productCategory = productCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다."));
 
-        productCategory.update(requestDto);
+        productCategory.updateProductCategory(requestDto);
         productCategoryRepository.save(productCategory);
 
         return ProductCategoryResponseDto.builder()
                 .categoryId(productCategory.getCategoryId())
                 .categoryName(productCategory.getCategoryName())
                 .sortNo(productCategory.getSortNo())
-                .active(productCategory.isActive())
                 .parentId(productCategory.getParent().getCategoryId())
                 .build();
     }

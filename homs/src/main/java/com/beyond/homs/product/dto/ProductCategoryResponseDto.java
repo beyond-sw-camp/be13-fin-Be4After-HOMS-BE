@@ -16,7 +16,5 @@ public class ProductCategoryResponseDto {
 
     private int sortNo;
 
-    private boolean active;
-
     private Long parentId;
 }

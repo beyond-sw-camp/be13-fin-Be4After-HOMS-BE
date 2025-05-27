@@ -16,8 +16,7 @@ import java.util.List;
 public interface OrderController {
 
     @Operation(summary = "주문 생성", description = "주문을 생성합니다.")
-    ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
-            @Valid @RequestBody OrderRequestDto requestDto);
+    ResponseEntity<ResponseDto<OrderResponseDto>> createOrder();
 
     @Operation(summary = "주문 단건 조회", description = "주문 ID로 단건 조회합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> getOrder(

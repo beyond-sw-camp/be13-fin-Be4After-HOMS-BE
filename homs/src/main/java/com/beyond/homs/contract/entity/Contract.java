@@ -38,7 +38,7 @@ public class Contract {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
