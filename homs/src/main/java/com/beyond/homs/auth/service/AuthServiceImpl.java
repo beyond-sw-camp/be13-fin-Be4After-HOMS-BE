@@ -37,7 +37,8 @@ public class AuthServiceImpl implements AuthService {
         }
         return new TokenResponseDto(
                 jwtProvider.createAccessToken(user.getUserId().toString(), user.getRole()),
-                jwtProvider.createRefreshToken(user.getUserId().toString())
+                jwtProvider.createRefreshToken(user.getUserId().toString()),
+                userLogin.getUserId()
         );
     }
 
@@ -45,9 +46,10 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String bearerToken) {
         if (bearerToken != null) {
             String accessToken = jwtProvider.resolveToken(bearerToken);
-            if (!jwtService.validateToken(accessToken)) {
-                throw new RuntimeException("Invalid token");
-            }
+            // 토큰 만료해도 로그 아웃 할 수 있게
+//            if (!jwtService.validateToken(accessToken)) {
+//                throw new RuntimeException("Invalid token");
+//            }
             jwtProvider.addBlackList(accessToken);
         } else {
             throw new RuntimeException("Invalid token");
@@ -58,15 +60,18 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponseDto refresh(String bearerToken) {
         if (bearerToken != null) {
             String resolvedToken = jwtProvider.resolveToken(bearerToken);
+
             if (!jwtService.validateToken(resolvedToken)) {
                 throw new RuntimeException("Invalid token");
             }
             String subject = jwtService.getClaims(resolvedToken).getSubject();
             String savedRefreshToken = jwtProvider.getRefreshToken(subject);
+
             // user의 refreshToken과 redis에 저장된 refreshToken 비교
             if (!resolvedToken.equals(savedRefreshToken)) {
                 throw new RuntimeException("Invalid refresh token");
             }
+
             jwtProvider.addBlackList(resolvedToken);
 
             User user = userRepository.findById(Long.valueOf(subject))
@@ -74,7 +79,8 @@ public class AuthServiceImpl implements AuthService {
 
             return new TokenResponseDto(
                     jwtProvider.createAccessToken(user.getUserId().toString(), user.getRole()),
-                    jwtProvider.createRefreshToken(user.getUserId().toString())
+                    savedRefreshToken,
+                    user.getUserId()
             );
         }
         throw new RuntimeException("Invalid token");
