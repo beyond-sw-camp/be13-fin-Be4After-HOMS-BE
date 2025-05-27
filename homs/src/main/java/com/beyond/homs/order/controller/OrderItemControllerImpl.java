@@ -3,7 +3,6 @@ package com.beyond.homs.order.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,9 +28,10 @@ public class OrderItemControllerImpl implements OrderItemController {
 
     @PostMapping("/{orderId}")
     @Override
-    public ResponseEntity<ResponseDto<OrderItemResponseDto>> addOrderItem(
-            @Valid @RequestBody OrderItemRequestDto requestDto) {
-        OrderItemResponseDto dto = orderItemService.addOrderItem(requestDto);
+    public ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> addOrderItem(
+            @PathVariable Long orderId,
+            @Valid @RequestBody List<OrderItemRequestDto> requestDto) {
+        List<OrderItemResponseDto> dto = orderItemService.addOrderItem(orderId,requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
                         HttpStatus.CREATED.value(),
@@ -51,12 +52,12 @@ public class OrderItemControllerImpl implements OrderItemController {
         ));
     }
 
-    @DeleteMapping("/{orderId}/out/{productId}")
+    @DeleteMapping("/{orderId}/out")
     @Override
     public ResponseEntity<ResponseDto<Void>> deleteOrderItem(
             @PathVariable Long orderId,
-            @PathVariable Long productId) {
-        orderItemService.deleteOrderItem(orderId, productId);
+            @RequestParam List<Long> productIds) {
+        orderItemService.deleteOrderItem(orderId, productIds);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문 상품이 성공적으로 삭제되었습니다.",
@@ -69,8 +70,8 @@ public class OrderItemControllerImpl implements OrderItemController {
     public ResponseEntity<ResponseDto<OrderItemResponseDto>> updateOrderItem(
             @PathVariable Long orderId,
             @PathVariable Long productId,
-            @Valid @RequestBody OrderItemRequestDto requestDto) {
-        OrderItemResponseDto dto = orderItemService.updateOrderItem(orderId, productId, requestDto);
+            @RequestParam Long quantity) {
+        OrderItemResponseDto dto = orderItemService.updateOrderItem(orderId, productId, quantity);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문 상품이 성공적으로 수정되었습니다.",

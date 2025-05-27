@@ -4,16 +4,18 @@ import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public interface OrderItemService {
-    OrderItemResponseDto addOrderItem(@Valid OrderItemRequestDto requestDto);
+
+    List<OrderItemResponseDto> addOrderItem(Long orderId, List<OrderItemRequestDto> requestDtos);
 
     List<OrderItemResponseDto> getOrderItems(Long orderId);
+    
+    void deleteOrderItem(Long orderId, List<Long> productIds);
 
-    void deleteOrderItem(Long orderId, Long productId);
-
-    OrderItemResponseDto updateOrderItem(Long orderId, Long productId, OrderItemRequestDto requestDto);
+    OrderItemResponseDto updateOrderItem(Long orderId, Long productId, Long quantity);
 }

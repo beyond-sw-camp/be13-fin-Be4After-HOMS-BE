@@ -1,6 +1,6 @@
 package com.beyond.homs.order.entity;
 
-import com.beyond.homs.company.data.CountryEnum;
+import jakarta.persistence.CascadeType;
 import com.beyond.homs.order.data.OrderStatusEnum;
 import com.beyond.homs.user.entity.User;
 import com.beyond.homs.wms.entity.DeliveryAddress;
@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -25,6 +26,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 * table 명을 order로 했을 때, 테이블 생성 과정에서 에러가 발생해서 order_table로 변경
 * */
@@ -70,6 +74,10 @@ public class Order {
     @Column(name = "order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum orderStatus;
+
+    // Order 엔티티에서 OrderItem 엔티티들을 참조하도록 @OneToMany 관계 설정
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @Builder
     public Order(String orderCode, LocalDateTime dueDate, boolean approved,
