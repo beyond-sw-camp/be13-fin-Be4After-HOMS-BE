@@ -27,6 +27,7 @@ dependencies {
     configurations.all {
         // 모든 configuration(testCompileClasspath, runtimeClasspath 등)에 적용
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
@@ -35,15 +36,46 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-redis') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
-    implementation('org.springframework.boot:spring-boot-starter-jdbc') {
+//    implementation('org.springframework.boot:spring-boot-starter-jdbc') {
+//        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+//    }
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
+    implementation('org.springframework.boot:spring-boot-starter-security') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
+
+    // @Valid 어노테이션 사용하기 위해 명시
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+// 메일서버와 연결해서 메일을 발송하는데 필요한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    // aws s3
+    implementation ('io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+
+    // 엑셀 관련
+    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    implementation 'org.apache.poi:poi:5.4.0'
+    implementation 'org.apache.poi:poi-ooxml:5.4.0'
+    implementation ('com.opencsv:opencsv:5.10'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
