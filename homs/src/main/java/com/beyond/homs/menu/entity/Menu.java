@@ -1,6 +1,8 @@
 package com.beyond.homs.menu.entity;
 
 import com.beyond.homs.company.entity.Department;
+import com.beyond.homs.menu.dto.MenuRequestDto;
+import com.beyond.homs.product.dto.ProductCategoryRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,9 +44,6 @@ public class Menu {
     @Column(name = "sort_no")
     private int sortNo;
 
-    @Column(name = "is_active")
-    private boolean active;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "menu_id_parent", nullable = true)
     private Menu parent;
@@ -61,11 +60,15 @@ public class Menu {
     private Department department;
 
     @Builder
-    public Menu(String menuName, int sortNo, boolean active, Menu parent, Department department) {
+    public Menu(String menuName, int sortNo, Menu parent, Department department) {
         this.menuName = menuName;
         this.sortNo = sortNo;
-        this.active = active;
         this.parent = parent;
         this.department = department;
+    }
+
+    public void updateMenu(MenuRequestDto requestDto) {
+        this.menuName = requestDto.getMenuName();
+        this.sortNo = requestDto.getSortNo();
     }
 }
