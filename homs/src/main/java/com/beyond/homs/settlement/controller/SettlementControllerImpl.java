@@ -11,6 +11,7 @@ import com.beyond.homs.settlement.service.SettlementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class SettlementControllerImpl implements SettlementController {
     private final OrderService orderService;
     private final SettlementService settlementService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<List<SettlementResponseDto>>> getAllSettlement() {
@@ -33,6 +35,7 @@ public class SettlementControllerImpl implements SettlementController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("user/{userId}")
     @Override
     public ResponseEntity<ResponseDto<List<SettlementResponseDto>>> getSettlementByUser(
