@@ -15,15 +15,12 @@ public class ProductCategoryListDto {
 
     private final int sortNo;
 
-    private final boolean active;
-
     private final List<ProductCategoryListDto> children;
 
-    private ProductCategoryListDto(Long categoryId, String categoryName, int sortNo, boolean active, List<ProductCategoryListDto> children) {
+    private ProductCategoryListDto(Long categoryId, String categoryName, int sortNo, List<ProductCategoryListDto> children) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.sortNo = sortNo;
-        this.active = active;
         this.children = children;
     }
 
@@ -33,7 +30,6 @@ public class ProductCategoryListDto {
                 productCategory.getCategoryId(),
                 productCategory.getCategoryName(),
                 productCategory.getSortNo(),
-                productCategory.isActive(),
                 productCategory.getChildren().stream()
                         .map(ProductCategoryListDto::of)
                         .collect(Collectors.toList())

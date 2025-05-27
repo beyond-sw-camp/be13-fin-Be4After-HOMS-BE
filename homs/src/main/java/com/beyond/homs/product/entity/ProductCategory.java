@@ -42,9 +42,6 @@ public class ProductCategory {
     @Column(name = "sort_no")
     private int sortNo;
 
-    @Column(name = "is_active")
-    private boolean active = true;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "category_id_parent", nullable = true)
     private ProductCategory parent;
@@ -57,16 +54,14 @@ public class ProductCategory {
     private List<ProductCategory> children = new ArrayList<>();
 
     @Builder
-    public ProductCategory(String categoryName, int sortNo, boolean active, ProductCategory parent) {
+    public ProductCategory(String categoryName, int sortNo, ProductCategory parent) {
         this.categoryName = categoryName;
         this.sortNo = sortNo;
-        this.active = active;
         this.parent = parent;
     }
 
-    public void update(ProductCategoryRequestDto requestDto) {
+    public void updateProductCategory(ProductCategoryRequestDto requestDto) {
         this.categoryName = requestDto.getCategoryName();
         this.sortNo = requestDto.getSortNo();
-        this.active = requestDto.isActive();
     }
 }

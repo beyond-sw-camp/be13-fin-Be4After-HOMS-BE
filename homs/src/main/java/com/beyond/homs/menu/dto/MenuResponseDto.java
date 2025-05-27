@@ -1,20 +1,21 @@
-package com.beyond.homs.product.dto;
+package com.beyond.homs.menu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProductCategoryResponseDto {
+public class MenuResponseDto {
 
-    private Long categoryId;
+    private Long menuId;
 
-    private String categoryName;
+    private String menuName;
 
     private int sortNo;
 
     private Long parentId;
+
+    private Long deptId;
 }
