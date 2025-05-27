@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
+//커밋을 위한 주석
 @Tag(name = "인증 API", description = "인증 API 목록")
 public interface AuthController {
     @Operation(summary = "로그인", description = "로그인을 요청합니다.")
