@@ -37,7 +37,8 @@ public class AuthServiceImpl implements AuthService {
         }
         return new TokenResponseDto(
                 jwtProvider.createAccessToken(user.getUserId().toString(), user.getRole()),
-                jwtProvider.createRefreshToken(user.getUserId().toString())
+                jwtProvider.createRefreshToken(user.getUserId().toString()),
+                userLogin.getUserId()
         );
     }
 
@@ -74,7 +75,8 @@ public class AuthServiceImpl implements AuthService {
 
             return new TokenResponseDto(
                     jwtProvider.createAccessToken(user.getUserId().toString(), user.getRole()),
-                    jwtProvider.createRefreshToken(user.getUserId().toString())
+                    jwtProvider.createRefreshToken(user.getUserId().toString()),
+                    user.getUserId()
             );
         }
         throw new RuntimeException("Invalid token");
