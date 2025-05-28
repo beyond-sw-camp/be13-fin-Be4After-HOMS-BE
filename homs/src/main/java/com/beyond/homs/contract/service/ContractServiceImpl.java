@@ -44,17 +44,21 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Page<ContractListDto> getContracts(String company, Pageable pageable) {
-        return contractRepository
-                .findByCompany_CompanyNameContaining(company, pageable)
-                .map(contract -> new ContractListDto(
-                        contract.getContractId(),
-                        contract.getCompany().getCompanyName(),
-                        contract.getProduct().getProductName(),
-                        contract.getContractStartAt(),
-                        contract.getContractStopAt(),
-                        contract.getProduct().getCategory().getCategoryName()
-                ));
+    public Page<ContractListDto> getContracts(String keyword, Pageable pageable) {
+        Page<Contract> page = (keyword == null || keyword.isBlank())
+                ? contractRepository.findAll(pageable)
+                : contractRepository.searchByKeyword(keyword, pageable);
+
+        return page.map(c ->
+                new ContractListDto(
+                        c.getContractId(),
+                        c.getCompany().getCompanyName(),
+                        c.getProduct().getProductName(),
+                        c.getContractStartAt(),
+                        c.getContractStopAt(),
+                        c.getProduct().getCategory().getCategoryName()
+                )
+        );
     }
 
     @Override

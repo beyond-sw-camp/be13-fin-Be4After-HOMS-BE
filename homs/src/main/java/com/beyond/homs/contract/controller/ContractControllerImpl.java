@@ -43,23 +43,14 @@ public class ContractControllerImpl implements ContractController {
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<Page<ContractListDto>>> contractList(
-            @RequestParam(required = false) String company,
+            @RequestParam(value = "keyword", required = false) String keyword,
             @PageableDefault(size = 10, sort = "contractId", direction = Sort.Direction.DESC)
-            Pageable pageable) {
-
-        Page<ContractListDto> page;
-        if (company != null && !company.isBlank()) {
-            page = contractService.getContracts(company, pageable);
-        } else {
-            // company 파라미터 없으면 전체 조회
-            page = contractService.getContracts("", pageable);
-        }
-
-        return ResponseEntity.ok(new ResponseDto<>(
-                HttpStatus.OK.value(),
-                "전체 계약 목록을 불러왔습니다.",
-                page
-        ));
+            Pageable pageable
+    ) {
+        Page<ContractListDto> page = contractService.getContracts(keyword, pageable);
+        return ResponseEntity.ok(
+                new ResponseDto<>(HttpStatus.OK.value(), "계약 목록 조회 성공", page)
+        );
     }
 
     @GetMapping("/{contractId}")
