@@ -1,7 +1,10 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
+import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
 import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
@@ -12,6 +15,8 @@ import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,17 +85,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrders() {
-        if (SecurityUtil.getCurrentUserRole() == UserRole.ROLE_ADMIN) {
-            return orderRepository.findAll().stream()
-                    .map(this::toResponseDto)
-                    .collect(Collectors.toList());
-        } else{
-            Long userId = SecurityUtil.getCurrentUserId();
-            return orderRepository.findAllByUser_UserId(userId).stream()
-                    .map(this::toResponseDto)
-                    .collect(Collectors.toList());
+    public Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable) {
+        // 검색어가 있는데 옵션이 없는 경우는 검색 안됨
+        if (keyword == null && option == null) {
+            throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
         }
+
+        Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, pageable);
+
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        return searchResult;
     }
 
     @Override
@@ -179,13 +187,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Order not found by code: " + orderCode));
         return toResponseDto(order);
     }
-
-    // @Override
-    // public List<OrderResponseDto> getOrdersByUser(Long userId) {
-    //     return orderRepository.findAllByUser_UserId(userId).stream()
-    //             .map(this::toResponseDto)
-    //             .collect(Collectors.toList());
-    // }
 
     @Override
     public List<OrderResponseDto> getChildOrders(Long parentOrderId) {

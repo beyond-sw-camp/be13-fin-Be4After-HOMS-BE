@@ -1,10 +1,13 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
 import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ public interface OrderService {
 
     OrderResponseDto getOrder(Long orderId);
 
-    List<OrderResponseDto> getAllOrders();
+    Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable);
 
     OrderResponseDto updateOrder(Long orderId, @Valid OrderRequestDto requestDto);
 

@@ -43,7 +43,10 @@ public enum ExceptionMessage {
     WAREHOUSE_NOT_FOUND("W001","해당 창고를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 파일 관리
-    UNSUPPORTED_FILE_TYPE("F001", "지원되지 않는 파일 타입입니다.", HttpStatus.BAD_REQUEST);
+    UNSUPPORTED_FILE_TYPE("F001", "지원되지 않는 파일 타입입니다.", HttpStatus.BAD_REQUEST),
+
+    // 검색
+    INVALID_SEARCH_KEYWORD("S001","검색어가 유효하지 않거나 형식이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
