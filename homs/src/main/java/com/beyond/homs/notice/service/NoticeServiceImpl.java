@@ -1,10 +1,14 @@
 package com.beyond.homs.notice.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.notice.dto.NoticeRequestDto;
 import com.beyond.homs.notice.dto.NoticeListDto;
 import com.beyond.homs.notice.dto.NoticeResponseDto;
 import com.beyond.homs.notice.entity.Notice;
 import com.beyond.homs.notice.repository.NoticeRepository;
+import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +26,6 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 목록 조회
     @Override
     public Page<NoticeListDto> getNotices(String title, Pageable pageable) {
-
         return noticeRepository.searchNotice(title, pageable);
     }
 
@@ -46,7 +49,15 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public NoticeResponseDto createNotice(NoticeRequestDto requestDto)  {
-        
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
+
         Notice notice = Notice.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
@@ -69,7 +80,13 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public NoticeResponseDto updateNotice(Long noticeId, NoticeRequestDto requestDto) {
         Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
         
         // 각 값이 빈값이면 이전값을 채워넣음
         if (requestDto.getTitle() == null) {
@@ -102,9 +119,14 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public void deleteNotice(Long noticeId) {
-        Notice post = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
 
+        noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ExceptionMessage.POST_NOT_FOUND));
         noticeRepository.deleteById(noticeId);
     }
 }

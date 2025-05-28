@@ -1,5 +1,6 @@
 package com.beyond.homs.common.util;
 
+import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,5 +36,14 @@ public class SecurityUtil {
             return null;
         }
         return currentUser.getUserId();
+    }
+
+    // 현재 로그인한 유저의 권한 반환
+    public static UserRole getCurrentUserRole() {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getRole();
     }
 }
