@@ -1,5 +1,6 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.order.dto.OrderApproveRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import jakarta.validation.Valid;
@@ -19,9 +20,11 @@ public interface OrderService {
 
     void deleteOrder(Long orderId);
 
+    void setApprove(Long orderId, OrderApproveRequestDto requestDto);
+
     OrderResponseDto getOrderByCode(String orderCode);
 
-    List<OrderResponseDto> getOrdersByUser(Long userId);
+    // List<OrderResponseDto> getOrdersByUser(Long userId);
 
     List<OrderResponseDto> getChildOrders(Long parentOrderId);
 }

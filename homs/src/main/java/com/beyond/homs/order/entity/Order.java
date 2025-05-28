@@ -177,4 +177,6 @@ public class Order {
     public void updateOrderStatus(OrderStatusEnum orderStatus) {
         this.orderStatus = orderStatus;
     }
+
+    public void updateApprove(Boolean approved) {this.approved = approved;}
 }

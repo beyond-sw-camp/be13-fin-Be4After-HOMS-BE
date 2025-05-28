@@ -1,6 +1,7 @@
 package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.order.dto.OrderApproveRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
@@ -85,6 +86,19 @@ public class OrderControllerImpl implements OrderController {
         ));
     }
 
+    @PutMapping("/{orderId}/approve")
+    @Override
+    public ResponseEntity<ResponseDto<Void>> setApprove(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderApproveRequestDto requestDto) {
+        orderService.setApprove(orderId,requestDto);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "성공적으로 수정되었습니다.",
+                null
+        ));
+    }
+
     @GetMapping("/code/{orderCode}")
     @Override
     public ResponseEntity<ResponseDto<OrderResponseDto>> getOrderByCode(
@@ -96,16 +110,16 @@ public class OrderControllerImpl implements OrderController {
                 dto));
     }
 
-    @GetMapping("/user/{userId}")
-    @Override
-    public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrdersByUser(
-            @PathVariable Long userId) {
-        List<OrderResponseDto> list = orderService.getOrdersByUser(userId);
-        return ResponseEntity.ok(new ResponseDto<>(
-                HttpStatus.OK.value(),
-                "사용자별 주문 조회 성공",
-                list));
-    }
+    // @GetMapping("/user/{userId}")
+    // @Override
+    // public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrdersByUser(
+    //         @PathVariable Long userId) {
+    //     List<OrderResponseDto> list = orderService.getOrdersByUser(userId);
+    //     return ResponseEntity.ok(new ResponseDto<>(
+    //             HttpStatus.OK.value(),
+    //             "사용자별 주문 조회 성공",
+    //             list));
+    // }
 
     @GetMapping("/{parentOrderId}/children")
     @Override
