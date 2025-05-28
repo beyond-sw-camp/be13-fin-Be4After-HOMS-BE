@@ -28,6 +28,7 @@ public enum ExceptionMessage {
     DUPLICATE_USERNAME("U002", "이미 사용 중인 아이디입니다.", HttpStatus.CONFLICT),
     PASSWORD_MISMATCH("U003", "비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_FORMAT_INVALID("U004", "이메일 형식이 올바르지 않습니다.", HttpStatus.BAD_REQUEST),
+    NOT_PERMISSION_USER("U005","접근 권한이 없습니다!",HttpStatus.BAD_REQUEST),
 
     // 주문 관련 에러 (예시)
     ORDER_NOT_FOUND("O001", "해당 주문을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

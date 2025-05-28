@@ -2,10 +2,12 @@ package com.beyond.homs.order.service;
 
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
+import com.beyond.homs.order.dto.OrderApproveRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -78,9 +80,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponseDto> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
+        if (SecurityUtil.getCurrentUserRole() == UserRole.ROLE_ADMIN) {
+            return orderRepository.findAll().stream()
+                    .map(this::toResponseDto)
+                    .collect(Collectors.toList());
+        } else{
+            Long userId = SecurityUtil.getCurrentUserId();
+            return orderRepository.findAllByUser_UserId(userId).stream()
+                    .map(this::toResponseDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
@@ -128,6 +137,22 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(orderId);
     }
 
+    @Transactional
+    @Override
+    public void setApprove(Long orderId, OrderApproveRequestDto requestDto){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        // 승인 / 거절 분기 처리
+        if (requestDto.isApproved()) {
+            order.updateApprove(true);  // 파라미터 없는 approve()
+        } else {
+            order.reject(requestDto.getRejectReason());  // 거절 사유는 필요
+        }
+        orderRepository.save(order);
+    }
+
     @Override
     public OrderResponseDto getOrderByCode(String orderCode) {
         Order order = orderRepository.findByOrderCode(orderCode)
@@ -135,12 +160,12 @@ public class OrderServiceImpl implements OrderService {
         return toResponseDto(order);
     }
 
-    @Override
-    public List<OrderResponseDto> getOrdersByUser(Long userId) {
-        return orderRepository.findAllByUser_UserId(userId).stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
-    }
+    // @Override
+    // public List<OrderResponseDto> getOrdersByUser(Long userId) {
+    //     return orderRepository.findAllByUser_UserId(userId).stream()
+    //             .map(this::toResponseDto)
+    //             .collect(Collectors.toList());
+    // }
 
     @Override
     public List<OrderResponseDto> getChildOrders(Long parentOrderId) {
