@@ -2,6 +2,9 @@ package com.beyond.homs.common.s3.service;
 
 import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.common.util.SecurityUtil;
+import com.beyond.homs.notice.entity.Notice;
+import com.beyond.homs.user.data.UserRole;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
@@ -35,7 +38,13 @@ public class S3ServiceImpl implements S3Service {
     // 업로드 메서드
     @Override
     public void uploadFile(MultipartFile multipartFile, String key) throws IOException {
-        /* 파일로 부터 InputStream을 얻어오고 사용후 자동으로 닫음
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
+        /* 파일로 부터 InputStream을 얻어오고 사용 후 자동으로 닫음
         * key = S3 객체의 키 이름
         * is = 업로드할 파일의 InputStream
         */
@@ -54,6 +63,12 @@ public class S3ServiceImpl implements S3Service {
     // 삭제 메서드
     @Override
     public void deleteFile(String key) {
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
         s3Operations.deleteObject(S3_BUCKET, key);
     }
 
@@ -93,6 +108,12 @@ public class S3ServiceImpl implements S3Service {
             MultipartFile s3Tds2,
             MultipartFile s3Property,
             MultipartFile s3Guide) {
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
 
         // 1. 각 MultipartFile이 null이 아닌지, 비어있지 않은지 확인하고 Map에 모으기
         // Map은 파일의 "종류" (키)와 실제 파일 데이터 (MultipartFile)를 매핑합니다.
