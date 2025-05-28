@@ -2,6 +2,7 @@ package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
@@ -92,6 +93,19 @@ public class OrderControllerImpl implements OrderController {
             @PathVariable Long orderId,
             @Valid @RequestBody OrderApproveRequestDto requestDto) {
         orderService.setApprove(orderId,requestDto);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "성공적으로 수정되었습니다.",
+                null
+        ));
+    }
+
+    @PutMapping("/{orderId}/date")
+    @Override
+    public ResponseEntity<ResponseDto<Void>> updateDate(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderDateRequestDto requestDto) {
+        orderService.updateOrderDate(orderId,requestDto);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "성공적으로 수정되었습니다.",

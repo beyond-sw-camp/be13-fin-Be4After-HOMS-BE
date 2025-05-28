@@ -2,6 +2,7 @@ package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,11 @@ public interface OrderController {
     ResponseEntity<ResponseDto<Void>> setApprove(
             @PathVariable Long orderId,
             @Valid @RequestBody OrderApproveRequestDto requestDto);
+
+    @Operation(summary = "납품일 업데이트", description = "납품일을 업데이트합니다")
+    ResponseEntity<ResponseDto<Void>> updateDate(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderDateRequestDto requestDto);
 
     @Operation(summary = "주문 코드로 조회", description = "orderCode로 단건 조회합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> getOrderByCode(

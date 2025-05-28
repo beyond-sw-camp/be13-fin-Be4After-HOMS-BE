@@ -3,6 +3,7 @@ package com.beyond.homs.order.service;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
@@ -151,6 +152,25 @@ public class OrderServiceImpl implements OrderService {
             order.reject(requestDto.getRejectReason());  // 거절 사유는 필요
         }
         orderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public OrderResponseDto updateOrderDate(Long orderId, OrderDateRequestDto requestDto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        // 납품일 업데이트
+        order.updateDueDate(requestDto.getDueDate());
+
+//        DeliveryAddress addr = addressRepository.findById(requestDto.getDeliveryAddressId())
+//                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + requestDto.getDeliveryAddressId()));
+//        order.updateDeliveryAddress(addr);
+
+        // flush & update
+        Order updated = orderRepository.save(order);
+        return toResponseDto(updated);
     }
 
     @Override
