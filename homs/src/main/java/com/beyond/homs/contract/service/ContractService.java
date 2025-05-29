@@ -1,5 +1,6 @@
 package com.beyond.homs.contract.service;
 
+import com.beyond.homs.contract.data.ContractSearchOption;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 public interface ContractService {
     ContractResponseDto createContract(@Valid ContractRequestDto contractRequestDto);
 
-    Page<ContractListDto> getContracts(String company, Pageable pageable);
+    Page<ContractListDto> getContracts(ContractSearchOption option, String keyword, Pageable pageable);
 
     ContractResponseDto getContractDetail(Long contractDetail);
 }

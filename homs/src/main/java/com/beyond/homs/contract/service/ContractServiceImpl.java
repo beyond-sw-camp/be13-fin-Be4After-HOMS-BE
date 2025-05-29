@@ -1,7 +1,10 @@
 package com.beyond.homs.contract.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
+import com.beyond.homs.contract.data.ContractSearchOption;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -44,21 +47,15 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Page<ContractListDto> getContracts(String keyword, Pageable pageable) {
-        Page<Contract> page = (keyword == null || keyword.isBlank())
-                ? contractRepository.findAll(pageable)
-                : contractRepository.searchByKeyword(keyword, pageable);
+    public Page<ContractListDto> getContracts(ContractSearchOption option, String keyword, Pageable pageable) {
+        Page<ContractListDto> searchResult = contractRepository.findContractList(option, keyword, pageable);
 
-        return page.map(c ->
-                new ContractListDto(
-                        c.getContractId(),
-                        c.getCompany().getCompanyName(),
-                        c.getProduct().getProductName(),
-                        c.getContractStartAt(),
-                        c.getContractStopAt(),
-                        c.getProduct().getCategory().getCategoryName()
-                )
-        );
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
+        }
+
+        return searchResult;
     }
 
     @Override

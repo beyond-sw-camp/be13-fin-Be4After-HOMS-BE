@@ -1,12 +1,17 @@
 package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -52,8 +58,12 @@ public class OrderControllerImpl implements OrderController {
 
     @GetMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getAllOrders() {
-        List<OrderResponseDto> list = orderService.getAllOrders();
+    public ResponseEntity<ResponseDto<Page<OrderResponseDto>>> getAllOrders(
+            @RequestParam(required = false) OrderSearchOption option,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+
+        Page<OrderResponseDto> list = orderService.getAllOrders(option,keyword,pageable);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "모든 주문을 성공적으로 조회했습니다.",
@@ -92,6 +102,19 @@ public class OrderControllerImpl implements OrderController {
             @PathVariable Long orderId,
             @Valid @RequestBody OrderApproveRequestDto requestDto) {
         orderService.setApprove(orderId,requestDto);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "성공적으로 수정되었습니다.",
+                null
+        ));
+    }
+
+    @PutMapping("/{orderId}/date")
+    @Override
+    public ResponseEntity<ResponseDto<Void>> updateDate(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderDateRequestDto requestDto) {
+        orderService.updateOrderDate(orderId,requestDto);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "성공적으로 수정되었습니다.",

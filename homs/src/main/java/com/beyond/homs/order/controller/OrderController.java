@@ -1,16 +1,23 @@
 package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,7 +32,10 @@ public interface OrderController {
             @PathVariable("orderId") Long orderId);
 
     @Operation(summary = "주문 전체 조회", description = "모든 주문 목록을 조회합니다.")
-    ResponseEntity<ResponseDto<List<OrderResponseDto>>> getAllOrders();
+    ResponseEntity<ResponseDto<Page<OrderResponseDto>>> getAllOrders(
+            @RequestParam(required = false) OrderSearchOption option,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, page = 0) Pageable pageable);
 
     @Operation(summary = "주문 수정", description = "주문 정보를 수정합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> updateOrder(
@@ -40,6 +50,11 @@ public interface OrderController {
     ResponseEntity<ResponseDto<Void>> setApprove(
             @PathVariable Long orderId,
             @Valid @RequestBody OrderApproveRequestDto requestDto);
+
+    @Operation(summary = "납품일 업데이트", description = "납품일을 업데이트합니다")
+    ResponseEntity<ResponseDto<Void>> updateDate(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderDateRequestDto requestDto);
 
     @Operation(summary = "주문 코드로 조회", description = "orderCode로 단건 조회합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> getOrderByCode(
