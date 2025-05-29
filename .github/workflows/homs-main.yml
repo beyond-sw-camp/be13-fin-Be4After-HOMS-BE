@@ -4,14 +4,14 @@ name: Build & Push homs-main to ECR
 on:
   push:
     branches:
-      - feat/github_action
+      - develop
     paths:
       - 'homs/**'
       - '.github/workflows/homs-main.yml'
   pull_request:
     types: [closed]
     branches:
-      - feat/github_action
+      - develop
     paths:
       - 'homs/**'
       - '.github/workflows/homs-main.yml'
