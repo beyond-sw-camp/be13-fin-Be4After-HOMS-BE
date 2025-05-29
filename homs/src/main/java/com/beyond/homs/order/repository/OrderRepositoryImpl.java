@@ -29,9 +29,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     // 동적 검색 조건 메서드
     private BooleanExpression searchOptions(String keyword, OrderSearchOption option) {
         // 검색 조건이 없으면 null 반환
-        if (option == null || keyword == null) {
-            return null;
-        }
+        // if (option == null || keyword == null) {
+        //     return null;
+        // }
 
         if (option == OrderSearchOption.ORDER_CODE){
             return order.orderCode.contains(keyword); // 코드 검색

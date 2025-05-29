@@ -87,9 +87,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable) {
         // 검색어가 있는데 옵션이 없는 경우는 검색 안됨
-        if (keyword == null && option == null) {
-            throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
-        }
+        // if (keyword == null && option == null) {
+        //     throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
+        // }
 
         Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, pageable);
 
