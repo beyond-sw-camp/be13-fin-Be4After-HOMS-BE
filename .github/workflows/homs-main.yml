@@ -56,6 +56,6 @@ jobs:
       - name: Build & Push Docker image
         working-directory: homs
         run: |
-          docker build -t homs-backend:latest .
+          docker build -t homs-backend:latest --build-arg BUILD_PROFILE=prod .
           docker tag homs-backend:latest 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
           docker push 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
