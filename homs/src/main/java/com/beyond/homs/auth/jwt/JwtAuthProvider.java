@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtAuthProvider {
     private final JwtService jwtService;
     private final RedisTemplate<String, String> redisTemplate;
-  
+
     private static final long ACCESS_TOKEN_EXP = 1000L * 60L * 60L;     // 15분
 //    private static final long ACCESS_TOKEN_EXP = 1000L * 60L;     // 1분
 

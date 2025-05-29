@@ -65,11 +65,9 @@ public class Company {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Setter
     @Column(name = "is_continue_status", nullable = false)
     private boolean continueStatus;
 
-    @Setter
     @Column(name = "is_approve_status", nullable = false)
     private boolean approveStatus;
 
@@ -85,8 +83,14 @@ public class Company {
         this.representPhone = companyDto.representPhone();
         this.representManagerName = companyDto.representManagerName();
         this.representManagerEmail = companyDto.representManagerEmail();
-        this.continueStatus = false;
-        this.approveStatus = false;
+
+        if (companyDto.continueStatus() != null) {
+            this.continueStatus = companyDto.continueStatus();
+        }
+
+        if (companyDto.approveStatus() != null) {
+            this.approveStatus = companyDto.approveStatus();
+        }
         this.country = companyDto.country();
     }
 
@@ -102,5 +106,13 @@ public class Company {
         this.continueStatus = continueStatus;
         this.approveStatus = approveStatus;
         this.country = country;
+    }
+
+    public void changeApproveStatus(boolean approveStatus) {
+        this.approveStatus = approveStatus;
+    }
+
+    public void changeContinueStatus(boolean continueStatus) {
+        this.continueStatus = continueStatus;
     }
 }

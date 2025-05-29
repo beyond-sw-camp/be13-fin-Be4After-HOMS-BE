@@ -85,7 +85,8 @@ public class CompanyAdminServiceTest {
         List<ResponseCompanyDto> companies = companyAdminService.getCompanyList();
         assertThat(companies).hasSize(1);
         Long companyId = companies.getFirst().companyId();
-        companyAdminService.grantCompany(companyId);
+        companyAdminService.grantCompany(companyId, true);
+        companyAdminService.grantCompany(companyId, false);
 
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
@@ -109,6 +110,7 @@ public class CompanyAdminServiceTest {
 
         Long companyId = companies.getFirst().companyId();
         companyAdminService.updateTransactionStatus(companyId, true);
+        companyAdminService.updateTransactionStatus(companyId, false);
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         assertThat(company.isContinueStatus()).isTrue();

@@ -13,6 +13,8 @@ public record UpdateCompanyDto(
         String representCall,
         String representPhone,
         String representManagerName,
-        String representManagerEmail
+        String representManagerEmail,
+        Boolean continueStatus,
+        Boolean approveStatus
 ) {
 }
