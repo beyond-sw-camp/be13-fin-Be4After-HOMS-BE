@@ -41,6 +41,12 @@ jobs:
                 --username AWS \
                 --password-stdin 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com
 
+      - name: Build Backend JAR
+        working-directory: homs
+        run: |
+          sh 'chmod +x ./gradlew'
+          sh './gradlew clean bootJar'
+
       - name: Build & Push Docker image
         working-directory: homs
         run: |
