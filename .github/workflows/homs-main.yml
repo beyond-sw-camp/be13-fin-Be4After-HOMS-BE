@@ -41,6 +41,12 @@ jobs:
                 --username AWS \
                 --password-stdin 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'    # AdoptOpenJDK(Temurin)
+          java-version: '21'         # 프로젝트에 맞게 조정
+      
       - name: Build Backend JAR
         working-directory: homs
         run: |
