@@ -50,8 +50,8 @@ jobs:
       - name: Build Backend JAR
         working-directory: homs
         run: |
-          sh 'chmod +x ./gradlew'
-          sh './gradlew clean bootJar'
+          chmod +x ./gradlew
+          ./gradlew clean bootJar
 
       - name: Build & Push Docker image
         working-directory: homs
