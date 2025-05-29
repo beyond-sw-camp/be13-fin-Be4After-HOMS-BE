@@ -6,25 +6,28 @@ import com.beyond.homs.company.dto.UpdateCompanyDto;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.CountryRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CompanyAdminServiceImpl implements CompanyAdminService {
     private final CompanyRepository companyRepository;
     private final CountryRepository countryRepository;
 
     @Override
-    public void grantCompany(Long companyId) {
+    public void grantCompany(Long companyId, Boolean status) {
          Company company = companyRepository.findById(companyId)
                  .orElseThrow(() -> new RuntimeException("Company not found"));
 
-        company.setApproveStatus(true);
-        company.setContinueStatus(true);
+        System.out.println("기존 승인 상태: " + company.isApproveStatus());
+        System.out.println("변경할 승인 상태: " + status);
+
+        company.changeApproveStatus(status);
         companyRepository.saveAndFlush(company);
     }
 
@@ -47,7 +50,8 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
     public void updateTransactionStatus(Long companyId, Boolean status) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        company.setContinueStatus(status);
+        company.changeContinueStatus(status);
+
         companyRepository.saveAndFlush(company);
     }
 
@@ -63,7 +67,9 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
                 companyDto.representCall(),
                 companyDto.representPhone(),
                 companyDto.representManagerName(),
-                companyDto.representManagerEmail()
+                companyDto.representManagerEmail(),
+                companyDto.continueStatus(),
+                companyDto.approveStatus()
         );
         company.setFromDto(updateCompanyDto);
         companyRepository.save(company);

@@ -12,5 +12,7 @@ public record CompanyDto(
         @NotBlank String representCall,
         @NotBlank String representPhone,
         @NotBlank String representManagerName,
-        @NotBlank @Email String representManagerEmail
+        @NotBlank @Email String representManagerEmail,
+        Boolean continueStatus,  // <- 추가
+        Boolean approveStatus
 ) {}

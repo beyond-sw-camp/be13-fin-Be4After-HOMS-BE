@@ -3,11 +3,13 @@ package com.beyond.homs.company.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.company.dto.CompanyDto;
 import com.beyond.homs.company.dto.ResponseCompanyDto;
+import com.beyond.homs.company.dto.UpdateContractStatusDto;
 import com.beyond.homs.company.dto.UpdateTransactionStatusDto;
 import com.beyond.homs.company.service.CompanyAdminService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +34,13 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @PutMapping("/grant/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<Void>> grantCompany(@PathVariable @Positive Long companyId) {
-        companyAdminService.grantCompany(companyId);
+    public ResponseEntity<ResponseDto<Void>> grantCompany(
+            @PathVariable Long companyId,
+            @RequestBody UpdateContractStatusDto updateContractStatusDto) {
+        System.out.println(updateContractStatusDto.isApprovedStatus());
+        companyAdminService.grantCompany(companyId, updateContractStatusDto.isApprovedStatus());
+        System.out.println(updateContractStatusDto.isApprovedStatus());
+
         return ResponseEntity.ok(new ResponseDto<>(
                         HttpStatus.CREATED.value(),
                         "Company enrollment success",
@@ -55,7 +62,7 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @GetMapping("/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<ResponseCompanyDto>> getCompany(@PathVariable @NotBlank Long companyId) {
+    public ResponseEntity<ResponseDto<ResponseCompanyDto>> getCompany(@PathVariable Long companyId) {
         ResponseCompanyDto companyDto = companyAdminService.getCompany(companyId);
         return ResponseEntity.ok(
                 new ResponseDto<>(
@@ -67,8 +74,8 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @PutMapping("/status/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<Void>> updateTransactionStatus(@PathVariable @Positive Long companyId,
-                                                                     @RequestBody @Valid UpdateTransactionStatusDto updateTransactionStatusDto) {
+    public ResponseEntity<ResponseDto<Void>> updateTransactionStatus(@PathVariable Long companyId,
+                                                                     @RequestBody UpdateTransactionStatusDto updateTransactionStatusDto) {
         companyAdminService.updateTransactionStatus(companyId, updateTransactionStatusDto.isApprovedStatus());
         return ResponseEntity.ok(
                 new ResponseDto<>(
@@ -80,8 +87,8 @@ public class CompanyAdminControllerImpl implements CompanyAdminController {
 
     @PutMapping("/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<Void>> updateCompany(@PathVariable @NotBlank Long companyId,
-                                                           @RequestBody @Valid CompanyDto updateCompanyDto) {
+    public ResponseEntity<ResponseDto<Void>> updateCompany(@PathVariable Long companyId,
+                                                           @RequestBody CompanyDto updateCompanyDto) {
         companyAdminService.updateCompany(companyId, updateCompanyDto);
         return ResponseEntity.ok(
                 new ResponseDto<>(
