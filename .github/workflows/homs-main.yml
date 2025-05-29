@@ -1,0 +1,49 @@
+# .github/workflows/project-A.yml
+name: Build & Push homs-main to ECR
+
+on:
+  push:
+    branches:
+      - feat/github_action
+    paths:
+      - 'homs/**'
+      - '.github/workflows/homs-main.yml'
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - 'homs/**'
+      - '.github/workflows/homs-main.yml'
+  workflow_dispatch: 
+
+jobs:
+  build-and-push:
+    # push 이벤트이거나, pull_request 중 머지된 경우에만 실행
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged) }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region:            ap-northeast-2
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ap-northeast-2 \
+            | docker login \
+                --username AWS \
+                --password-stdin 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com
+
+      - name: Build & Push Docker image
+        working-directory: homs
+        run: |
+          docker build -t homs-backend:latest
+          docker tag homs-backend:latest 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
+          docker push 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
