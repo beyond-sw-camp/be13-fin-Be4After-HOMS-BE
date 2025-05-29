@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/api-docs/**",          // Swagger 관련 경로 허용
                                 "/swagger-ui/**",        // Swagger UI 경로 허용
                                 "/v3/api-docs/**",       // OpenAPI 문서 경로 허용
-                                "/swagger-resources/**"  // Swagger 리소스 허용
+                                "/swagger-resources/**",  // Swagger 리소스 허용
+                                "/actuator/health"          // Health check 경로 허용
                         ).permitAll()               // 위 경로는 모두 허용
 
                                 .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user").permitAll()
