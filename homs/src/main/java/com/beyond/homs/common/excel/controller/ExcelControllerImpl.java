@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ public class ExcelControllerImpl implements ExcelController {
     @Override
     public ResponseEntity<Resource> downloadExcel(
             @RequestParam ExcelTypeEnum type,
-            @RequestParam(required = false) Long orderId) {
+            @RequestParam(required = false) Long orderId) throws UnsupportedEncodingException {
         Resource file = excelService.excelDownload(type, orderId);
 
         String baseName = ""; // 기본 이름
@@ -56,21 +57,23 @@ public class ExcelControllerImpl implements ExcelController {
         }
 
         // 최종 파일명 생성: 접두사 + 기본 이름 + 현재 날짜/시간
-        String finalFileName = baseName + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String finalFileName = baseName + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
 
-        // 파일명 URL 인코딩 (한글 및 특수문자 깨짐 방지)
-        String encodedFileName;
-        try {
-            // URLEncoder는 공백을 '+'로 인코딩하는데, 일부 브라우저가 이를 '%20'으로 더 잘 인식하므로 변환합니다.
-            encodedFileName = URLEncoder.encode(finalFileName, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
-        } catch (Exception e) {
-            // 인코딩 실패 시 대비
-            encodedFileName = "download"; // 대체 파일명
-        }
+        // RFC 5987 용으로 인코딩된 파일명
+        String encodedFileNameRfc5987 = URLEncoder.encode(finalFileName, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20"); // RFC 5987에서는 공백을 %20으로 인코딩 (URLEncoder 기본 +는 %2B)
+
+
+        // Content-Disposition 헤더 생성:
+        // filename="" 부분에는 ASCII 문자만 허용되므로, 한글 파일명을 그대로 넣지 않거나,
+        // 이 부분도 인코딩된 안전한 값(예: download.xlsx 또는 ASCII로 변환된 이름)을 사용해야 합니다.
+        String contentDispositionHeader = "attachment; ";
+
+        contentDispositionHeader += "filename*=UTF-8''" + encodedFileNameRfc5987;
 
         return ResponseEntity.ok()
-                // Content-Disposition 헤더에 인코딩된 파일명 사용. .xlsx 확장자도 명시적으로 붙여줍니다.
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + ".xlsx\"")
+                // Content-Disposition 헤더에 RFC 5987 인코딩된 파일명 사용
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDispositionHeader)
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) // 올바른 MIME 타입
                 .body(file);
     }

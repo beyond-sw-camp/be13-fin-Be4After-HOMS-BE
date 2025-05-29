@@ -1,14 +1,22 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
+import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.dto.OrderApproveRequestDto;
+import com.beyond.homs.order.dto.OrderDateRequestDto;
 import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,10 +85,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
+    public Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable) {
+        // 검색어가 있는데 옵션이 없는 경우는 검색 안됨
+        // if (keyword == null && option == null) {
+        //     throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
+        // }
+
+        Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, pageable);
+
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        return searchResult;
     }
 
     @Override
@@ -128,18 +146,46 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(orderId);
     }
 
+    @Transactional
+    @Override
+    public void setApprove(Long orderId, OrderApproveRequestDto requestDto){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        // 승인 / 거절 분기 처리
+        if (requestDto.isApproved()) {
+            order.updateApprove(true);  // 파라미터 없는 approve()
+        } else {
+            order.reject(requestDto.getRejectReason());  // 거절 사유는 필요
+        }
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public OrderResponseDto updateOrderDate(Long orderId, OrderDateRequestDto requestDto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        // 납품일 업데이트
+        order.updateDueDate(requestDto.getDueDate());
+
+//        DeliveryAddress addr = addressRepository.findById(requestDto.getDeliveryAddressId())
+//                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + requestDto.getDeliveryAddressId()));
+//        order.updateDeliveryAddress(addr);
+
+        // flush & update
+        Order updated = orderRepository.save(order);
+        return toResponseDto(updated);
+    }
+
     @Override
     public OrderResponseDto getOrderByCode(String orderCode) {
         Order order = orderRepository.findByOrderCode(orderCode)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found by code: " + orderCode));
         return toResponseDto(order);
-    }
-
-    @Override
-    public List<OrderResponseDto> getOrdersByUser(Long userId) {
-        return orderRepository.findAllByUser_UserId(userId).stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
     }
 
     @Override

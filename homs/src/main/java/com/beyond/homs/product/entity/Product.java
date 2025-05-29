@@ -1,5 +1,6 @@
 package com.beyond.homs.product.entity;
 
+import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.product.dto.ProductRequestDto;
 import com.beyond.homs.wms.entity.Inventory;
 import jakarta.persistence.CascadeType;
@@ -49,6 +50,10 @@ public class Product {
     // 재고와의 연관관계 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Inventory> inventories = new ArrayList<>();
+    
+    // 주문 상세와 연관관계 설정
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @Builder
     public Product(String productName, String productFeature, String productUsage, Long productMinQuantity, ProductCategory category) {
