@@ -1,6 +1,10 @@
 package com.beyond.homs.order.repository;
 
 import com.beyond.homs.order.entity.Order;
+import com.beyond.homs.product.dto.ProductListDto;
+import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
     // 단건 조회
     Optional<Order> findByOrderCode(String orderCode);
     // 전체 조회

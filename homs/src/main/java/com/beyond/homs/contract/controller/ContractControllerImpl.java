@@ -1,6 +1,7 @@
 package com.beyond.homs.contract.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
+import com.beyond.homs.contract.data.ContractSearchOption;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -9,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +43,10 @@ public class ContractControllerImpl implements ContractController {
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<Page<ContractListDto>>> contractList(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @PageableDefault(size = 10, sort = "contractId", direction = Sort.Direction.DESC)
-            Pageable pageable
-    ) {
-        Page<ContractListDto> page = contractService.getContracts(keyword, pageable);
+            @RequestParam(required = false) ContractSearchOption option,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        Page<ContractListDto> page = contractService.getContracts(option, keyword, pageable);
         return ResponseEntity.ok(
                 new ResponseDto<>(HttpStatus.OK.value(), "계약 목록 조회 성공", page)
         );
