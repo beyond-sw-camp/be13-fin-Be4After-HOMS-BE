@@ -26,7 +26,7 @@ public class CompanyControllerImpl implements CompanyController {
 
     @PostMapping
     @Override
-    public ResponseEntity<ResponseDto<Void>> enrollmentCompany(@RequestBody @Valid CompanyDto enrollmentCompanyDto) {
+    public ResponseEntity<ResponseDto<Void>> enrollmentCompany(@RequestBody CompanyDto enrollmentCompanyDto) {
         companyService.enrollmentCompany(enrollmentCompanyDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
@@ -38,7 +38,7 @@ public class CompanyControllerImpl implements CompanyController {
 
     @GetMapping("/{companyId}")
     @Override
-    public ResponseEntity<ResponseDto<ResponseCompanyDto>> getCompany(@PathVariable @NotBlank Long companyId) {
+    public ResponseEntity<ResponseDto<ResponseCompanyDto>> getCompany(@PathVariable Long companyId) {
         ResponseCompanyDto companyDto = companyService.getCompany(companyId);
         return ResponseEntity.ok(
                 new ResponseDto<>(
