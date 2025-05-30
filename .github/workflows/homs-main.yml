@@ -2,12 +2,12 @@
 name: Build & Push homs-main to ECR
 
 on:
-  # push:
-  #   branches:
-  #     - develop
-  #   paths:
-  #     - 'homs/**'
-  #     - '.github/workflows/homs-main.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'homs/**'
+      - '.github/workflows/homs-main.yml'
   pull_request:
     types: [closed]
     branches:
