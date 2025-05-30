@@ -8,13 +8,13 @@ on:
     paths:
       - 'homs/**'
       - '.github/workflows/homs-main.yml'
-  pull_request:
-    types: [closed]
-    branches:
-      - develop
-    paths:
-      - 'homs/**'
-      - '.github/workflows/homs-main.yml'
+  # pull_request:
+  #   types: [closed]
+  #   branches:
+  #     - develop
+  #   paths:
+  #     - 'homs/**'
+  #     - '.github/workflows/homs-main.yml'
   workflow_dispatch: 
 
 jobs:
