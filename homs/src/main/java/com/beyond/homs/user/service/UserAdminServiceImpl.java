@@ -62,6 +62,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
+    @Transactional
     public void updateUser(Long userId, UpdateUserDto updateUserDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
@@ -87,6 +88,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
