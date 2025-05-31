@@ -88,14 +88,11 @@ public class S3ControllerImpl implements S3Controller {
             @PathVariable Long productId,
             @RequestParam(value = "s3Image", required = false) MultipartFile s3Image,
             @RequestParam(value = "s3Msds", required = false) MultipartFile s3Msds,
-            @RequestParam(value = "s3Tds1", required = false) MultipartFile s3Tds1,
-            @RequestParam(value = "s3Tds2", required = false) MultipartFile s3Tds2,
-            @RequestParam(value = "s3Property", required = false) MultipartFile s3Property,
-            @RequestParam(value = "s3Guide", required = false) MultipartFile s3Guide) {
+            @RequestParam(value = "s3Tds1", required = false) MultipartFile s3Tds1) {
         try {
             // S3Service의 uploadProductFiles 메서드를 호출
             Map<String, String> uploadedUrls = s3Service.uploadProductFiles(
-                    productId,s3Image, s3Msds, s3Tds1, s3Tds2, s3Property, s3Guide);
+                    productId,s3Image, s3Msds, s3Tds1);
             return ResponseEntity.ok(uploadedUrls);
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
