@@ -149,9 +149,6 @@ public class ProductServiceImpl implements ProductService{
                 .s3Image(productFile.getS3Image())
                 .s3Msds(productFile.getS3Msds())
                 .s3Tds1(productFile.getS3Tds1())
-                .s3Tds2(productFile.getS3Tds2())
-                .s3Property(productFile.getS3Property())
-                .s3Guide(productFile.getS3Guide())
                 .build();
     }
 
@@ -174,9 +171,6 @@ public class ProductServiceImpl implements ProductService{
                 .s3Image(requestDto.getS3Image())
                 .s3Msds(requestDto.getS3Msds())
                 .s3Tds1(requestDto.getS3Tds1())
-                .s3Tds2(requestDto.getS3Tds2())
-                .s3Property(requestDto.getS3Property())
-                .s3Guide(requestDto.getS3Guide())
                 .build();
 
         productFileRepository.save(productFile);

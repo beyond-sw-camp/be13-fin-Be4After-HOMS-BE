@@ -3,12 +3,12 @@ package com.beyond.homs.common.s3.service;
 import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
-import com.beyond.homs.notice.entity.Notice;
 import com.beyond.homs.user.data.UserRole;
 import io.awspring.cloud.s3.ObjectMetadata;
-import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
+import io.awspring.cloud.s3.S3Template;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,14 +27,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class S3ServiceImpl implements S3Service {
-    private static final String S3_BUCKET = System.getenv("AWS_S3_BUCKET");
+    // private static final String S3_BUCKET = System.getenv("AWS_S3_BUCKET");
     private static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/png", "image/jpeg", "image/gif", "image/webp");
     private final List<String> ALLOWED_DOC_TYPES = Arrays.asList("application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
-    private final S3Operations s3Operations;
-    
+    // private final s3Template s3Template;
+    private final S3Template s3Template;
+
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String S3_BUCKET;
+
+    public S3ServiceImpl(S3Template s3Template) {
+        this.s3Template = s3Template;
+    }
+
     // 업로드 메서드
     @Override
     public void uploadFile(MultipartFile multipartFile, String key) throws IOException {
@@ -43,13 +50,16 @@ public class S3ServiceImpl implements S3Service {
         if(role != UserRole.ROLE_ADMIN){
             throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
         }
+        if (S3_BUCKET == null || S3_BUCKET.isEmpty()) {
+            throw new IllegalArgumentException("S3 bucket name is not configured.");
+        }
 
         /* 파일로 부터 InputStream을 얻어오고 사용 후 자동으로 닫음
         * key = S3 객체의 키 이름
         * is = 업로드할 파일의 InputStream
         */
         try (InputStream is = multipartFile.getInputStream()) {
-            s3Operations.upload(S3_BUCKET, key, is,
+            s3Template.upload(S3_BUCKET, key, is,
                     ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
         }
     }
@@ -57,7 +67,7 @@ public class S3ServiceImpl implements S3Service {
     // 다운로드 메서드
     @Override
     public Resource downloadFile(String key) {
-        return s3Operations.download(S3_BUCKET, key);
+        return s3Template.download(S3_BUCKET, key);
     }
 
     // 삭제 메서드
@@ -69,7 +79,7 @@ public class S3ServiceImpl implements S3Service {
             throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
         }
 
-        s3Operations.deleteObject(S3_BUCKET, key);
+        s3Template.deleteObject(S3_BUCKET, key);
     }
 
     // 이미지 출력 메서드
@@ -78,6 +88,8 @@ public class S3ServiceImpl implements S3Service {
         if (resource instanceof S3Resource && resource.exists()) {
             S3Resource s3Resource = (S3Resource) resource;
             String contentType = s3Resource.contentType();
+
+            System.out.println(contentType);
 
             try (InputStream inputStream = s3Resource.getInputStream()) {
                 // 이미지를 바이트 배열로 읽어오기
@@ -104,10 +116,7 @@ public class S3ServiceImpl implements S3Service {
             Long productId,
             MultipartFile s3Image,
             MultipartFile s3Msds,
-            MultipartFile s3Tds1,
-            MultipartFile s3Tds2,
-            MultipartFile s3Property,
-            MultipartFile s3Guide) {
+            MultipartFile s3Tds1) {
 
         // 현재 유저의 권한을 가져옴
         UserRole role = SecurityUtil.getCurrentUserRole();
@@ -121,9 +130,6 @@ public class S3ServiceImpl implements S3Service {
         if (s3Image != null && !s3Image.isEmpty()) incomingFiles.put("s3Image", s3Image);
         if (s3Msds != null && !s3Msds.isEmpty()) incomingFiles.put("s3Msds", s3Msds);
         if (s3Tds1 != null && !s3Tds1.isEmpty()) incomingFiles.put("s3Tds1", s3Tds1);
-        if (s3Tds2 != null && !s3Tds2.isEmpty()) incomingFiles.put("s3Tds2", s3Tds2);
-        if (s3Property != null && !s3Property.isEmpty()) incomingFiles.put("s3Property", s3Property);
-        if (s3Guide != null && !s3Guide.isEmpty()) incomingFiles.put("s3Guide", s3Guide);
 
         // 2. 파일 타입/확장자 유효성 검증
         for (Map.Entry<String, MultipartFile> entry : incomingFiles.entrySet()) {
@@ -140,10 +146,11 @@ public class S3ServiceImpl implements S3Service {
 
             if (!isAllowed) {
                 // 허용되지 않는 파일 형식일 경우 예외 발생
-                throw new CustomException(ExceptionMessage.UNSUPPORTED_FILE_TYPE
-                );
+                throw new CustomException(ExceptionMessage.UNSUPPORTED_FILE_TYPE);
             }
         }
+
+        System.out.println("여기까지는 잘됨");
 
         // 4. S3 업로드 로직 및 업로드된 S3 Key 수집
         Map<String, String> uploadedFileKeys = new HashMap<>(); // S3 Key (폴더 경로 포함 파일명)를 저장할 맵
@@ -153,18 +160,11 @@ public class S3ServiceImpl implements S3Service {
                 MultipartFile file = entry.getValue();
 
                 String s3FolderPath = "product/"+productId+"/"; // 각 파일 종류에 맞는 S3 폴더 경로 결정
-                // switch (fieldName) {
-                //     case "s3Image": s3FolderPath = "product-images/"; break;
-                //     case "s3Msds": s3FolderPath = "product-documents/msds/"; break;
-                //     case "s3Tds1": s3FolderPath = "product-documents/tds1/"; break;
-                //     case "s3Tds2": s3FolderPath = "product-documents/tds2/"; break;
-                //     case "s3Property": s3FolderPath = "product-documents/property/"; break;
-                //     case "s3Guide": s3FolderPath = "product-documents/guide/"; break;
-                //     default: s3FolderPath = "other-product-files/"; break; // 예상치 못한 필드명
-                // }
 
                 // S3에 저장될 고유한 키(경로 + 파일명)를 생성
                 String s3Key = generateS3Key(s3FolderPath, Objects.requireNonNullElse(file.getOriginalFilename(), "unknown"));
+
+                System.out.println(s3Key);
 
                 // 기존 uploadFile 메서드 호출
                 uploadFile(file, s3Key); // S3ServiceImpl의 다른 메서드 호출

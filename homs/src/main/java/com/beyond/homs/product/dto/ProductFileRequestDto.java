@@ -13,10 +13,4 @@ public class ProductFileRequestDto {
     private String s3Msds;
 
     private String s3Tds1;
-
-    private String s3Tds2;
-
-    private String s3Property;
-
-    private String s3Guide;
 }
