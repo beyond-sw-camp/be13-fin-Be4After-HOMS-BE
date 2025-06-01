@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         // 2-2) 엔티티 생성
         Order order = Order.builder()
                 .orderCode(orderNumberGenerator.generateOrderNumber())
-                .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
+                // .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
                 .approved(false)
                 .orderStatus(BEFORE) // 고정값
                 .user(currentUser)

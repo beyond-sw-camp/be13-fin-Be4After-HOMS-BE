@@ -1,9 +1,10 @@
 package com.beyond.homs.order.dto;
 
+import com.beyond.homs.order.data.OrderStatusEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
@@ -14,9 +15,15 @@ public class OrderItemSearchResponseDto {
 
     private final String companyName;
 
-    private final LocalDateTime orderDate;
+    private final Date orderDate;
 
-    private final LocalDateTime dueDate;
+    private final Date dueDate;
+
+    private final OrderStatusEnum orderStatus;
+
+    private final boolean approved;
+
+    private final String rejectReason;
 
     private final Long productId;
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Builder
@@ -12,5 +13,5 @@ import java.time.LocalDateTime;
 public class SettlementOrderInfoDto {
     private String productName;
     private Long quantity;
-    private final LocalDateTime orderDate;
+    private final Date orderDate;
 }
