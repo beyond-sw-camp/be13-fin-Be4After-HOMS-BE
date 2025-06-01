@@ -41,15 +41,14 @@ public class MenuServiceImpl implements MenuService{
                     .orElseThrow(() -> new IllegalArgumentException("부모 카테고리가 존재하지 않습니다."));
         }
 
-        // Department 조회
-        Department department = departmentRepository.findById(requestDto.getDeptId())
-                .orElseThrow(() -> new IllegalArgumentException("부서 정보가 존재하지 않습니다."));
-
         Menu menu = Menu.builder()
                 .menuName(requestDto.getMenuName())
                 .sortNo(requestDto.getSortNo())
+                .buy(requestDto.getBuy())
+                .delivery(requestDto.getDelivery())
+                .materials(requestDto.getMaterials())
+                .sales(requestDto.getSales())
                 .parent(parent)
-                .department(department)
                 .build();
 
         Menu saved = menuRepository.save(menu);
@@ -58,6 +57,10 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(saved.getMenuId())
                 .menuName(saved.getMenuName())
                 .sortNo(saved.getSortNo())
+                .buy(saved.getBuy())
+                .delivery(saved.getDelivery())
+                .materials(saved.getMaterials())
+                .sales(saved.getSales())
                 .parentId(saved.getParent() != null ? saved.getParent().getMenuId() : null)
                 .build();
     }
@@ -68,7 +71,6 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new RuntimeException("해당 메뉴가 존재하지 않습니다."));
 
-
         menu.updateMenu(requestDto);
         menuRepository.save(menu);
 
@@ -76,7 +78,11 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(menu.getMenuId())
                 .menuName(menu.getMenuName())
                 .sortNo(menu.getSortNo())
-                .parentId(menu.getParent().getMenuId())
+                .buy(menu.getBuy())
+                .delivery(menu.getDelivery())
+                .materials(menu.getMaterials())
+                .sales(menu.getSales())
+                .parentId(menu.getParent() != null ? menu.getParent().getMenuId() : null)
                 .build();
     }
 

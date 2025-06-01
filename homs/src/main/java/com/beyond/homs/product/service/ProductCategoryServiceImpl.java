@@ -72,7 +72,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
                 .categoryId(productCategory.getCategoryId())
                 .categoryName(productCategory.getCategoryName())
                 .sortNo(productCategory.getSortNo())
-                .parentId(productCategory.getParent().getCategoryId())
+                .parentId(productCategory.getParent() != null ? productCategory.getParent().getCategoryId() : null)
                 .build();
     }
 
