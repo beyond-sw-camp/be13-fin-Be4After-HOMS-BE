@@ -2,6 +2,8 @@ package com.beyond.homs.user.dto;
 
 import com.beyond.homs.user.entity.User;
 
+import java.time.LocalDateTime;
+
 public record UserResponseDto(
     Long userId,
     String userName,
@@ -11,17 +13,26 @@ public record UserResponseDto(
 //    Long companyId,
 //    Long deptId
     String companyName,
-    String deptName
+    String deptName,
+    LocalDateTime deleteAt,
+    boolean isLockedOut
 ) {
     public static UserResponseDto fromUser(User user) {
+        boolean isLockedOut = false;
+        if (user.getUserLogin() != null) {
+            isLockedOut = user.getUserLogin().isLockedOut();
+        }
+
         return new UserResponseDto(
-            user.getUserId(),
-            user.getUsername(),
-            user.getManagerName(),
-            user.getManagerEmail(),
-            user.getManagerPhone(),
-            user.getCompany().getCompanyName(),
-            user.getDepartment().getDeptName().toString()
+                user.getUserId(),
+                user.getUsername(),
+                user.getManagerName(),
+                user.getManagerEmail(),
+                user.getManagerPhone(),
+                user.getCompany().getCompanyName(),
+                user.getDepartment().getDeptName().toString(),
+                user.getDeletedAt(),
+                isLockedOut
         );
     }
 }

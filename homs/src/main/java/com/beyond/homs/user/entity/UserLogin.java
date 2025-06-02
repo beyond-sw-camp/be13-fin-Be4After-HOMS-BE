@@ -32,7 +32,7 @@ public class UserLogin {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "is_locked_out", nullable = false)
+    @Column(name = "is_locked_out", nullable = true)
     private boolean lockedOut;
 
     @Builder
