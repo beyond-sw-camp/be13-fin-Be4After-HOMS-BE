@@ -2,21 +2,9 @@ package com.beyond.homs.user.entity;
 
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.entity.Department;
+import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.user.data.UserRole;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,7 +28,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "userId")
-@ToString(exclude = {"company","department"})
+@ToString(exclude = {"company","department", "orders"})
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     @Id
@@ -87,6 +75,10 @@ public class User implements UserDetails {
             cascade= CascadeType.ALL,
             orphanRemoval=true)
     private UserLogin userLogin;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
 
     @Builder
     public User(String userName, String managerName, String managerEmail, String managerPhone
