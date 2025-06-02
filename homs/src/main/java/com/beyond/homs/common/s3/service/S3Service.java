@@ -23,10 +23,7 @@ public interface S3Service {
             Long productId,
             MultipartFile s3Image,
             MultipartFile s3Msds,
-            MultipartFile s3Tds1,
-            MultipartFile s3Tds2,
-            MultipartFile s3Property,
-            MultipartFile s3Guide);
+            MultipartFile s3Tds1);
 
     String generateS3Key(String folderPath, String originalFilename);
 }
