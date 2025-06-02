@@ -11,7 +11,6 @@ import com.beyond.homs.order.dto.OrderRequestDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
-import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.beyond.homs.order.data.OrderStatusEnum.BEFORE;
+import static com.beyond.homs.user.data.UserRole.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -86,12 +85,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable) {
-        // 검색어가 있는데 옵션이 없는 경우는 검색 안됨
-        // if (keyword == null && option == null) {
-        //     throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
-        // }
+        Long userId = null;
+        
+        // 로그인한 유저가 일반 유저라면 해당 유저의 Id값으로 검색
+        if(SecurityUtil.getCurrentUserRole() == ROLE_USER){
+            userId = SecurityUtil.getCurrentUserId();
+        }
 
-        Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, pageable);
+        Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, userId, pageable);
 
         // 검색결과가 없는 경우 예외 처리
         if (searchResult.isEmpty()) {
@@ -194,6 +195,26 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<OrderResponseDto> getAllClaimOrders(OrderSearchOption option, String keyword, Pageable pageable) {
+        Long userId = null;
+
+        // 로그인한 유저가 일반 유저라면 해당 유저의 Id값으로 검색
+        if(SecurityUtil.getCurrentUserRole() == ROLE_USER){
+            userId = SecurityUtil.getCurrentUserId();
+        }
+
+        Page<OrderResponseDto> searchResult = orderRepository.findClaimOrders(option, keyword, userId, pageable);
+
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        return searchResult;
+    }
+
 
     private OrderResponseDto toResponseDto(Order order) {
         return new OrderResponseDto(
