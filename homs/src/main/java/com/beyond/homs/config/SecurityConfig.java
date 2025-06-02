@@ -6,7 +6,6 @@ import com.beyond.homs.common.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -73,9 +72,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // 모든 Origin 허용 (개발 단계에서만 사용)
-        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // 허용할 HTTP 메서드
+        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(java.util.List.of("*")); // 모든 헤더 허용
-        configuration.setExposedHeaders(java.util.List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.LINK, "X-Total-Count", HttpHeaders.CONTENT_DISPOSITION)); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
+        configuration.setExposedHeaders(java.util.List.of("Authorization", "Link", "X-Total-Count")); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
         configuration.setAllowCredentials(true); // 인증 정보 포함 여부 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

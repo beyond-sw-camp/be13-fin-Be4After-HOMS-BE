@@ -41,4 +41,8 @@ public class UserLogin {
         this.passwordHash = passwordHash;
         this.lockedOut = lockedOut;
     }
+
+    public void lockAccount() {
+        this.lockedOut = true;
+    }
 }
