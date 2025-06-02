@@ -25,9 +25,10 @@ public class EmailControllerImpl implements EmailController {
             @RequestBody EmailPostDto emailPostDto) {
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(emailPostDto.getEmail())
-                .subject("테스트 이메일입니다.")
+                .subject(emailPostDto.getSubject())
+                .content(emailPostDto.getContent())
                 .build();
-        emailService.sendMail(emailMessage,"email");
+        emailService.sendMail(emailMessage,emailPostDto.getEmailType());
 
         return ResponseEntity.ok().build();
     }
