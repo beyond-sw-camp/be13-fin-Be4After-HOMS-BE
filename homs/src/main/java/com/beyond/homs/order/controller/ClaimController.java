@@ -7,7 +7,6 @@ import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
 import com.beyond.homs.order.dto.ClaimStatusUpdateDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -16,12 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Tag(name = "클레임 API", description = "클레임 API 목록")
 public interface ClaimController {
@@ -39,6 +35,7 @@ public interface ClaimController {
     @Operation(summary = "클레임 조회", description = "해당 주문의 모든 클레임 목록을 조회합니다.")
     ResponseEntity<ResponseDto<Page<ClaimResponseDto>>> getClaims(
             @PathVariable Long orderId,
+            @RequestParam(required = false) Long claimId,
             @RequestParam(required = false) ClaimSearchOption option,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 10, page = 0) Pageable pageable);
@@ -47,5 +44,4 @@ public interface ClaimController {
     ResponseEntity<ResponseDto<Void>> updateClaimStatus(
             @PathVariable Long claimId,
             @Valid @RequestBody ClaimStatusUpdateDto dto);
-
 }

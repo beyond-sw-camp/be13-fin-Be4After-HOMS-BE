@@ -9,7 +9,6 @@ import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Claim;
 import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.entity.OrderItemId;
@@ -75,8 +74,8 @@ public class ClaimServiceImpl implements ClaimService {
     // }
 
     @Override
-    public Page<ClaimResponseDto> getClaims(Long orderId, ClaimSearchOption option, String keyword, Pageable pageable){
-        Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, option, keyword, pageable);
+    public Page<ClaimResponseDto> getClaims(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable){
+        Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, claimId, option, keyword, pageable);
 
         // 검색결과가 없는 경우 예외 처리
         if (searchResult.isEmpty()) {

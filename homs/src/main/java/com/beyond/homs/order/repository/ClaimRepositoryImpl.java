@@ -38,9 +38,10 @@ public class ClaimRepositoryImpl implements ClaimRepositoryCustom {
     }
 
     @Override
-    public Page<ClaimResponseDto> findClaim(Long orderId, ClaimSearchOption option, String keyword, Pageable pageable) {
+    public Page<ClaimResponseDto> findClaim(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable) {
         // orderId 조건 생성 (null이 아니면 조건 추가)
         BooleanExpression orderIdCondition = (orderId != null) ? order.orderId.eq(orderId) : null;
+        BooleanExpression claimIdCondition = (claimId != null) ? claim.claimId.eq(claimId) : null;
 
         List<ClaimResponseDto> content = queryFactory // JPAQueryFactory 사용
                 // select문 시작
@@ -61,6 +62,7 @@ public class ClaimRepositoryImpl implements ClaimRepositoryCustom {
                 .leftJoin(user.company,company)
                 .where(
                         orderIdCondition,
+                        claimIdCondition,
                         searchOptions(keyword, option) // 동적 검색 조건
                 )
                 .orderBy(product.productId.desc()) // 정렬
@@ -78,6 +80,7 @@ public class ClaimRepositoryImpl implements ClaimRepositoryCustom {
                 .leftJoin(user.company,company)
                 .where(
                         orderIdCondition,
+                        claimIdCondition,
                         searchOptions(keyword, option) // 동적 검색 조건
                 );
 

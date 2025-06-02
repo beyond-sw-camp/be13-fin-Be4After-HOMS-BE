@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public interface ClaimService {
     ClaimResponseDto createClaim(@Valid ClaimRequestDto claimRequestDto);
 
-    Page<ClaimResponseDto> getClaims(Long orderId, ClaimSearchOption option, String keyword, Pageable pageable);
+    Page<ClaimResponseDto> getClaims(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable);
 
     Page<ClaimListResponseDto> getAllClaimOrders(OrderSearchOption option, String keyword, Pageable pageable);
 

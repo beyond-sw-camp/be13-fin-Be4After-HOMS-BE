@@ -7,7 +7,6 @@ import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
 import com.beyond.homs.order.dto.ClaimStatusUpdateDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.order.service.ClaimService;
 import com.beyond.homs.order.service.OrderService;
@@ -67,10 +66,11 @@ public class ClaimControllerImpl implements ClaimController {
     @Override
     public ResponseEntity<ResponseDto<Page<ClaimResponseDto>>> getClaims(
             @PathVariable Long orderId,
+            @RequestParam(required = false) Long claimId,
             @RequestParam(required = false) ClaimSearchOption option,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 10, page = 0) Pageable pageable) {
-        Page<ClaimResponseDto> list = claimService.getClaims(orderId, option, keyword, pageable);
+        Page<ClaimResponseDto> list = claimService.getClaims(orderId, claimId, option, keyword, pageable);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문관련 모든 클레임을 성공적으로 조회했습니다.",
