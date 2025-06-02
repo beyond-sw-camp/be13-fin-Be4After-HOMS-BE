@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.beyond.homs.order.entity.QClaim.claim;
 import static com.beyond.homs.order.entity.QOrder.order;
 import static com.beyond.homs.company.entity.QCompany.company;
 import static com.beyond.homs.user.entity.QUser.user;
@@ -28,22 +29,25 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     // 동적 검색 조건 메서드
     private BooleanExpression searchOptions(String keyword, OrderSearchOption option) {
-        // 검색 조건이 없으면 null 반환
-        // if (option == null || keyword == null) {
-        //     return null;
-        // }
-
         if (option == OrderSearchOption.ORDER_CODE){
             return order.orderCode.contains(keyword); // 코드 검색
         } else if (option == OrderSearchOption.COMPANY_NAME){
             return company.companyName.contains(keyword); // 회사 검색
         }
-
         return null; // 일치하는 옵션 없으면 null
     }
 
+    // 사용자 ID 기반 필터링 조건 추가
+    private BooleanExpression userEq(Long userId) {
+        if (userId == null) {
+            return null; // userId가 null이면 모든 주문 조회 (관리자 케이스)
+        }
+        // 주문을 생성한 user의 ID와 userId가 일치하는 경우
+        return order.user.userId.eq(userId);
+    }
+
     @Override
-    public Page<OrderResponseDto> findOrders(OrderSearchOption option, String keyword, Pageable pageable) {
+    public Page<OrderResponseDto> findOrders(OrderSearchOption option, String keyword, Long userId, Pageable pageable) {
         List<OrderResponseDto> content = queryFactory // JPAQueryFactory 사용
                 // select문 시작
                 .select(Projections.constructor(OrderResponseDto.class, // DTO 인트턴스 직접 생성
@@ -61,7 +65,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .leftJoin(order.user,user)
                 .leftJoin(user.company,company)
                 .where(
-                        searchOptions(keyword, option) // 동적 검색 조건
+                        searchOptions(keyword, option),  // 동적 검색 조건
+                        userEq(userId)                   // 사용자 필터링 조건 추가
                 )
                 .orderBy(order.orderId.desc()) // 정렬
                 .offset(pageable.getOffset()) // 페이징 시작 오프셋
@@ -74,8 +79,57 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .from(order)
                 .leftJoin(order.user,user)
                 .leftJoin(user.company,company)
-                .where(searchOptions(keyword, option));
+                .where(
+                        searchOptions(keyword, option),
+                        userEq(userId)
+                );
         
+        // Spring Data JPA의 PageableExecutionUtils를 사용하여 Page 객체 생성
+        return PageableExecutionUtils.getPage(content,pageable,totalCount::fetchOne);
+    }
+
+    // 클레임이 있는 모든 주문 검색
+    @Override
+    public Page<OrderResponseDto> findClaimOrders(OrderSearchOption option, String keyword, Long userId, Pageable pageable) {
+        List<OrderResponseDto> content = queryFactory // JPAQueryFactory 사용
+                // select문 시작
+                .select(Projections.constructor(OrderResponseDto.class, // DTO 인트턴스 직접 생성
+                        order.orderId,
+                        order.orderCode,
+                        company.companyName,
+                        order.orderDate,
+                        order.dueDate,
+                        order.approved,
+                        order.parentOrder.orderId,
+                        order.rejectReason,
+                        order.orderStatus
+                ))
+                .from(claim)
+                .leftJoin(claim.orderItem.order,order)
+                .leftJoin(order.user,user)
+                .leftJoin(user.company,company)
+                .where(
+                        searchOptions(keyword, option),  // 동적 검색 조건
+                        userEq(userId)                   // 사용자 필터링 조건 추가
+                )
+                .groupBy(order.orderId)
+                .orderBy(order.orderId.desc()) // 정렬
+                .offset(pageable.getOffset()) // 페이징 시작 오프셋
+                .limit(pageable.getPageSize()) // 페이지 크기
+                .fetch(); // 실제 쿼리 실행 및 결과 리스트 반환
+
+        // 총 개수 쿼리
+        JPAQuery<Long> totalCount = queryFactory
+                .select(order.count()) // COUNT 쿼리
+                .from(order)
+                .leftJoin(order.user,user)
+                .leftJoin(user.company,company)
+                .where(
+                        searchOptions(keyword, option),
+                        userEq(userId)                   // 사용자 필터링 조건 추가
+                )
+                .groupBy(order.orderId);
+
         // Spring Data JPA의 PageableExecutionUtils를 사용하여 Page 객체 생성
         return PageableExecutionUtils.getPage(content,pageable,totalCount::fetchOne);
     }

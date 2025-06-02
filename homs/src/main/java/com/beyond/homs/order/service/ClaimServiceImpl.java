@@ -1,5 +1,9 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.common.util.SecurityUtil;
+import com.beyond.homs.order.data.ClaimSearchOption;
 import com.beyond.homs.order.data.ClaimStatusEnum;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
@@ -10,11 +14,12 @@ import com.beyond.homs.order.repository.ClaimRepository;
 import com.beyond.homs.order.repository.OrderItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static com.beyond.homs.user.data.UserRole.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -54,11 +59,23 @@ public class ClaimServiceImpl implements ClaimService {
         return toResponseDto(saved);
     }
 
+    // @Override
+    // public List<ClaimResponseDto> getClaims(Long orderId) {
+    //     return claimRepository.findAllByOrderItem_OrderItemId_OrderId(orderId).stream()
+    //             .map(this::toResponseDto)
+    //             .collect(Collectors.toList());
+    // }
+
     @Override
-    public List<ClaimResponseDto> getClaims(Long orderId) {
-        return claimRepository.findAllByOrderItem_OrderItemId_OrderId(orderId).stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
+    public Page<ClaimResponseDto> getClaims(Long orderId, ClaimSearchOption option, String keyword, Pageable pageable){
+        Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, option, keyword, pageable);
+
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        return searchResult;
     }
 
     @Override
