@@ -41,20 +41,6 @@ public class EmailServiceImpl implements EmailService {
             String templateName = "email-base-template"; // 기본 템플릿 이름
 
             switch (type) {
-                // case VERIFICATION:
-                //     // 회원가입 인증 이메일 내용
-                //     String verificationCode = emailMessage.getContent(); // EmailMessage의 content를 인증 코드로 사용
-                //     String verificationHtml = "<p> 아래 코드를 회원가입 창으로 돌아가 입력해주세요.</p>" +
-                //                                 "<br>" +
-                //                                 "<div align=\"center\" style=\"border:1px solid black; font-family:verdana;\">" +
-                //                                 "    <h3 style=\"color:blue\"> 회원가입 인증 코드 입니다. </h3>" +
-                //                                 "    <div style=\"font-size:130%\">" + verificationCode + "</div>" +
-                //                                 "</div>";
-                //     templateVariables.put("mainTitle", "안녕하세요. HOMS 회원가입 인증 메일입니다.");
-                //     templateVariables.put("dynamicContent", verificationHtml);
-                //     // templateName은 그대로 "email-base-template" 사용
-                //     break;
-
                 case ORDER_CONFIRMATION:
                     // 주문 승인 메일
                     String contentHtml = "<p> 요청하신 주문이 승인되었습니다! </p>" +
@@ -79,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
                 case SHIPPING_UPDATE:
                     // 배송 상태 알림
                     String orderStatus = emailMessage.getContent();
-                    String orderStatusHtml = "<p> 배송상태가 " + orderStatus + "으로 변경되었습니다. </p>" +
+                    String orderStatusHtml = "<p> 배송 상태가 " + orderStatus + "으로 변경되었습니다. </p>" +
                                             "<p> HOMS를 이용해주셔 감사합니다. </p>";
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
                     templateVariables.put("dynamicContent", orderStatusHtml);
@@ -91,6 +77,15 @@ public class EmailServiceImpl implements EmailService {
                                          "<p> 지금 바로 서비스를 이용해보세요.</p>";
                     templateVariables.put("mainTitle", "HOMS에 오신 것을 환영합니다!");
                     templateVariables.put("dynamicContent", welcomeHtml);
+                    break;
+                
+                case SETTLE_STATUS:
+                    // 정산 상태 알림
+                    String settleStatus = emailMessage.getContent();
+                    String settleStatusHtml = "<p> 정산 상태가 " + settleStatus + "으로 변경되었습니다. </p>" +
+                                            "<p> HOMS를 이용해주셔 감사합니다. </p>";
+                    templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
+                    templateVariables.put("dynamicContent", settleStatusHtml);
                     break;
 
                 default:
