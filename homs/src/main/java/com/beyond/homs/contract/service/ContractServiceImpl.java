@@ -30,11 +30,19 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional
     public ContractResponseDto createContract(ContractRequestDto contractRequestDto) {
-        Company company = companyRepository.findById(contractRequestDto.getCompanyId())
-                .orElseThrow(() -> new IllegalArgumentException("회사 정보가 없습니다. id=" + contractRequestDto.getCompanyId()));
-        Product product = productRepository.findById(contractRequestDto.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("상품 정보가 없습니다. id=" + contractRequestDto.getProductId()));
+        // 1) companyName 으로 조회
+        Company company = companyRepository.findByCompanyName(contractRequestDto.getCompanyName())
+                .orElseThrow(() ->
+                        new CustomException(ExceptionMessage.COMPANY_NOT_FOUND)
+                );
 
+        // 2) productName 으로 조회
+        Product product = (Product) productRepository.findByProductName(contractRequestDto.getProductName())
+                .orElseThrow(() ->
+                        new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND)
+                );
+
+        // 3) Contract 엔티티 빌드 및 저장
         Contract contract = Contract.builder()
                 .company(company)
                 .product(product)
@@ -43,6 +51,8 @@ public class ContractServiceImpl implements ContractService {
                 .build();
 
         contractRepository.save(contract);
+
+        // 4) 저장된 엔티티를 ResponseDto 로 변환
         return toResponseDto(contract);
     }
 
