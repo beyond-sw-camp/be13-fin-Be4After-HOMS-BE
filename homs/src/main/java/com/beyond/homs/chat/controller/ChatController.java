@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/chatter")
 public class ChatController {
 
     private final ChatService chatService;

@@ -1,6 +1,7 @@
 package com.beyond.homs.config;
 
 import com.beyond.homs.chat.interceptor.StompHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -10,7 +11,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final StompHandler stompHandler;
 
     // 메시지 브로커 구성
     @Override
@@ -22,7 +26,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // JWT 인증 필터 삽입을 위한 설정
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new StompHandler()); // JWT 인증 핸들러
+//        registration.interceptors(new StompHandler()); // JWT 인증 핸들러
+
+        // new StompHandler() 대신, 주입된 stompHandler 사용
+        registration.interceptors(stompHandler);
     }
 
     // WebSocket 연결 endpoint 정의
