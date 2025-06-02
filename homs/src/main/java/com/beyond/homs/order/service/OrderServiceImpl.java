@@ -196,26 +196,6 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<OrderResponseDto> getAllClaimOrders(OrderSearchOption option, String keyword, Pageable pageable) {
-        Long userId = null;
-
-        // 로그인한 유저가 일반 유저라면 해당 유저의 Id값으로 검색
-        if(SecurityUtil.getCurrentUserRole() == ROLE_USER){
-            userId = SecurityUtil.getCurrentUserId();
-        }
-
-        Page<OrderResponseDto> searchResult = orderRepository.findClaimOrders(option, keyword, userId, pageable);
-
-        // 검색결과가 없는 경우 예외 처리
-        if (searchResult.isEmpty()) {
-            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
-        }
-
-        return searchResult;
-    }
-
-
     private OrderResponseDto toResponseDto(Order order) {
         return new OrderResponseDto(
             order.getOrderId(),

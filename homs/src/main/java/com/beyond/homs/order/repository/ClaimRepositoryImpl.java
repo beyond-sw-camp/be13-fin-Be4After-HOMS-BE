@@ -31,9 +31,7 @@ public class ClaimRepositoryImpl implements ClaimRepositoryCustom {
 
     // 동적 검색 조건 메서드
     private BooleanExpression searchOptions(String keyword, ClaimSearchOption option) {
-        if (option == ClaimSearchOption.ORDER_CODE){
-            return order.orderCode.contains(keyword); // 주문 코드
-        } else if (option == ClaimSearchOption.PRODUCT_NAME){
+        if (option == ClaimSearchOption.PRODUCT_NAME){
             return product.productName.contains(keyword); // 상품명
         }
         return null; // 일치하는 옵션 없으면 null

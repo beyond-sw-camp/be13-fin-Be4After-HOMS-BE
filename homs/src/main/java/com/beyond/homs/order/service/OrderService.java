@@ -34,6 +34,4 @@ public interface OrderService {
     // List<OrderResponseDto> getOrdersByUser(Long userId);
 
     List<OrderResponseDto> getChildOrders(Long parentOrderId);
-
-    Page<OrderResponseDto> getAllClaimOrders(OrderSearchOption option, String keyword, Pageable pageable);
 }

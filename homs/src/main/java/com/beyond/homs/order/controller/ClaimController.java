@@ -3,6 +3,7 @@ package com.beyond.homs.order.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.data.ClaimSearchOption;
 import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
 import com.beyond.homs.order.dto.ClaimStatusUpdateDto;
@@ -30,7 +31,7 @@ public interface ClaimController {
             @Valid @RequestBody ClaimRequestDto claimRequestDto);
 
     @Operation(summary = "클레임이 있는 주문 조회", description = "클레임이 있는 모든 주문을 조회합니다.")
-    ResponseEntity<ResponseDto<Page<OrderResponseDto>>> getAllOrders(
+    ResponseEntity<ResponseDto<Page<ClaimListResponseDto>>> getAllOrders(
             @RequestParam(required = false) OrderSearchOption option,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 10, page = 0) Pageable pageable);

@@ -5,19 +5,26 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.order.data.ClaimSearchOption;
 import com.beyond.homs.order.data.ClaimStatusEnum;
+import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.ClaimRequestDto;
 import com.beyond.homs.order.dto.ClaimResponseDto;
+import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Claim;
 import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.entity.OrderItemId;
 import com.beyond.homs.order.repository.ClaimRepository;
 import com.beyond.homs.order.repository.OrderItemRepository;
+import com.beyond.homs.order.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.beyond.homs.user.data.UserRole.ROLE_USER;
 
@@ -27,6 +34,7 @@ import static com.beyond.homs.user.data.UserRole.ROLE_USER;
 public class ClaimServiceImpl implements ClaimService {
 
     private final ClaimRepository claimRepository;
+    private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
     @Override
@@ -76,6 +84,37 @@ public class ClaimServiceImpl implements ClaimService {
         }
 
         return searchResult;
+    }
+
+    @Override
+    public Page<ClaimListResponseDto> getAllClaimOrders(OrderSearchOption option, String keyword, Pageable pageable) {
+        Long userId = null;
+
+        // 로그인한 유저가 일반 유저라면 해당 유저의 Id값으로 검색
+        if(SecurityUtil.getCurrentUserRole() == ROLE_USER){
+            userId = SecurityUtil.getCurrentUserId();
+        }
+
+        Page<ClaimListResponseDto> searchResult = orderRepository.findClaimOrders(option, keyword, userId, pageable);
+        List<ClaimListResponseDto> orderDtos = searchResult.getContent();
+
+        // 검색결과가 없는 경우 예외 처리
+        if (orderDtos.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        // 각 주문에 대한 클레임 해결 상태 판단 및 DTO에 설정
+        List<ClaimListResponseDto> processedOrderDtos = orderDtos.stream()
+                .peek(orderDto -> {
+                    List<Claim> claimsForOrder = claimRepository.findByOrderItem_Order_orderId(orderDto.getOrderId());
+                    boolean allClaimsResolved = !claimsForOrder.isEmpty() &&
+                                                claimsForOrder.stream()
+                                                    .allMatch(claim -> claim.getStatus().isResolved());
+                    orderDto.setAllClaimsResolved(allClaimsResolved); // DTO에 결과 설정
+                })
+                .toList();
+
+        return new PageImpl<>(processedOrderDtos, pageable, searchResult.getContent().size());
     }
 
     @Override

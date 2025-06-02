@@ -1,7 +1,9 @@
 package com.beyond.homs.order.repository;
 
 import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -90,10 +92,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     // 클레임이 있는 모든 주문 검색
     @Override
-    public Page<OrderResponseDto> findClaimOrders(OrderSearchOption option, String keyword, Long userId, Pageable pageable) {
-        List<OrderResponseDto> content = queryFactory // JPAQueryFactory 사용
+    public Page<ClaimListResponseDto> findClaimOrders(OrderSearchOption option, String keyword, Long userId, Pageable pageable) {
+        List<ClaimListResponseDto> content = queryFactory // JPAQueryFactory 사용
                 // select문 시작
-                .select(Projections.constructor(OrderResponseDto.class, // DTO 인트턴스 직접 생성
+                .select(Projections.constructor(ClaimListResponseDto.class, // DTO 인트턴스 직접 생성
                         order.orderId,
                         order.orderCode,
                         company.companyName,
