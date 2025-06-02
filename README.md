@@ -45,3 +45,24 @@
 [화면설계서 바로가기](https://www.figma.com/design/q944fA6GYd5sTxmnAI1m5D/화면-설계서?node-id=0-1&t=zvr2lsrwj7Su31aZ-1)
 
 </details>
+
+<details>
+<summary><strong>📂 프로그램 사양서</strong></summary>
+
+[프로그램 사양서 바로가기](https://playdatacademy.notion.site/API-1d6d943bcac2810a938bd9ac0cf706da?pvs=4)
+
+</details>
+
+<details>
+<summary><strong>📂 단위 테스트 결과서</strong></summary>
+
+[단위 테스트 결과서 바로가기](https://playdatacademy.notion.site/1d6d943bcac2818eb324eb893fbb1f77?pvs=4)
+
+</details>
+
+<details>
+<summary><strong>📂 UI/UX 단위 테스트</strong></summary>
+
+[UI/UX 단위 테스트 바로가기](https://playdatacademy.notion.site/UI-UX-203d943bcac280a8a3a7fe7263847027?pvs=4)
+
+</details>

@@ -8,13 +8,13 @@ on:
     paths:
       - 'homs/**'
       - '.github/workflows/homs-main.yml'
-  pull_request:
-    types: [closed]
-    branches:
-      - develop
-    paths:
-      - 'homs/**'
-      - '.github/workflows/homs-main.yml'
+  # pull_request:
+  #   types: [closed]
+  #   branches:
+  #     - develop
+  #   paths:
+  #     - 'homs/**'
+  #     - '.github/workflows/homs-main.yml'
   workflow_dispatch: 
 
 jobs:
@@ -59,3 +59,10 @@ jobs:
           docker build -t homs-backend:latest --build-arg BUILD_PROFILE=prod .
           docker tag homs-backend:latest 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
           docker push 688567303092.dkr.ecr.ap-northeast-2.amazonaws.com/homs/backend:latest
+
+      - name: Trigger ECS Rolling Update
+        run: |
+          aws ecs update-service \
+          --cluster    homs-server-cluster \
+          --service    homs-backend-service-01inek5c \
+          --force-new-deployment

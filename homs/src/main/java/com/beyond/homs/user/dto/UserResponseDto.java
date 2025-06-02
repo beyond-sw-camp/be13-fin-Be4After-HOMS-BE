@@ -8,8 +8,10 @@ public record UserResponseDto(
     String managerName,
     String managerEmail,
     String managerPhone,
-    Long companyId,
-    Long deptId
+//    Long companyId,
+//    Long deptId
+    String companyName,
+    String deptName
 ) {
     public static UserResponseDto fromUser(User user) {
         return new UserResponseDto(
@@ -18,8 +20,8 @@ public record UserResponseDto(
             user.getManagerName(),
             user.getManagerEmail(),
             user.getManagerPhone(),
-            user.getCompany().getCompanyId(),
-            user.getDepartment().getDeptId()
+            user.getCompany().getCompanyName(),
+            user.getDepartment().getDeptName().toString()
         );
     }
 }
