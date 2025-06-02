@@ -20,7 +20,7 @@ on:
 jobs:
   build-and-push:
     # push 이벤트이거나, pull_request 중 머지된 경우에만 실행
-    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged) }}
+    # if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged) }}
     runs-on: ubuntu-latest
 
     steps:

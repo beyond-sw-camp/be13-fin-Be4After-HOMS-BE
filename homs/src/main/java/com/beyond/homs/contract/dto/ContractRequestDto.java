@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class ContractRequestDto {
-    private final Long companyId;
+    private final String companyName;
 
-    private final Long productId;
+    private final String productName;
 
     private final LocalDateTime contractStartAt;
 
