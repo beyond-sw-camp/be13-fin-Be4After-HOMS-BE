@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService{
     private final MenuRepository menuRepository;
-    private final DepartmentRepository departmentRepository;
 
     // 메뉴 조회
     @Override
