@@ -22,15 +22,34 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("Authorization");
-            if (token == null || !jwtService.validateToken(token)) {
-                throw new IllegalArgumentException("JWT 토큰이 유효하지 않음");
+        if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+            // 1) STOMP CONNECT 헤더에서 Authorization 가져오기
+            String rawHeader = accessor.getFirstNativeHeader("Authorization");
+            if (rawHeader == null || !rawHeader.startsWith("Bearer ")) {
+                System.out.println("[StompHandler] Authorization 헤더 누락 또는 형식 오류: " + rawHeader);
+                return null; // CONNECT 자체를 거부
             }
-            String userId = jwtService.getUserId(token);
-            accessor.setUser(new UsernamePasswordAuthenticationToken(userId, null, null));
+
+            String token = rawHeader.substring(7); // "Bearer " 이후 실제 토큰만 추출
+            try {
+                // 2) 토큰 유효성 검사
+                if (!jwtService.validateToken(token)) {
+                    System.out.println("[StompHandler] 유효하지 않은 JWT 토큰: " + token);
+                    return null;
+                }
+
+                // 3) 토큰에서 userId 추출
+                String userId = jwtService.getUserId(token);
+
+                // 4) 인증 객체 생성하여 WebSocket 세션에 바인딩
+                accessor.setUser(new UsernamePasswordAuthenticationToken(userId, null, null));
+            } catch (Exception ex) {
+                System.out.println("[StompHandler] JWT 검증 중 예외 발생: " + ex.getMessage());
+                return null;
+            }
         }
 
         return message;
     }
 }
+
