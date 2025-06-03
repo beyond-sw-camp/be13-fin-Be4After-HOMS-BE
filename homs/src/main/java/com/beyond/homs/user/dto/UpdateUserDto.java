@@ -7,5 +7,5 @@ public record UpdateUserDto(
         @NotBlank String managerName,
         @Email String managerEmail,
         @NotBlank String managerPhone,
-        @NotBlank String newPassword
+        String newPassword
 ) { }

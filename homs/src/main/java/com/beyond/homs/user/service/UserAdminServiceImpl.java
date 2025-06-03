@@ -90,6 +90,16 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     @Transactional
     public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() -> new RuntimeException("User not found or already deleted"));
+
+        user.delete(); // 논리 삭제 처리
+
+        UserLogin userLogin = userLoginRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("User login not found"));
+
+        userLogin.lockAccount();
+        userLoginRepository.save(userLogin);
+        userRepository.save(user);
     }
 }
