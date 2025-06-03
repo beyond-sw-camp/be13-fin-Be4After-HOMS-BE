@@ -27,7 +27,7 @@ public class MenuControllerImpl implements MenuController {
     public ResponseEntity<ResponseDto<List<MenuListDto>>> MenuList() {
         List<MenuListDto> menuList = menuService.getMenus();
 
-        return ResponseEntity.ok(
+        return ResponseEntity.ok( 
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
                         "메뉴 목록을 불러왔습니다.",
