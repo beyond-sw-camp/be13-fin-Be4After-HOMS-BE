@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT NEW com.beyond.homs.product.dto.ProductListDto(p.productId, p.productName, p.productMinQuantity, SUM(i.quantity), p.category) " +
@@ -22,4 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("domain") String domain,
             @Param("category") String category,
             Pageable pageable);
+
+    Optional<Object> findByProductName(String productName);
 }

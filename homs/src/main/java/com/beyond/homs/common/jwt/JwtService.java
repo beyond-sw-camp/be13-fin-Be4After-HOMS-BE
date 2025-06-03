@@ -55,4 +55,8 @@ public class JwtService {
     public String getJti(String token) {
         return getClaims(token).getId();
     }
+
+    public String getUserId(String token) {
+        return getClaims(token).getSubject();
+    }
 }
