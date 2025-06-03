@@ -6,10 +6,7 @@ import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.repository.OrderItemRepository;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.settlement.data.SettleStatusEnum;
-import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
-import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
-import com.beyond.homs.settlement.dto.SettlementResponseDto;
-import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
+import com.beyond.homs.settlement.dto.*;
 import com.beyond.homs.settlement.entity.Settlement;
 import com.beyond.homs.settlement.repository.SettlementRepository;
 import com.beyond.homs.wms.entity.DeliveryAddress;
@@ -81,6 +78,23 @@ public class SettlementServiceImpl implements SettlementService {
                 .orElseThrow(() -> new IllegalArgumentException("정산 정보를 찾을 수 없습니다."));
 
         settlement.updateSettleStatus(SettleStatusEnum.SETTLED);
+    }
+
+    @Override
+    @Transactional
+    public SettlementResponseDto createSettlement(Long orderId, SettlementRequestDto requestDto){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다. ID=" + orderId));
+
+        Settlement settlement = Settlement.builder()
+                .order(order)
+                .settlementDate(requestDto.getSettlementDate())
+                .taxInvoice(requestDto.getTexInvoice())
+                .isSettled(requestDto.getIsSettled())
+                .build();
+
+        settlementRepository.save(settlement);
+        return toSettlementResponse(settlement);
     }
 
     private SettlementResponseDto toSettlementResponse(Settlement settlement) {

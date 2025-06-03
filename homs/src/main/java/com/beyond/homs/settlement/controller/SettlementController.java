@@ -1,15 +1,13 @@
 package com.beyond.homs.settlement.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
-import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
-import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
-import com.beyond.homs.settlement.dto.SettlementResponseDto;
-import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
+import com.beyond.homs.settlement.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -37,6 +35,12 @@ public interface SettlementController {
     @Operation(summary = "세금명세서 상태 변경", description = "정산 관리 상태 변경합니다")
     ResponseEntity<ResponseDto<String>> updateSettlementStatus(
             @RequestBody SettlementUpdateRequestDto requestDto
+    );
+
+    @Operation(summary = "정산 생성", description = "정산을 생성합니다")
+    ResponseEntity<ResponseDto<SettlementResponseDto>> createSettlement(
+            @PathVariable("orderId") Long orderId,
+            @RequestBody SettlementRequestDto requestDto
     );
 }
 

@@ -1,9 +1,6 @@
 package com.beyond.homs.settlement.service;
 
-import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
-import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
-import com.beyond.homs.settlement.dto.SettlementResponseDto;
-import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
+import com.beyond.homs.settlement.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,4 +16,6 @@ public interface SettlementService {
     SettlementCompanyInfoDto getCompanyInfoByOrderId(Long orderId);
 
     void updateSettlementStatus(SettlementUpdateRequestDto requestDto);
+
+    SettlementResponseDto createSettlement(Long id, SettlementRequestDto requestDto);
 }
