@@ -11,6 +11,9 @@ public interface DeliveryAddService {
   // 배송지 목록
   List<DeliveryAddResponseDto> getDeliveryList();
 
+  // 배송지 목록
+  List<DeliveryAddResponseDto> getDeliveryListByCompanyId(Long companyId);
+
   // 배송지 추가
   @Transactional
   DeliveryAddResponseDto createDelivery(DeliveryAddRequestDto requestDto);

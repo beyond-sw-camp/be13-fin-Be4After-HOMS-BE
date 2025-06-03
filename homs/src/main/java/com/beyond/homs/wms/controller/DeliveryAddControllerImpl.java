@@ -33,6 +33,19 @@ public class DeliveryAddControllerImpl implements DeliveryAddController {
                 ));
     }
 
+    // 배송지 목록 조회
+    @GetMapping("/{companyId}")
+    @Override
+    public ResponseEntity<ResponseDto<List<DeliveryAddResponseDto>>> deliveryAddListByCompany(@PathVariable Long companyId) {
+        List<DeliveryAddResponseDto> deliveryList = deliveryAddService.getDeliveryListByCompanyId(companyId);
+        return ResponseEntity.ok(
+            new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "모든 배송지 목록을 불러왔습니다.",
+                deliveryList
+            ));
+    }
+
     // 배송지 추가
     @PostMapping("/create")
     @Override

@@ -4,7 +4,6 @@ import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
-import com.beyond.homs.menu.entity.Menu;
 import com.beyond.homs.wms.dto.DeliveryAddRequestDto;
 import com.beyond.homs.wms.dto.DeliveryAddResponseDto;
 import com.beyond.homs.wms.entity.DeliveryAddress;
@@ -25,6 +24,23 @@ public class DeliveryAddServiceImpl implements DeliveryAddService{
   @Override
   public List<DeliveryAddResponseDto> getDeliveryList() {
     List<DeliveryAddress> addresses = deliveryAddRepository.findAll();
+
+    return addresses.stream()
+        .map(address -> DeliveryAddResponseDto.builder()
+            .addressId(address.getAddressId())
+            .deliveryName(address.getDeliveryName())
+            .postalCode(address.getPostalCode())
+            .streetAddress(address.getStreetAddress())
+            .detailedAddress(address.getDetailedAddress())
+            .reference(address.getReference())
+            .companyId(address.getCompany().getCompanyId())
+            .build())
+        .toList();
+  }
+
+  @Override
+  public List<DeliveryAddResponseDto> getDeliveryListByCompanyId(Long companyId) {
+    List<DeliveryAddress> addresses = deliveryAddRepository.findByCompany_CompanyId(companyId);
 
     return addresses.stream()
         .map(address -> DeliveryAddResponseDto.builder()
