@@ -31,8 +31,8 @@ public class ChatService {
     public ChatRoom getOrCreateRoom(Long userId1, Long userId2) {
         // 두 사용자 간 이미 방이 있는지 확인 (순서 상관 없이)
         return chatRoomRepository
-                .findByUser1_IdAndUser2_Id(userId1, userId2)
-                .or(() -> chatRoomRepository.findByUser2_IdAndUser1_Id(userId1, userId2))
+                .findByUser1_UserIdAndUser2_UserId(userId1, userId2)
+                .or(() -> chatRoomRepository.findByUser2_UserIdAndUser1_UserId(userId1, userId2))
                 .orElseGet(() -> {
                     // 없으면 신규 생성
                     User user1 = userRepository.findById(userId1)
