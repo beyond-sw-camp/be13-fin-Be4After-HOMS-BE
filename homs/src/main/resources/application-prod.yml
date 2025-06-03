@@ -44,3 +44,6 @@ springboot:
   jwt:
     secret: ${JWT_SECRET}
     issuer: ${JWT_ISSUER}
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL}
