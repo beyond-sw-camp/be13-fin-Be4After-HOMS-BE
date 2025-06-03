@@ -10,7 +10,7 @@ public record UserResponseDto(
     String managerName,
     String managerEmail,
     String managerPhone,
-//    Long companyId,
+    Long companyId,
 //    Long deptId
     String companyName,
     String deptName,
@@ -29,6 +29,7 @@ public record UserResponseDto(
                 user.getManagerName(),
                 user.getManagerEmail(),
                 user.getManagerPhone(),
+                user.getCompany().getCompanyId(),
                 user.getCompany().getCompanyName(),
                 user.getDepartment().getDeptName().toString(),
                 user.getDeletedAt(),
