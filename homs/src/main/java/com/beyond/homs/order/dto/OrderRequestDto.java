@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
 public class OrderRequestDto {
     private final String orderCode;
 
-    private final LocalDateTime dueDate;
+    private final Date dueDate;
 
     private final boolean approved;
 
