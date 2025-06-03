@@ -2,8 +2,12 @@ package com.beyond.homs.common.exception.handler;
 
 import com.beyond.homs.common.exception.dto.ErrorResponseDto;
 import com.beyond.homs.common.exception.exceptions.BaseException;
+import com.beyond.homs.common.message.MessageSender;
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,7 +22,12 @@ import java.time.LocalDateTime;
 
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private final MessageSender messageSender;
+
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     //  ResponseEntityExceptionHandler에서 상속한 메서드로, Spring 내부에서 예외가 발생했을 때 호추된다.
     // buildErrorResponse를 통해서 예외를 처리하도록 작성
@@ -36,6 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                       String message,
                                                       HttpStatus httpStatus,
                                                       WebRequest request) {
+        errorReport(message, request.getDescription(false));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(httpStatus.value(), message, LocalDateTime.now());
         if (exception instanceof BaseException) {
             errorResponseDto.setErrorCode(((BaseException) exception).getErrorCode());
@@ -47,6 +57,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Object> handleBaseException(BaseException ex, WebRequest request) {
         log.error("BaseException: {}", ex.getMessage());
+        errorReport(ex.getMessage(), request.getDescription(false));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ex.getStatus().value(), ex.getMessage(), LocalDateTime.now());
         errorResponseDto.setErrorCode(ex.getErrorCode());
         return ResponseEntity.status(ex.getStatus()).body(errorResponseDto);
@@ -61,5 +72,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAllUncaughtException(Exception exception, WebRequest request) {
         log.error("Internal error occurred", exception);
         return buildErrorResponse(exception, exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    private void errorReport(String message, String requestUri) {
+        System.out.println( "Profile!!!!!!!!!!!!" + profile);
+        if ("prod".equals(profile)) { // Only send error reports in production
+            String rid = ThreadContext.get("requestId");
+            messageSender.send(String.format("```Exception occurred\n \tRequestId=%s \n \tMessage=%s \n \t%s```", rid, message, requestUri));
+        }
     }
 }
