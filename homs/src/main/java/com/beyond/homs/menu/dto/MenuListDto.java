@@ -15,16 +15,28 @@ public class MenuListDto {
 
     private final int sortNo;
 
-    private final Long deptId;
+    private final Boolean buy;
+
+    private final Boolean delivery;
+
+    private final Boolean materials;
+
+    private final Boolean sales;
+
+    private final Long parentId;
 
     private final List<MenuListDto> children;
 
-    private MenuListDto(Long menuId, String menuName, int sortNo, Long deptId, List<MenuListDto> children)
+    private MenuListDto(Long menuId, String menuName, int sortNo, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Long parentId, List<MenuListDto> children)
     {
         this.menuId = menuId;
         this.menuName = menuName;
         this.sortNo = sortNo;
-        this.deptId = deptId;
+        this.buy = buy;
+        this.delivery = delivery;
+        this.materials = materials;
+        this.sales = sales;
+        this.parentId = parentId;
         this.children = children;
     }
 
@@ -34,7 +46,11 @@ public class MenuListDto {
                 menu.getMenuId(),
                 menu.getMenuName(),
                 menu.getSortNo(),
-                menu.getDepartment().getDeptId(),
+                menu.getBuy(),
+                menu.getDelivery(),
+                menu.getMaterials(),
+                menu.getSales(),
+                menu.getParent() != null ? menu.getParent().getMenuId() : null,
                 menu.getChildren().stream()
                         .map(MenuListDto::of)
                         .collect(Collectors.toList())
