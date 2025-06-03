@@ -25,6 +25,4 @@ public class SettlementResponseDto {
 
     private final String taxInvoice;
 
-
-
 }
