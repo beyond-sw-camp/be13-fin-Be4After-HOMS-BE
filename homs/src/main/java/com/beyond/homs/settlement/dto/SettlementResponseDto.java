@@ -11,6 +11,8 @@ import java.util.Date;
 public class SettlementResponseDto {
     private final Long settlementId;
 
+    private final Long orderId;
+
     private final String orderCode;
 
     private final String companyName;
