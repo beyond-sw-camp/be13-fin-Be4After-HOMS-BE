@@ -6,6 +6,8 @@ import com.beyond.homs.company.dto.UpdateCompanyDto;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.CountryRepository;
+import com.beyond.homs.wms.entity.DeliveryAddress;
+import com.beyond.homs.wms.repository.DeliveryAddRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CompanyAdminServiceImpl implements CompanyAdminService {
     private final CompanyRepository companyRepository;
     private final CountryRepository countryRepository;
+    private final DeliveryAddRepository deliveryAddRepository;
 
     @Override
     public void grantCompany(Long companyId, Boolean status) {
@@ -43,7 +46,11 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
     public ResponseCompanyDto getCompany(Long companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        return ResponseCompanyDto.fromCompany(company);
+        DeliveryAddress address = deliveryAddRepository.findFirstByCompany_CompanyId(companyId)
+                .orElse(null);
+        String addressName = address != null ? address.getStreetAddress() : null;
+
+        return ResponseCompanyDto.fromCompany(company,addressName);
     }
 
     @Override
