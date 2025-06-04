@@ -11,8 +11,8 @@ public record UserResponseDto(
     String managerEmail,
     String managerPhone,
     Long companyId,
-//    Long deptId
     String companyName,
+    Long deptId,
     String deptName,
     LocalDateTime deleteAt,
     boolean isLockedOut
@@ -31,6 +31,7 @@ public record UserResponseDto(
                 user.getManagerPhone(),
                 user.getCompany().getCompanyId(),
                 user.getCompany().getCompanyName(),
+                user.getDepartment().getDeptId(),
                 user.getDepartment().getDeptName().toString(),
                 user.getDeletedAt(),
                 isLockedOut

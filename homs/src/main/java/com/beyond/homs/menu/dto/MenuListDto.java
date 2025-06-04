@@ -15,6 +15,10 @@ public class MenuListDto {
 
     private final int sortNo;
 
+    private final String image;
+
+    private final String path;
+
     private final Boolean buy;
 
     private final Boolean delivery;
@@ -27,11 +31,13 @@ public class MenuListDto {
 
     private final List<MenuListDto> children;
 
-    private MenuListDto(Long menuId, String menuName, int sortNo, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Long parentId, List<MenuListDto> children)
+    private MenuListDto(Long menuId, String menuName, int sortNo, String image, String path, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Long parentId, List<MenuListDto> children)
     {
         this.menuId = menuId;
         this.menuName = menuName;
         this.sortNo = sortNo;
+        this.image = image;
+        this.path = path;
         this.buy = buy;
         this.delivery = delivery;
         this.materials = materials;
@@ -46,6 +52,8 @@ public class MenuListDto {
                 menu.getMenuId(),
                 menu.getMenuName(),
                 menu.getSortNo(),
+                menu.getImage(),
+                menu.getPath(),
                 menu.getBuy(),
                 menu.getDelivery(),
                 menu.getMaterials(),

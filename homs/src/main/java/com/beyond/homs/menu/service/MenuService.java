@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface MenuService {
-    // 메뉴 조회
+    // 메뉴 전체 조회
     List<MenuListDto> getMenus();
+
+    // 메뉴 Dept 별 조회
+    List<MenuListDto> getMenusByDept(Long deptId);
 
     // 메뉴 등록
     @Transactional
