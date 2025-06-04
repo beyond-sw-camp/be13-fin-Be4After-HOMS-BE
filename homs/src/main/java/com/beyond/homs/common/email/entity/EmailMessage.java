@@ -1,4 +1,4 @@
-package com.beyond.homs.notify.email.entity;
+package com.beyond.homs.common.email.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

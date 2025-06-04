@@ -1,7 +1,7 @@
-package com.beyond.homs.notify.email.service;
+package com.beyond.homs.common.email.service;
 
-import com.beyond.homs.notify.email.data.EmailTypeEnum;
-import com.beyond.homs.notify.email.entity.EmailMessage;
+import com.beyond.homs.common.email.data.EmailTypeEnum;
+import com.beyond.homs.common.email.entity.EmailMessage;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,6 @@ public class EmailServiceImpl implements EmailService {
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             mimeMessageHelper.setTo(emailMessage.getTo());      // 메일 수신자
-            mimeMessageHelper.setSubject(emailMessage.getSubject()); // 메일 제목
             
             // 이미지 가져와서 할당
             ClassPathResource classPathResource = new ClassPathResource("templates/homsLogo.png");
@@ -39,61 +38,87 @@ public class EmailServiceImpl implements EmailService {
             // EmailTypeEnum에 따라 동적 내용과 변수를 구성
             Map<String, Object> templateVariables = new HashMap<>();
             String templateName = "email-base-template"; // 기본 템플릿 이름
+            String mailSubject = ""; // 메일 제목을 저장할 변수 초기화
+
+            String subject = "";
+            String content = "";
+            String contentHtml = "";
+
 
             switch (type) {
                 case ORDER_CONFIRMATION:
                     // 주문 승인 메일
-                    String contentHtml = "<p> 요청하신 주문이 승인되었습니다! </p>" +
-                                         "<p> HOMS를 이용해주셔 감사합니다. </p>";
+                    subject = emailMessage.getSubject(); // 배송코드
+                    contentHtml =
+                            "<p style=\"font-size: 16px; color: #333333; margin-bottom: 15px;\">" +
+                            "고객님, 요청하신 주문(<strong>"+subject+"</strong>)이 <strong>승인</strong>되었습니다.";
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
                     templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] 주문이 정상적으로 승인되었습니다.";
                     break;
 
                 case ORDER_CANCELLATION:
                     // 주문 거부 메일
-                    String rejectReason = emailMessage.getContent();
-                    String rejectHtml = "<p> 요청하신 주문이 거부되었습니다! </p>" +
-                                        "<div align=\"center\" style=\"border:1px solid black; font-family:verdana;\">" +
-                                        "    <h3 style=\"color:blue\"> 상세 사유 </h3>" +
-                                        "    <div>" + rejectReason + "</div>" +
-                                        "</div>" +
-                                        "<p> HOMS를 이용해주셔 감사합니다. </p>";
-                    templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
-                    templateVariables.put("dynamicContent", rejectHtml);
+                    subject = emailMessage.getSubject(); // 배송코드
+                    content = emailMessage.getContent(); // 거부 사유 텍스트
+                    contentHtml =
+                            "<p style=\"font-size: 16px; color: #333333; margin-bottom: 15px;\">" +
+                            "고객님, 요청하신 주문(<strong>"+subject+"</strong>)이 <strong>거부</strong>되었습니다." +
+                            "</p>" +
+                            "<p style=\"font-size: 15px; color: #555555; margin-bottom: 25px;\">" +
+                            "자세한 사유는 아래를 확인해 주시기 바랍니다." +
+                            "</p>" +
+                            "<div class=\"reason-box\">" + // 새로운 CSS 클래스 활용
+                            "    <h4 style=\"font-weight: 600; color: #333333;\">상세 거부 사유</h4>" +
+                            "    <p style=\"white-space: pre-wrap; word-break: break-word;\">" + content + "</p>" + // 텍스트 줄바꿈 및 긴 단어 처리
+                            "</div>" +
+                            "<p style=\"font-size: 15px; color: #555555; margin-top: 30px;\">" +
+                            "문의사항이 있으시면 고객센터로 연락 주시기 바랍니다." +
+                            "</p>";
+
+                    templateVariables.put("mainTitle", "주문 처리 결과: 주문 거부 안내");
+                    templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] 주문 거부 안내 메일입니다.";
                     break;
 
                 case SHIPPING_UPDATE:
                     // 배송 상태 알림
-                    String orderStatus = emailMessage.getContent();
-                    String orderStatusHtml = "<p> 배송 상태가 " + orderStatus + "으로 변경되었습니다. </p>" +
+                    content = emailMessage.getContent();
+                    contentHtml = "<p> 배송 상태가 " + content + "으로 변경되었습니다. </p>" +
                                             "<p> HOMS를 이용해주셔 감사합니다. </p>";
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
-                    templateVariables.put("dynamicContent", orderStatusHtml);
+                    templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] 배송 상태가 변경되었습니다.";
                     break;
 
                 case ACCOUNT_CREATED:
                     // 가입 환영 이메일 내용
-                    String welcomeHtml = "<p> 저희 HOMS에 가입해주셔서 진심으로 감사드립니다!</p>" +
+                    contentHtml = "<p> 저희 HOMS에 가입해주셔서 진심으로 감사드립니다!</p>" +
                                          "<p> 지금 바로 서비스를 이용해보세요.</p>";
                     templateVariables.put("mainTitle", "HOMS에 오신 것을 환영합니다!");
-                    templateVariables.put("dynamicContent", welcomeHtml);
+                    templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] HOMS에 오신 것을 환영합니다!";
                     break;
                 
                 case SETTLE_STATUS:
                     // 정산 상태 알림
-                    String settleStatus = emailMessage.getContent();
-                    String settleStatusHtml = "<p> 정산 상태가 " + settleStatus + "으로 변경되었습니다. </p>" +
+                    content = emailMessage.getContent();
+                    contentHtml = "<p> 정산 상태가 " + content + "으로 변경되었습니다. </p>" +
                                             "<p> HOMS를 이용해주셔 감사합니다. </p>";
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
-                    templateVariables.put("dynamicContent", settleStatusHtml);
+                    templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] 정산 상태가 변경되었습니다.";
                     break;
 
                 default:
                     // 정의되지 않은 유형 처리 또는 기본 내용
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
                     templateVariables.put("dynamicContent", "<p>요청하신 메일 내용입니다.</p>");
+                    mailSubject = "[HOMS] 알림 메일입니다.";
                     break;
             }
+
+            mimeMessageHelper.setSubject(mailSubject); // 메일 제목 지정
 
             // Thymeleaf 템플릿에 데이터 주입
             mimeMessageHelper.setText(processEmailTemplate(templateName, templateVariables), true);
