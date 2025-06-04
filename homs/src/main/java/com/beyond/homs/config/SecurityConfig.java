@@ -1,13 +1,17 @@
 package com.beyond.homs.config;
 
+import com.beyond.homs.auth.handler.AccessDeniedHandlerImpl;
+import com.beyond.homs.auth.handler.AuthenticationEntryPointImpl;
 import com.beyond.homs.auth.jwt.JwtAuthFilter;
 import com.beyond.homs.auth.jwt.JwtAuthProvider;
 import com.beyond.homs.common.jwt.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -20,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +33,7 @@ public class SecurityConfig {
     private final JwtAuthProvider jwtAuthProvider;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -59,6 +65,10 @@ public class SecurityConfig {
                 .addFilterBefore(
                         new JwtAuthFilter(jwtAuthProvider, jwtService, userDetailsService), // JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new AuthenticationEntryPointImpl(handlerExceptionResolver))
+                        .accessDeniedHandler(new AccessDeniedHandlerImpl(handlerExceptionResolver))
                 );
 
         return http.build();
@@ -72,7 +82,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "https://app.be4after-homs.com")); // 모든 Origin 허용 (개발 단계에서만 사용)
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "https://app.be4after-homs.com"));
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(java.util.List.of("*")); // 모든 헤더 허용
         configuration.setExposedHeaders(java.util.List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.LINK, "X-Total-Count", HttpHeaders.CONTENT_DISPOSITION)); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
