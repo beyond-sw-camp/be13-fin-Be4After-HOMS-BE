@@ -30,6 +30,24 @@ public class MenuServiceImpl implements MenuService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MenuListDto> getMenusByDept(Long deptId) {
+        List<Menu> rootMenus = menuRepository.findByParentIsNullOrderBySortNoAsc();
+        List<Menu> filteredChildren = menuRepository.findMenusByDeptId(deptId);
+
+        for (Menu root : rootMenus) {
+            List<Menu> children = filteredChildren.stream()
+                .filter(child -> child.getParent().getMenuId().equals(root.getMenuId()))
+                .collect(Collectors.toList());
+            root.getChildren().clear();
+            root.getChildren().addAll(children);
+        }
+
+        return rootMenus.stream()
+            .map(MenuListDto::of)
+            .collect(Collectors.toList());
+    }
+
     // 메뉴 등록
     @Override
     public MenuResponseDto createMenu(MenuRequestDto requestDto) {
@@ -43,6 +61,8 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = Menu.builder()
                 .menuName(requestDto.getMenuName())
                 .sortNo(requestDto.getSortNo())
+                .image(requestDto.getImage())
+                .path(requestDto.getPath())
                 .buy(requestDto.getBuy())
                 .delivery(requestDto.getDelivery())
                 .materials(requestDto.getMaterials())
@@ -56,6 +76,8 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(saved.getMenuId())
                 .menuName(saved.getMenuName())
                 .sortNo(saved.getSortNo())
+                .image(saved.getImage())
+                .path(saved.getPath())
                 .buy(saved.getBuy())
                 .delivery(saved.getDelivery())
                 .materials(saved.getMaterials())
@@ -77,6 +99,8 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(menu.getMenuId())
                 .menuName(menu.getMenuName())
                 .sortNo(menu.getSortNo())
+                .image(menu.getImage())
+                .path(menu.getPath())
                 .buy(menu.getBuy())
                 .delivery(menu.getDelivery())
                 .materials(menu.getMaterials())

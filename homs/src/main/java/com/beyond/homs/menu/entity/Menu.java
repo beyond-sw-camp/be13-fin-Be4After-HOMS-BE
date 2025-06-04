@@ -44,6 +44,12 @@ public class Menu {
     @Column(name = "sort_no")
     private int sortNo;
 
+    @Column(name = "image")
+    private String image;
+
+    @Column(name = "path")
+    private String path;
+
     @Column(name = "is_buy")
     private Boolean buy;
 
@@ -68,9 +74,11 @@ public class Menu {
     private List<Menu> children = new ArrayList<>();
 
     @Builder
-    public Menu(String menuName, int sortNo, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Menu parent) {
+    public Menu(String menuName, int sortNo, String image, String path, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Menu parent) {
         this.menuName = menuName;
         this.sortNo = sortNo;
+        this.image = image;
+        this.path = path;
         this.buy = buy;
         this.delivery = delivery;
         this.materials = materials;
@@ -81,6 +89,8 @@ public class Menu {
     public void updateMenu(MenuRequestDto requestDto) {
         this.menuName = requestDto.getMenuName();
         this.sortNo = requestDto.getSortNo();
+        this.image = requestDto.getImage();
+        this.path = requestDto.getPath();
         this.buy = requestDto.getBuy();
         this.delivery = requestDto.getDelivery();
         this.materials = requestDto.getMaterials();

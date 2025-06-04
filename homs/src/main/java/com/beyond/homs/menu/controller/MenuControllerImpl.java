@@ -35,6 +35,21 @@ public class MenuControllerImpl implements MenuController {
                 ));
     }
 
+    @GetMapping("/{deptId}")
+    @Override
+    public ResponseEntity<ResponseDto<List<MenuListDto>>> MenuListByDept(
+            @PathVariable Long deptId) {
+
+        List<MenuListDto> menuList = menuService.getMenusByDept(deptId);
+
+        return ResponseEntity.ok(
+            new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "메뉴 목록을 불러왔습니다.",
+                menuList
+            ));
+    }
+
     //메뉴 등록
     @PostMapping("/create")
     @Override
