@@ -5,10 +5,7 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.data.OrderSearchOption;
-import com.beyond.homs.order.dto.OrderApproveRequestDto;
-import com.beyond.homs.order.dto.OrderDateRequestDto;
-import com.beyond.homs.order.dto.OrderRequestDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
+import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.user.entity.User;
@@ -193,6 +190,23 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderResponseDto> getChildOrders(Long parentOrderId) {
         return orderRepository.findAllByParentOrder_OrderId(parentOrderId).stream()
                 .map(this::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDeliveryResponseDTO> getDeliveryInfo() {
+        List<Order> orders = orderRepository.findAll(); // 커스텀 JPQL 또는 fetch join 필요
+
+        return orders.stream()
+                .map(order -> OrderDeliveryResponseDTO.builder()
+                        .orderId(order.getOrderId())
+                        .orderCode(order.getOrderCode())
+                        .companyName(order.getUser().getCompany().getCompanyName())
+                        .deliveryName(order.getDeliveryAddress() != null ? order.getDeliveryAddress().getDeliveryName() : null)
+                        .orderDate(order.getOrderDate())
+                        .deliveryDate(order.getDueDate())
+                        .deliveryStatus(order.getOrderStatus() != null ? order.getOrderStatus().name() : null) // Enum이면 toString or name
+                        .build())
                 .collect(Collectors.toList());
     }
 

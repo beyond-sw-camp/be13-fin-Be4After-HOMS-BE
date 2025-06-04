@@ -2,10 +2,7 @@ package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.data.OrderSearchOption;
-import com.beyond.homs.order.dto.OrderApproveRequestDto;
-import com.beyond.homs.order.dto.OrderDateRequestDto;
-import com.beyond.homs.order.dto.OrderRequestDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
+import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -153,5 +150,16 @@ public class OrderControllerImpl implements OrderController {
                 HttpStatus.OK.value(),
                 "하위 주문 조회 성공",
                 list));
+    }
+
+    @GetMapping("/deliveryInfo")
+    @Override
+    public ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>>getDeliveryInfo(){
+        List<OrderDeliveryResponseDTO> deliveryInfo = orderService.getDeliveryInfo();
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "배송 정보 조회 성공",
+                deliveryInfo
+        ));
     }
 }
