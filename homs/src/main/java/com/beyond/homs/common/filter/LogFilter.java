@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
-@Component
 public class LogFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
