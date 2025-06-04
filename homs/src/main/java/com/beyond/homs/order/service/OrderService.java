@@ -33,4 +33,6 @@ public interface OrderService {
     List<OrderResponseDto> getChildOrders(Long parentOrderId);
 
     List<OrderDeliveryResponseDTO> getDeliveryInfo();
+
+    List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId);
 }

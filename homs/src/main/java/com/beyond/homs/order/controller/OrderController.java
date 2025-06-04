@@ -71,4 +71,7 @@ public interface OrderController {
     @Operation(summary = "주문별 배송목록 조회", description = "주문건 별로 배송 정보를 조회합니다.")
     ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfo();
 
+    @Operation(summary = "사용자별 배송목록 조회", description = "사용자별 배송 정보를 조회합니다.")
+    ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(Long userId);
+
 }

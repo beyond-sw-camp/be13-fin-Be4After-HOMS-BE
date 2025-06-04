@@ -195,19 +195,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDeliveryResponseDTO> getDeliveryInfo() {
-        List<Order> orders = orderRepository.findAll(); // 커스텀 JPQL 또는 fetch join 필요
+        List<Order> orders = orderRepository.findAll();
+        return toDeliveryResponseDtoList(orders);
+    }
 
-        return orders.stream()
-                .map(order -> OrderDeliveryResponseDTO.builder()
-                        .orderId(order.getOrderId())
-                        .orderCode(order.getOrderCode())
-                        .companyName(order.getUser().getCompany().getCompanyName())
-                        .deliveryName(order.getDeliveryAddress() != null ? order.getDeliveryAddress().getDeliveryName() : null)
-                        .orderDate(order.getOrderDate())
-                        .deliveryDate(order.getDueDate())
-                        .deliveryStatus(order.getOrderStatus() != null ? order.getOrderStatus().name() : null) // Enum이면 toString or name
-                        .build())
-                .collect(Collectors.toList());
+    @Override
+    public List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId) {
+        List<Order> orders = orderRepository.findAllByUser_UserId(userId);
+        return toDeliveryResponseDtoList(orders);
     }
 
     private OrderResponseDto toResponseDto(Order order) {
@@ -224,5 +219,20 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderStatus()
         );
     }
+
+    private List<OrderDeliveryResponseDTO> toDeliveryResponseDtoList(List<Order> orders) {
+        return orders.stream()
+                .map(order -> OrderDeliveryResponseDTO.builder()
+                        .orderId(order.getOrderId())
+                        .orderCode(order.getOrderCode())
+                        .companyName(order.getUser().getCompany().getCompanyName())
+                        .deliveryName(order.getDeliveryAddress() != null ? order.getDeliveryAddress().getDeliveryName() : null)
+                        .orderDate(order.getOrderDate())
+                        .deliveryDate(order.getDueDate())
+                        .deliveryStatus(order.getOrderStatus() != null ? order.getOrderStatus().name() : null)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
 
