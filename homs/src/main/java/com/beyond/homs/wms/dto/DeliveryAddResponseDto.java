@@ -23,6 +23,6 @@ public class DeliveryAddResponseDto {
 
   private Long companyId;
 
-  private String companyName;
+  private String companyName;   // 거래처명 추가
 
 }
