@@ -9,6 +9,8 @@ import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.user.entity.User;
+import com.beyond.homs.wms.entity.DeliveryAddress;
+import com.beyond.homs.wms.repository.DeliveryAddRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,15 +33,16 @@ public class OrderServiceImpl implements OrderService {
 //    private final DeliveryAddressRepository addressRepository;
     private final OrderNumberGenerator orderNumberGenerator;
     private final CompanyRepository companyRepository;
+    private final DeliveryAddRepository deliveryAddRepository;
 
     @Override
     @Transactional
     public OrderResponseDto createOrder() {
         // 1) 사용자 조회
         User currentUser = SecurityUtil.getCurrentUser();
-
-//        DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
-//                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
+       //
+       // DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
+       //         .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
 //
 //         // 2-1) 재귀
 //         Order parent = null;
@@ -56,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
                 .approved(false)
                 .orderStatus(BEFORE) // 고정값
                 .user(currentUser)
-//                .deliveryAddress(addr)
+               // .deliveryAddress(null)
                 .build();
 //                .linkParent(parent);
 
@@ -170,9 +173,8 @@ public class OrderServiceImpl implements OrderService {
         // 납품일 업데이트
         order.updateDueDate(requestDto.getDueDate());
 
-//        DeliveryAddress addr = addressRepository.findById(requestDto.getDeliveryAddressId())
-//                .orElseThrow(() -> new EntityNotFoundException("Address not found: " + requestDto.getDeliveryAddressId()));
-//        order.updateDeliveryAddress(addr);
+       DeliveryAddress addr = deliveryAddRepository.findByAddressId(requestDto.getDeliveryAddressId());
+       order.updateDeliveryAddress(addr);
 
         // flush & update
         Order updated = orderRepository.save(order);
@@ -206,11 +208,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderResponseDto toResponseDto(Order order) {
+        // 1. 회사 이름 (companyName)을 안전하게 가져오기
+        // user나 company가 null일 수 있으므로 안전하게 체이닝합니다.
+        String companyName = null;
+        if (order.getUser() != null && order.getUser().getCompany() != null) {
+            companyName = order.getUser().getCompany().getCompanyName();
+        }
+
+        // 2. 배송지 이름 (deliveryAddressName)을 안전하게 가져오기
+        // deliveryAddress가 null일 수 있으므로 반드시 체크해야 합니다.
+        String deliveryAddressName = null;
+        if (order.getDeliveryAddress() != null) {
+            deliveryAddressName = order.getDeliveryAddress().getDeliveryName();
+        }
+
         return new OrderResponseDto(
             order.getOrderId(),
             order.getOrderCode(),
-            order.getUser().getCompany().getCompanyName(),
-            // order.getDeliveryAddress().getDeliveryName(),
+            companyName,
+            deliveryAddressName,
             order.getOrderDate(),
             order.getDueDate(),
             order.isApproved(),

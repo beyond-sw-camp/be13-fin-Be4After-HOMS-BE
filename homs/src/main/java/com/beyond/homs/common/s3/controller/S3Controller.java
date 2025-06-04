@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Tag(name = "파일관리 API (샘플)", description = "S3를 활용한 파일관리 API 목록")
+@Tag(name = "파일관리 API", description = "S3를 활용한 파일관리 API 목록")
 public interface S3Controller {
     @Operation(summary = "파일 업로드", description = "S3에 파일을 업로드합니다.")
     ResponseEntity<String> uploadFile(

@@ -1,10 +1,12 @@
-package com.beyond.homs.notify.email.dto;
+package com.beyond.homs.common.email.dto;
 
-import com.beyond.homs.notify.email.data.EmailTypeEnum;
+import com.beyond.homs.common.email.data.EmailTypeEnum;
 import lombok.Getter;
 
 @Getter
 public class EmailPostDto {
+    private Long id;
+
     private String email;
 
     private String subject;

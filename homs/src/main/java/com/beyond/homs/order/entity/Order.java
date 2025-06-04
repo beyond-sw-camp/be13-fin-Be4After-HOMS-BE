@@ -22,6 +22,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -67,8 +69,10 @@ public class Order {
     @Column(name = "reject_reason", length = 1024)
     private String rejectReason;
 
+    // ON DELETE SET NUL를 적용하여 주소를 삭제해도 주문에는 영향이 안감
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = true) // nullable = true 추가
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private DeliveryAddress deliveryAddress;
 
     @Column(name = "order_status", nullable = false)
@@ -179,4 +183,8 @@ public class Order {
     }
 
     public void updateApprove(Boolean approved) {this.approved = approved;}
+
+    public void updateDeliveryAddress(DeliveryAddress addr) {
+        this.deliveryAddress = addr;
+    }
 }

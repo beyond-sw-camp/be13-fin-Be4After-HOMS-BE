@@ -1,4 +1,4 @@
-package com.beyond.homs.notify.email.data;
+package com.beyond.homs.common.email.data;
 
 public enum EmailTypeEnum {
     // 주문 관련
