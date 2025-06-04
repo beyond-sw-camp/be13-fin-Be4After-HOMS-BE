@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class EmailMessage {
+    private Long id;
+
     private String to;
 
     private String subject;

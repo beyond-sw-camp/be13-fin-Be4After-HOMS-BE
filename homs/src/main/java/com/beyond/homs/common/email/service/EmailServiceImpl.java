@@ -2,6 +2,8 @@ package com.beyond.homs.common.email.service;
 
 import com.beyond.homs.common.email.data.EmailTypeEnum;
 import com.beyond.homs.common.email.entity.EmailMessage;
+import com.beyond.homs.order.entity.Order;
+import com.beyond.homs.order.repository.OrderRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -22,6 +25,7 @@ import java.util.Map;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
+    private final OrderRepository orderRepository;
 
     @Override
     public String sendMail(EmailMessage emailMessage, EmailTypeEnum type) { // EmailTypeEnum을 type으로 받음
@@ -29,7 +33,24 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setTo(emailMessage.getTo());      // 메일 수신자
+
+            Long id = emailMessage.getId(); // 식별자 id
+
+            if(emailMessage.getTo() != null){
+                mimeMessageHelper.setTo(emailMessage.getTo());      // 메일 수신자
+            } else{
+                switch (type){
+                    case ORDER_CONFIRMATION:
+                    case ORDER_CANCELLATION:
+                        // orderId로 주문을 찾음
+                        Order order = orderRepository.findByOrderId(id).getFirst();
+                        // 주문에서 유저의 이메일을 찾아서 반환
+                        mimeMessageHelper.setTo(order.getUser().getManagerEmail());
+                        emailMessage.setSubject(order.getOrderCode()); // 주문번호 반환
+                        break;
+                }
+            }
+
             
             // 이미지 가져와서 할당
             ClassPathResource classPathResource = new ClassPathResource("templates/homsLogo.png");
@@ -43,7 +64,6 @@ public class EmailServiceImpl implements EmailService {
             String subject = "";
             String content = "";
             String contentHtml = "";
-
 
             switch (type) {
                 case ORDER_CONFIRMATION:

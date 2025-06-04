@@ -5,6 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class EmailPostDto {
+    private Long id;
+
     private String email;
 
     private String subject;

@@ -23,6 +23,7 @@ public class EmailControllerImpl implements EmailController {
     public ResponseEntity<ResponseDto<String>> sendMail(
             @RequestBody EmailPostDto emailPostDto) {
         EmailMessage emailMessage = EmailMessage.builder()
+                .id(emailPostDto.getId())
                 .to(emailPostDto.getEmail())
                 .subject(emailPostDto.getSubject())
                 .content(emailPostDto.getContent())
