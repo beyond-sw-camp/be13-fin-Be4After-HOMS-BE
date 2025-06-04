@@ -4,7 +4,6 @@ import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
-import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.wms.dto.DeliveryAddRequestDto;
 import com.beyond.homs.wms.dto.DeliveryAddResponseDto;
@@ -27,7 +26,7 @@ public class DeliveryAddServiceImpl implements DeliveryAddService{
   @Override
   public List<DeliveryAddResponseDto> getDeliveryList() {
     List<DeliveryAddress> addresses = deliveryAddRepository.findAll();
-    List<Order> orders = orderRepository.findAll();
+    // List<Order> orders = orderRepository.findAll();
 
     return addresses.stream()
         .map(address -> DeliveryAddResponseDto.builder()
@@ -41,6 +40,22 @@ public class DeliveryAddServiceImpl implements DeliveryAddService{
             .companyName(address.getCompany().getCompanyName())
             .build())
         .toList();
+  }
+  // 배송지 단일 상세
+  @Override
+  public DeliveryAddResponseDto getDeliveryDetail(Long addressId) {
+    DeliveryAddress address = deliveryAddRepository.findByAddressId(addressId);
+
+    return DeliveryAddResponseDto.builder()
+                    .addressId(address.getAddressId())
+                    .deliveryName(address.getDeliveryName())
+                    .postalCode(address.getPostalCode())
+                    .streetAddress(address.getStreetAddress())
+                    .detailedAddress(address.getDetailedAddress())
+                    .reference(address.getReference())
+                    .companyId(address.getCompany().getCompanyId())
+                    .companyName(address.getCompany().getCompanyName())
+                    .build();
   }
 
   @Override

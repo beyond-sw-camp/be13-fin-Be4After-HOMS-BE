@@ -6,6 +6,7 @@ import com.beyond.homs.wms.dto.DeliveryAddResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,6 +16,9 @@ import java.util.List;
 public interface DeliveryAddController {
     @Operation(summary = "배송지 목록", description = "모든 배송지 목록을 가져옵니다.")
     ResponseEntity<ResponseDto<List<DeliveryAddResponseDto>>> deliveryAddList();
+
+    @Operation(summary = "배송지 상세 조회", description = "해당 배송지의 정보를 조회 합니다.")
+    ResponseEntity<ResponseDto<DeliveryAddResponseDto>> deliveryDetail(@PathVariable Long addressId);
 
     @Operation(summary = "회사별 배송지 목록", description = "회사별 배송지 목록을 가져옵니다.")
     ResponseEntity<ResponseDto<List<DeliveryAddResponseDto>>> deliveryAddListByCompany(
