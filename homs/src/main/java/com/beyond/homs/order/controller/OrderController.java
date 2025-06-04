@@ -2,10 +2,7 @@ package com.beyond.homs.order.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.data.OrderSearchOption;
-import com.beyond.homs.order.dto.OrderApproveRequestDto;
-import com.beyond.homs.order.dto.OrderDateRequestDto;
-import com.beyond.homs.order.dto.OrderRequestDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
+import com.beyond.homs.order.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -70,5 +67,11 @@ public interface OrderController {
     ResponseEntity<ResponseDto<List<OrderResponseDto>>> getChildOrders(
             @PathVariable("parentOrderId") Long parentOrderId
     );
+
+    @Operation(summary = "주문별 배송목록 조회", description = "주문건 별로 배송 정보를 조회합니다.")
+    ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfo();
+
+    @Operation(summary = "사용자별 배송목록 조회", description = "사용자별 배송 정보를 조회합니다.")
+    ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(Long userId);
 
 }

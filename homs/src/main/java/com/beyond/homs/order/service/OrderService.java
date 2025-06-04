@@ -1,10 +1,7 @@
 package com.beyond.homs.order.service;
 
 import com.beyond.homs.order.data.OrderSearchOption;
-import com.beyond.homs.order.dto.OrderApproveRequestDto;
-import com.beyond.homs.order.dto.OrderDateRequestDto;
-import com.beyond.homs.order.dto.OrderRequestDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
+import com.beyond.homs.order.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,4 +31,8 @@ public interface OrderService {
     // List<OrderResponseDto> getOrdersByUser(Long userId);
 
     List<OrderResponseDto> getChildOrders(Long parentOrderId);
+
+    List<OrderDeliveryResponseDTO> getDeliveryInfo();
+
+    List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId);
 }

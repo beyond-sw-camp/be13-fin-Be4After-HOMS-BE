@@ -5,10 +5,7 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.data.OrderSearchOption;
-import com.beyond.homs.order.dto.OrderApproveRequestDto;
-import com.beyond.homs.order.dto.OrderDateRequestDto;
-import com.beyond.homs.order.dto.OrderRequestDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
+import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.user.entity.User;
@@ -196,6 +193,18 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<OrderDeliveryResponseDTO> getDeliveryInfo() {
+        List<Order> orders = orderRepository.findAll();
+        return toDeliveryResponseDtoList(orders);
+    }
+
+    @Override
+    public List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId) {
+        List<Order> orders = orderRepository.findAllByUser_UserId(userId);
+        return toDeliveryResponseDtoList(orders);
+    }
+
     private OrderResponseDto toResponseDto(Order order) {
         return new OrderResponseDto(
             order.getOrderId(),
@@ -210,5 +219,20 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderStatus()
         );
     }
+
+    private List<OrderDeliveryResponseDTO> toDeliveryResponseDtoList(List<Order> orders) {
+        return orders.stream()
+                .map(order -> OrderDeliveryResponseDTO.builder()
+                        .orderId(order.getOrderId())
+                        .orderCode(order.getOrderCode())
+                        .companyName(order.getUser().getCompany().getCompanyName())
+                        .deliveryName(order.getDeliveryAddress() != null ? order.getDeliveryAddress().getDeliveryName() : null)
+                        .orderDate(order.getOrderDate())
+                        .deliveryDate(order.getDueDate())
+                        .deliveryStatus(order.getOrderStatus() != null ? order.getOrderStatus().name() : null)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
 
