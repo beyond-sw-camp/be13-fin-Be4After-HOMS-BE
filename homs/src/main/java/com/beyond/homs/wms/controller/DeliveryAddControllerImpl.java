@@ -7,11 +7,7 @@ import com.beyond.homs.wms.service.DeliveryAddService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.List;
 
 @RestController
@@ -33,7 +29,20 @@ public class DeliveryAddControllerImpl implements DeliveryAddController {
                 ));
     }
 
-    // 배송지 목록 조회
+    // 배송지 상세 조회
+    @GetMapping("/{addressId}/detail")
+    @Override
+    public ResponseEntity<ResponseDto<DeliveryAddResponseDto>> deliveryDetail(@PathVariable Long addressId) {
+        DeliveryAddResponseDto deliveryDetail = deliveryAddService.getDeliveryDetail(addressId);
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "해당 배송지의 상세 정보를 불러왔습니다.",
+                        deliveryDetail
+                ));
+    }
+
+    // 회사id 별 배송지 목록 조회
     @GetMapping("/{companyId}")
     @Override
     public ResponseEntity<ResponseDto<List<DeliveryAddResponseDto>>> deliveryAddListByCompany(@PathVariable Long companyId) {
