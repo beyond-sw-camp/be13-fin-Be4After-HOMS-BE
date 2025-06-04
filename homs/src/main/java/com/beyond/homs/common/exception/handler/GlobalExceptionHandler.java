@@ -47,7 +47,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                       String message,
                                                       HttpStatus httpStatus,
                                                       WebRequest request) {
-        errorReport(message, request.getDescription(false));
+        errorReport(message, request.getDescription(true));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(httpStatus.value(), message, LocalDateTime.now());
         if (exception instanceof BaseException) {
             errorResponseDto.setErrorCode(((BaseException) exception).getErrorCode());
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Object> handleBaseException(BaseException ex, WebRequest request) {
         log.error("BaseException: {}", ex.getMessage());
-        errorReport(ex.getMessage(), request.getDescription(false));
+        errorReport(ex.getMessage(), request.getDescription(true));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ex.getStatus().value(), ex.getMessage(), LocalDateTime.now());
         errorResponseDto.setErrorCode(ex.getErrorCode());
         return ResponseEntity.status(ex.getStatus()).body(errorResponseDto);

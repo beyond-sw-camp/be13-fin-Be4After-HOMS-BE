@@ -16,10 +16,10 @@ public class SwaggerConfig {
         Info info = new Info()
                 .title("HOMS")
                 .version(springdocVersion)
-                .description("테스트 가보자ㅏㅏㅏㅏㅏ<br>"
-                        + "개발드가자ㅏㅏㅏㅏㅏ<br>"
+                .description("HOMS Server의 API 문서 입니다.<br>"
                         + "인증된 사용자만 접근할 수 있으며, API 요청에 대한 응답으로 JSON 형식의 데이터를 반환합니다.<br>"
-                        + "각 API는 Swagger UI를 통해 테스트할 수 있습니다.");
+                        + "각 API는 Swagger UI를 통해 테스트할 수 있습니다.<br>"
+                        + "문의 사항은 homsbeafter@gmail.com 를 통해 문의해 주시기 바랍니다.<br>");
 
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes(
