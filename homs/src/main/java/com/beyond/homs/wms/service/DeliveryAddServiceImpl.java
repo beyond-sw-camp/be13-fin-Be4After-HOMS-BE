@@ -4,6 +4,8 @@ import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
+import com.beyond.homs.order.entity.Order;
+import com.beyond.homs.order.repository.OrderRepository;
 import com.beyond.homs.wms.dto.DeliveryAddRequestDto;
 import com.beyond.homs.wms.dto.DeliveryAddResponseDto;
 import com.beyond.homs.wms.entity.DeliveryAddress;
@@ -19,11 +21,13 @@ public class DeliveryAddServiceImpl implements DeliveryAddService{
 
   private final DeliveryAddRepository deliveryAddRepository;
   private final CompanyRepository companyRepository;
+  private final OrderRepository orderRepository;
 
   // 배송지 목록
   @Override
   public List<DeliveryAddResponseDto> getDeliveryList() {
     List<DeliveryAddress> addresses = deliveryAddRepository.findAll();
+    List<Order> orders = orderRepository.findAll();
 
     return addresses.stream()
         .map(address -> DeliveryAddResponseDto.builder()
@@ -34,6 +38,7 @@ public class DeliveryAddServiceImpl implements DeliveryAddService{
             .detailedAddress(address.getDetailedAddress())
             .reference(address.getReference())
             .companyId(address.getCompany().getCompanyId())
+            .companyName(address.getCompany().getCompanyName())
             .build())
         .toList();
   }
