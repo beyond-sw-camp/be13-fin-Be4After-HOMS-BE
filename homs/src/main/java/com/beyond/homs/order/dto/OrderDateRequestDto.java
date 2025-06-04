@@ -12,5 +12,5 @@ public class OrderDateRequestDto {
 
     private final Date dueDate;
 
-//    private final Long deliveryAddressId;
+    private final Long deliveryAddressId;
 }
