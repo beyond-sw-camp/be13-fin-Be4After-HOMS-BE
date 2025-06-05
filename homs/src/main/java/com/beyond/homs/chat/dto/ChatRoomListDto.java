@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChatRoomListDto {
     private String roomId;
-    private Long user1Id;
-    private Long user2Id;
+    private ParticipantDto user1; // 이제 ParticipantDto 객체
+    private ParticipantDto user2; // 이제 ParticipantDto 객체
     private String lastMessageContent;
     private LocalDateTime lastMessageSentAt;
 }
+
