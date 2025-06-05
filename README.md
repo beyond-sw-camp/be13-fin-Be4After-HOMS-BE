@@ -72,13 +72,13 @@
 <details>
 <summary><strong>📂 CI/CD 계획서</strong></summary>
 
-[CI/CD 계획서 바로가기](https://www.notion.so/playdatacademy/CI-CD-1d6d943bcac281d5a58bf908521c9b6c?source=copy_link)
+[CI/CD 계획서 바로가기](https://playdatacademy.notion.site/CI-CD-1d6d943bcac281d5a58bf908521c9b6c?source=copy_link)
 
 </details>
 
 <details>
 <summary><strong>📂 통합 테스트 결과서</strong></summary>
 
-[통합 테스트 결과서 바로가기](https://www.notion.so/playdatacademy/1d6d943bcac28132b060cf911ec43ab6?source=copy_link)
+[통합 테스트 결과서 바로가기](https://playdatacademy.notion.site/1d6d943bcac28132b060cf911ec43ab6?source=copy_link)
 
 </details>
