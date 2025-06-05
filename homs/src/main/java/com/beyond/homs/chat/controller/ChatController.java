@@ -2,7 +2,8 @@ package com.beyond.homs.chat.controller;
 
 import com.beyond.homs.chat.dto.ChatMessageDto;
 import com.beyond.homs.chat.dto.ChatRoomDto;
-import com.beyond.homs.chat.dto.ChatRoomListDto; // ChatRoomListDto 임포트 필요
+import com.beyond.homs.chat.dto.ChatRoomListDto; // Import the updated DTO
+import com.beyond.homs.chat.dto.ParticipantDto; // Import the new ParticipantDto
 import com.beyond.homs.chat.entity.ChatMessage;
 import com.beyond.homs.chat.entity.ChatRoom;
 import com.beyond.homs.chat.service.ChatService;
@@ -59,19 +60,14 @@ public class ChatController {
 
     /**
      * 과거 모든 메시지 조회 (REST 요청)
-     * principal.getName()에는 userName("admin", "kim" 등)이 담겨 있다고 가정
      */
     @GetMapping("/room/{roomId}/messages")
-    public List<ChatMessageDto> getAllMessages(@PathVariable String roomId, Principal principal) { // Principal 추가
+    public List<ChatMessageDto> getAllMessages(@PathVariable String roomId, Principal principal) {
         if (principal == null) {
             throw new IllegalArgumentException("인증 정보가 없습니다. 먼저 로그인해주세요.");
         }
-        // 이 메서드에서는 현재 사용자의 userId를 직접 사용하지 않으므로, Principal 검증만 합니다.
-        // 만약 메시지 조회 시 현재 사용자의 권한 검증이 필요하다면,
-        // principal.getName()으로 userId를 얻어 추가 로직을 구현할 수 있습니다.
-        // 현재는 roomId만으로 메시지를 조회하므로 Principal 사용은 선택 사항입니다.
-        // (다만, @AuthenticationPrincipal 등을 사용하면 더 깔끔합니다.)
-
+        // Principal을 통해 현재 사용자 인증 여부만 확인합니다.
+        // 이 메서드에서는 메시지 내용에 userId를 직접 포함하지 않으므로 추가적인 userId 추출은 필요 없습니다.
         List<ChatMessage> messages = chatService.findAllMessages(roomId);
         return messages.stream()
                 .map(msg -> new ChatMessageDto(
@@ -101,8 +97,6 @@ public class ChatController {
         try {
             senderId = Long.valueOf(principal.getName());
         } catch (NumberFormatException e) {
-            // 이 예외는 StompHandler가 올바르게 작동하지 않거나,
-            // Principal 설정에 문제가 있을 때 발생할 수 있습니다.
             throw new IllegalArgumentException("유효하지 않은 사용자 ID 형식 (WebSocket): " + principal.getName(), e);
         }
 
@@ -139,23 +133,40 @@ public class ChatController {
         User currentUser = userRepository.findByUserName(currentUserName)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + currentUserName));
 
-        Long currentUserId = currentUser.getUserId(); // User 엔티티에서 userId를 가져옵니다.
+        Long currentUserId = currentUser.getUserId();
 
-        List<ChatRoom> rooms = chatService.findAllRoomsByUserId(currentUserId);
+        // ChatService의 새로운 메서드를 호출하여 User 및 Company 정보가 Fetch된 ChatRoom 목록을 가져옵니다.
+        List<ChatRoom> rooms = chatService.findAllRoomsWithParticipantsInfoByUserId(currentUserId);
 
         return rooms.stream().map(room -> {
             ChatMessage lastMessage = chatService.findLastMessageByRoomId(room.getRoomId());
 
+            // User 엔티티에서 필요한 정보 추출하여 ParticipantDto 생성
+            User user1Entity = room.getUser1();
+            ParticipantDto user1Dto = new ParticipantDto(
+                    user1Entity.getUserId(),
+                    user1Entity.getManagerName(), // managerName 사용
+                    user1Entity.getCompany() != null ? user1Entity.getCompany().getCompanyName() : null // companyName 사용
+            );
+
+            User user2Entity = room.getUser2();
+            ParticipantDto user2Dto = new ParticipantDto(
+                    user2Entity.getUserId(),
+                    user2Entity.getManagerName(), // managerName 사용
+                    user2Entity.getCompany() != null ? user2Entity.getCompany().getCompanyName() : null // companyName 사용
+            );
+
             return new ChatRoomListDto(
                     room.getRoomId(),
-                    room.getUser1().getUserId(),
-                    room.getUser2().getUserId(),
+                    user1Dto, // ParticipantDto 객체 전달
+                    user2Dto, // ParticipantDto 객체 전달
                     lastMessage != null ? lastMessage.getContent() : null,
                     lastMessage != null ? lastMessage.getSentAt() : null
             );
         }).collect(Collectors.toList());
     }
 }
+
 
 
 
