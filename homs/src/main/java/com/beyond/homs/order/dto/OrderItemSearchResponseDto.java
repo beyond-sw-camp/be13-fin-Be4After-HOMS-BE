@@ -9,9 +9,11 @@ import java.util.Date;
 @Getter
 @RequiredArgsConstructor
 public class OrderItemSearchResponseDto {
-    private final long orderId;
+    private final Long orderId;
 
     private final String orderCode;
+
+    private final Long companyId;
 
     private final String companyName;
 
@@ -24,6 +26,8 @@ public class OrderItemSearchResponseDto {
     private final boolean approved;
 
     private final String rejectReason;
+
+    private final String deliveryName;
 
     private final Long productId;
 

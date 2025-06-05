@@ -9,6 +9,10 @@ public class MenuRequestDto {
 
     private int sortNo;
 
+    private String image;
+
+    private String path;
+
     private Boolean buy;
 
     private Boolean delivery;

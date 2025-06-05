@@ -1,5 +1,6 @@
 package com.beyond.homs.order.repository;
 
+import com.beyond.homs.company.entity.QCompany;
 import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
@@ -20,6 +21,7 @@ import static com.beyond.homs.order.entity.QClaim.claim;
 import static com.beyond.homs.order.entity.QOrder.order;
 import static com.beyond.homs.company.entity.QCompany.company;
 import static com.beyond.homs.user.entity.QUser.user;
+import static com.beyond.homs.wms.entity.QDeliveryAddress.deliveryAddress;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,6 +30,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     // Querydsl 쿼리를 생성하는 핵심 클래스
     // 내부적으로 EntityManager를 사용하여 데이터베이스에 접근
     private final JPAQueryFactory queryFactory;
+
+    // 별칭 충돌을 피하기 위해 새로운 QCompany 인스턴스 생성
+    // deliveryAddress를 통한 company 조인에 사용할 별칭
+    private final QCompany deliveryCompany = new QCompany("deliveryCompany"); // 새로운 별칭
 
     // 동적 검색 조건 메서드
     private BooleanExpression searchOptions(String keyword, OrderSearchOption option) {
@@ -56,6 +62,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         order.orderId,
                         order.orderCode,
                         company.companyName,
+                        deliveryAddress.deliveryName,
                         order.orderDate,
                         order.dueDate,
                         order.approved,
@@ -66,6 +73,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .from(order)
                 .leftJoin(order.user,user)
                 .leftJoin(user.company,company)
+                .leftJoin(deliveryAddress.company,deliveryCompany)
                 .where(
                         searchOptions(keyword, option),  // 동적 검색 조건
                         userEq(userId)                   // 사용자 필터링 조건 추가
@@ -81,6 +89,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .from(order)
                 .leftJoin(order.user,user)
                 .leftJoin(user.company,company)
+                .leftJoin(deliveryAddress.company,deliveryCompany)
                 .where(
                         searchOptions(keyword, option),
                         userEq(userId)

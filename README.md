@@ -17,7 +17,8 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
-![제목 없는 다이어그램 drawio](https://github.com/user-attachments/assets/3363ffb6-81e4-45e3-a0f4-248f4e68b059)
+![_drawio](https://github.com/user-attachments/assets/530484c9-51d4-4d51-8f87-f4590d6603e9)
+
 
 </details>
 
@@ -64,5 +65,20 @@
 <summary><strong>📂 UI/UX 단위 테스트</strong></summary>
 
 [UI/UX 단위 테스트 바로가기](https://playdatacademy.notion.site/UI-UX-203d943bcac280a8a3a7fe7263847027?pvs=4)
+
+</details>
+
+
+<details>
+<summary><strong>📂 CI/CD 계획서</strong></summary>
+
+[CI/CD 계획서 바로가기](https://www.notion.so/playdatacademy/CI-CD-1d6d943bcac281d5a58bf908521c9b6c?source=copy_link)
+
+</details>
+
+<details>
+<summary><strong>📂 통합 테스트 결과서</strong></summary>
+
+[통합 테스트 결과서 바로가기](https://www.notion.so/playdatacademy/1d6d943bcac28132b060cf911ec43ab6?source=copy_link)
 
 </details>

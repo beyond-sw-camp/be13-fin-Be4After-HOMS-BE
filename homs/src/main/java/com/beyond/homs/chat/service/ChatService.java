@@ -78,4 +78,13 @@ public class ChatService {
         // 내림차순으로 가져온 뒤, (예: 최신 50개), 호출 쪽에서 reverse 처리하거나 직접 오름차순으로 재정렬 가능
         return chatMessageRepository.findByRoomIdOrderBySentAtDesc(roomId, page);
     }
+
+    public List<ChatRoom> findAllRoomsByUserId(Long userId) {
+        return chatRoomRepository.findByUser1_UserIdOrUser2_UserId(userId, userId);
+    }
+
+    public ChatMessage findLastMessageByRoomId(String roomId) {
+        return chatMessageRepository.findFirstByRoomIdOrderBySentAtDesc(roomId)
+                .orElse(null);
+    }
 }

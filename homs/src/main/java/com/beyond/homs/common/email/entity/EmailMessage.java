@@ -1,4 +1,4 @@
-package com.beyond.homs.notify.email.entity;
+package com.beyond.homs.common.email.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class EmailMessage {
+    private Long id;
+
     private String to;
 
     private String subject;

@@ -16,9 +16,14 @@ public record ResponseCompanyDto(
         LocalDateTime createdAt,
         boolean continueStatus,
         boolean approvedStatus,
-        Long countryId
+        Long countryId,
+        String companyAddress
 ) {
     public static ResponseCompanyDto fromCompany(Company company) {
+        return fromCompany(company, null);
+    }
+
+    public static ResponseCompanyDto fromCompany(Company company, String addressName) {
         return new ResponseCompanyDto(
                 company.getCompanyId(),
                 company.getCompanyName(),
@@ -31,7 +36,8 @@ public record ResponseCompanyDto(
                 company.getCreatedAt(),
                 company.isContinueStatus(),
                 company.isApproveStatus(),
-                company.getCountry().getCountryId()
+                company.getCountry().getCountryId(),
+                addressName
         );
     }
 }
