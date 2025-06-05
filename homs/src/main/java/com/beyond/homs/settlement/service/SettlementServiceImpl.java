@@ -100,6 +100,7 @@ public class SettlementServiceImpl implements SettlementService {
     private SettlementResponseDto toSettlementResponse(Settlement settlement) {
         return new SettlementResponseDto(
                 settlement.getId(),
+                settlement.getOrder().getOrderId(),
                 settlement.getOrder().getOrderCode(),
                 settlement.getOrder().getUser().getCompany().getCompanyName(),
                 settlement.getOrder().getDeliveryAddress().getDeliveryName(),

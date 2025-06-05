@@ -35,6 +35,12 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             Long id = emailMessage.getId(); // 식별자 id
+            Order order = null;
+            if (id != null) {
+                order = orderRepository.findByOrderId(id).getFirst();
+                // 주문에서 유저의 이메일을 찾아서 반환
+                mimeMessageHelper.setTo(order.getUser().getManagerEmail());
+            }
 
             if(emailMessage.getTo() != null){
                 mimeMessageHelper.setTo(emailMessage.getTo());      // 메일 수신자
@@ -42,10 +48,6 @@ public class EmailServiceImpl implements EmailService {
                 switch (type){
                     case ORDER_CONFIRMATION:
                     case ORDER_CANCELLATION:
-                        // orderId로 주문을 찾음
-                        Order order = orderRepository.findByOrderId(id).getFirst();
-                        // 주문에서 유저의 이메일을 찾아서 반환
-                        mimeMessageHelper.setTo(order.getUser().getManagerEmail());
                         emailMessage.setSubject(order.getOrderCode()); // 주문번호 반환
                         break;
                 }
@@ -122,9 +124,9 @@ public class EmailServiceImpl implements EmailService {
                 
                 case SETTLE_STATUS:
                     // 정산 상태 알림
-                    content = emailMessage.getContent();
-                    contentHtml = "<p> 정산 상태가 " + content + "으로 변경되었습니다. </p>" +
-                                            "<p> HOMS를 이용해주셔 감사합니다. </p>";
+                    contentHtml =
+                            "<p style=\"font-size: 16px; color: #333333; margin-bottom: 15px;\">" +
+                                    "고객님, 요청하신 주문의 정산이 <strong>완료</strong>되었습니다.";
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
                     templateVariables.put("dynamicContent", contentHtml);
                     mailSubject = "[HOMS] 정산 상태가 변경되었습니다.";
