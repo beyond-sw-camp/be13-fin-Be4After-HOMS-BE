@@ -8,7 +8,10 @@ public enum EmailTypeEnum {
 
     // 계정 관련
     ACCOUNT_CREATED, // 계정 생성 알림
+    PASSWORD_RESET, //  비밀 번호 초기화
 
     // 정산 관련
     SETTLE_STATUS
+
+
 }

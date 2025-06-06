@@ -132,6 +132,17 @@ public class EmailServiceImpl implements EmailService {
                     mailSubject = "[HOMS] 정산 상태가 변경되었습니다.";
                     break;
 
+                case PASSWORD_RESET:
+                    content = emailMessage.getContent();
+                    contentHtml = "<p>비밀번호가 초기화되었습니다.</p>" +
+                            "<p><strong>" + content + "</strong></p>" +
+                            "<p>로그인 후 반드시 비밀번호를 변경해 주세요.</p>";
+
+                    templateVariables.put("mainTitle", "비밀번호 초기화 안내");
+                    templateVariables.put("dynamicContent", contentHtml);
+                    mailSubject = "[HOMS] 비밀번호 초기화 안내 메일입니다.";
+                    break;
+
                 default:
                     // 정의되지 않은 유형 처리 또는 기본 내용
                     templateVariables.put("mainTitle", "HOMS에서 알려드립니다.");
