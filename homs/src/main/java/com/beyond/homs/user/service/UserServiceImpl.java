@@ -38,12 +38,14 @@ public class UserServiceImpl implements UserService {
         user.setManagerEmail(updateUserDto.managerEmail());
         user.setManagerPhone(updateUserDto.managerPhone());
 
-        UserLogin userLogin = user.getUserLogin();
-        userLogin.setPasswordHash(
-                passwordEncoder.encode(updateUserDto.newPassword())
-        );
+        if (updateUserDto.newPassword() != null) {
+            UserLogin userLogin = user.getUserLogin();
+            userLogin.setPasswordHash(
+                    passwordEncoder.encode(updateUserDto.newPassword())
+            );
+            userLoginRepository.save(userLogin);
+        }
 
-        userLoginRepository.save(userLogin);
         userRepository.save(user);
     }
 
