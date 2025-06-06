@@ -5,9 +5,6 @@ import com.beyond.homs.menu.dto.MenuListDto;
 import com.beyond.homs.menu.dto.MenuRequestDto;
 import com.beyond.homs.menu.dto.MenuResponseDto;
 import com.beyond.homs.menu.service.MenuService;
-import com.beyond.homs.product.controller.ProductCategoryController;
-import com.beyond.homs.product.dto.ProductCategoryListDto;
-import com.beyond.homs.product.dto.ProductCategoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +32,12 @@ public class MenuControllerImpl implements MenuController {
                 ));
     }
 
-    @GetMapping("/{deptId}")
+    @GetMapping("/dept")
     @Override
     public ResponseEntity<ResponseDto<List<MenuListDto>>> MenuListByDept(
-            @PathVariable Long deptId) {
+            @RequestParam String menuName) {
 
-        List<MenuListDto> menuList = menuService.getMenusByDept(deptId);
+        List<MenuListDto> menuList = menuService.getMenusByDept(menuName);
 
         return ResponseEntity.ok(
             new ResponseDto<>(
