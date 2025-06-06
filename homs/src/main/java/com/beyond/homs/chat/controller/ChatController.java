@@ -29,10 +29,11 @@ public class ChatController {
 
     /**
      * 1:1 채팅방 생성 또는 기존 방 조회 (REST 요청)
+     * otherUserEmail을 통해 상대방을 찾습니다.
      * principal.getName()에는 userName("admin", "kim" 등)이 담겨 있다고 가정
      */
     @PostMapping("/room")
-    public ChatRoomDto createOrGetRoom(@RequestParam Long otherUserId, Principal principal) {
+    public ChatRoomDto createOrGetRoom(@RequestParam String otherUserEmail, Principal principal) { // Changed from Long otherUserId
         if (principal == null) {
             throw new IllegalArgumentException("인증 정보가 없습니다. 먼저 로그인해주세요.");
         }
@@ -40,23 +41,32 @@ public class ChatController {
         // REST 요청이므로 principal.getName()은 userName을 반환합니다.
         String currentUserName = principal.getName();
 
-        // userName으로 User 엔티티를 조회하여 userId를 얻습니다.
+        // userName으로 현재 User 엔티티 조회
         User currentUser = userRepository.findByUserName(currentUserName)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + currentUserName));
-
         Long currentUserId = currentUser.getUserId();
 
-        userRepository.findById(otherUserId)
-                .orElseThrow(() -> new IllegalArgumentException("상대 사용자를 찾을 수 없습니다: " + otherUserId));
+        // otherUserEmail로 상대방 User 엔티티 조회
+        User otherUser = userRepository.findByManagerEmail(otherUserEmail) // Find by managerEmail
+                .orElseThrow(() -> new IllegalArgumentException("상대방 이메일로 사용자를 찾을 수 없습니다: " + otherUserEmail));
+        Long otherUserId = otherUser.getUserId(); // Get userId from the found user
 
+        // 자기 자신과 채팅 시도 방지
+        if (currentUserId.equals(otherUserId)) {
+            throw new IllegalArgumentException("자기 자신과 채팅방을 만들 수 없습니다.");
+        }
+
+        // ChatService에 방 생성 또는 조회 요청
         ChatRoom room = chatService.getOrCreateRoom(currentUserId, otherUserId);
 
+        // ChatRoomDto 반환 (roomId, user1Id, user2Id)
         return new ChatRoomDto(
                 room.getRoomId(),
                 room.getUser1().getUserId(),
                 room.getUser2().getUserId()
         );
     }
+
 
     /**
      * 과거 모든 메시지 조회 (REST 요청)
