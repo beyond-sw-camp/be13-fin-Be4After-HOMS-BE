@@ -1,8 +1,5 @@
 package com.beyond.homs.menu.service;
 
-
-import com.beyond.homs.company.entity.Department;
-import com.beyond.homs.company.repository.DepartmentRepository;
 import com.beyond.homs.menu.dto.MenuListDto;
 import com.beyond.homs.menu.dto.MenuRequestDto;
 import com.beyond.homs.menu.dto.MenuResponseDto;
@@ -31,10 +28,12 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
-    public List<MenuListDto> getMenusByDept(Long deptId) {
+    public List<MenuListDto> getMenusByDept(String menuEnum) {
         List<Menu> rootMenus = menuRepository.findByParentIsNullOrderBySortNoAsc();
-        List<Menu> filteredChildren = menuRepository.findMenusByDeptId(deptId);
-
+        List<Menu> filteredChildren = menuRepository.findMenusByDeptMenu(menuEnum);
+        System.out.println(filteredChildren);
+        System.out.println(rootMenus);
+        System.out.println("1111111111111111");
         for (Menu root : rootMenus) {
             List<Menu> children = filteredChildren.stream()
                 .filter(child -> child.getParent().getMenuId().equals(root.getMenuId()))

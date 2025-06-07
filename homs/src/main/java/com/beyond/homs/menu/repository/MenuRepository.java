@@ -13,10 +13,10 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findByParent(Menu parent);
 
     @Query("SELECT m FROM Menu m WHERE m.parent IS NOT NULL AND " +
-        "((:deptId = 1 AND m.buy = true) OR " +
-        " (:deptId = 2 AND m.delivery = true) OR " +
-        " (:deptId = 3 AND m.materials = true) OR " +
-        " (:deptId = 4 AND m.sales = true)) " +
-        "ORDER BY m.sortNo ASC")
-    List<Menu> findMenusByDeptId(@Param("deptId") Long deptId);
+            "((:menu = 'BUY' AND m.buy = true) OR " +
+            " (:menu = 'DELIVERY' AND m.delivery = true) OR " +
+            " (:menu = 'MATERIALS' AND m.materials = true) OR " +
+            " (:menu = 'SALES' AND m.sales = true)) " +
+            "ORDER BY m.sortNo ASC")
+    List<Menu> findMenusByDeptMenu(@Param("menu") String menu);
 }

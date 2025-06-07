@@ -12,7 +12,7 @@ public interface MenuService {
     List<MenuListDto> getMenus();
 
     // 메뉴 Dept 별 조회
-    List<MenuListDto> getMenusByDept(Long deptId);
+    List<MenuListDto> getMenusByDept(String menuEnum);
 
     // 메뉴 등록
     @Transactional

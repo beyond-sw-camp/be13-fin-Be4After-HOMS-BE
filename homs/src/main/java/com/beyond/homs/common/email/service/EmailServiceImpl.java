@@ -31,6 +31,8 @@ public class EmailServiceImpl implements EmailService {
     public String sendMail(EmailMessage emailMessage, EmailTypeEnum type) { // EmailTypeEnum을 type으로 받음
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
+        System.out.println(emailMessage.getTo());
+
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
@@ -115,8 +117,25 @@ public class EmailServiceImpl implements EmailService {
 
                 case ACCOUNT_CREATED:
                     // 가입 환영 이메일 내용
-                    contentHtml = "<p> 저희 HOMS에 가입해주셔서 진심으로 감사드립니다!</p>" +
-                                         "<p> 지금 바로 서비스를 이용해보세요.</p>";
+                    subject = emailMessage.getSubject(); // 아이디
+                    content = emailMessage.getContent(); // 비밀번호
+                    contentHtml =
+                            "<p style=\"font-size: 16px; color: #333333; margin-bottom: 15px;\">" +
+                                    "고객님, 저희 HOMS에 가입해주셔서 진심으로 감사드립니다!" +
+                                    "</p>" +
+                                    "<p style=\"font-size: 15px; color: #555555; margin-bottom: 25px;\">" +
+                                    "자세한 계정 정보는 아래를 확인해 주시기 바랍니다." +
+                                    "</p>" +
+                                    "<div class=\"reason-box\">" + // 새로운 CSS 클래스 활용
+                                    "    <h4 style=\"font-weight: 600; color: #333333;\">아이디</h4>" +
+                                    "    <p style=\"white-space: pre-wrap; word-break: break-word;\">" + subject + "</p>" + // 텍스트 줄바꿈 및 긴 단어 처리
+                                    "    <h4 style=\"font-weight: 600; color: #333333;\">비밀번호</h4>" +
+                                    "    <p style=\"white-space: pre-wrap; word-break: break-word;\">" + content + "</p>" + // 텍스트 줄바꿈 및 긴 단어 처리
+                                    "</div>" +
+                                    "<p style=\"font-size: 15px; color: #555555; margin-top: 30px;\">" +
+                                    "지금 바로 서비스를 이용해보세요." +
+                                    "</p>";
+
                     templateVariables.put("mainTitle", "HOMS에 오신 것을 환영합니다!");
                     templateVariables.put("dynamicContent", contentHtml);
                     mailSubject = "[HOMS] HOMS에 오신 것을 환영합니다!";
