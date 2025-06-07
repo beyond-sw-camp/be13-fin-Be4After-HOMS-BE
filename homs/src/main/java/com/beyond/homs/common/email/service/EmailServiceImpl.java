@@ -8,8 +8,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -28,19 +25,13 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
     private final OrderRepository orderRepository;
 
-    @Value("${spring.mail.username}")
-    private String emailUser;
-
     @Override
     public String sendMail(EmailMessage emailMessage, EmailTypeEnum type) { // EmailTypeEnum을 type으로 받음
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        System.out.println(emailUser);
-        System.out.println(emailMessage.getTo());
-
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setFrom("homsbeafter@gmail.com");
+
             Long id = emailMessage.getId(); // 식별자 id
             Order order = null;
             if (id != null) {
@@ -60,13 +51,10 @@ public class EmailServiceImpl implements EmailService {
                 }
             }
 
-            
-            // 이미지 가져와서 할당
-            ClassPathResource classPathResource = new ClassPathResource("templates/homsLogo.png");
-            mimeMessageHelper.addInline("homsLogo", classPathResource);
+            // 맵을 가장 먼저 선언하고 초기화합니다.
+            Map<String, Object> templateVariables = new HashMap<>();
 
             // EmailTypeEnum에 따라 동적 내용과 변수를 구성
-            Map<String, Object> templateVariables = new HashMap<>();
             String templateName = "email-base-template"; // 기본 템플릿 이름
             String mailSubject = ""; // 메일 제목을 저장할 변수 초기화
 
@@ -166,8 +154,12 @@ public class EmailServiceImpl implements EmailService {
 
             mimeMessageHelper.setSubject(mailSubject); // 메일 제목 지정
 
+            // Thymeleaf로 HTML 렌더링
+            String htmlContent = processEmailTemplate(templateName, templateVariables);
+
             // Thymeleaf 템플릿에 데이터 주입
-            mimeMessageHelper.setText(processEmailTemplate(templateName, templateVariables), true);
+            mimeMessageHelper.setText(htmlContent, true);
+
             javaMailSender.send(mimeMessage); // 실제 이메일 전송
             log.info("Email sent successfully to: {} with type: {}", emailMessage.getTo(), type);
             return null;
