@@ -5,6 +5,7 @@ import com.beyond.homs.order.dto.OrderItemSearchResponseDto;
 import com.beyond.homs.product.data.ProductSearchOption;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathInits;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import com.beyond.homs.product.entity.QProductCategory;
+
 
 import java.util.List;
 
@@ -34,15 +37,18 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
     // deliveryAddress를 통한 company 조인에 사용할 별칭
     private final QCompany deliveryCompany = new QCompany("deliveryCompany"); // 새로운 별칭
 
+    private final QProductCategory category = new QProductCategory("category");
+    private final QProductCategory parentCategory = new QProductCategory("parentCategory");
+
 
     // 동적 검색 조건 메서드
     private BooleanExpression searchOptions(String keyword, ProductSearchOption option) {
         if (option == ProductSearchOption.PRODUCT_NAME){
-            return product.productName.contains(keyword); // 상품명
+            return product.productName.containsIgnoreCase(keyword); // 상품명
         } else if (option == ProductSearchOption.DOMAIN_NAME){
-            return product.category.parent.categoryName.contains(keyword); // 분야
+            return parentCategory.categoryName.containsIgnoreCase(keyword); // 분야
         } else if (option == ProductSearchOption.CATEGORY_NAME){
-            return product.category.categoryName.contains(keyword); // 분류
+            return category.categoryName.containsIgnoreCase(keyword); // 분류
         }
         return null; // 일치하는 옵션 없으면 null
     }
@@ -67,14 +73,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
                         deliveryAddress.deliveryName,
                         product.productId,
                         product.productName,
-                        product.category.parent.categoryName,
-                        product.category.categoryName,
+                        parentCategory.categoryName, // 분야
+                        category.categoryName,       // 분류
                         product.productMinQuantity,
                         orderItem.quantity
                 ))
                 .from(order)
                 .leftJoin(order.orderItems,orderItem)
-                .leftJoin(orderItem.product,product)
+                .leftJoin(orderItem.product, product)
+                .leftJoin(product.category, category)
+                .leftJoin(category.parent, parentCategory)
                 .leftJoin(order.user,user)
                 .leftJoin(user.company,company)
                 .leftJoin(deliveryAddress.company,deliveryCompany)

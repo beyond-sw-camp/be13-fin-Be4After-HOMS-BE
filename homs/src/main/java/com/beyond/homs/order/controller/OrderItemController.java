@@ -50,4 +50,7 @@ public interface OrderItemController {
             @PathVariable("productId") Long productId,
             @RequestParam Long quantity);
 
+    @Operation(summary = "모든 주문상품 조회", description = "모든 주문의 모든 상품을 조회합니다.")
+    ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> getAllItems();
+
 }

@@ -16,12 +16,20 @@ public class ProductCategoryMapper {
                 builder.productDomain(category.getCategoryName());
                 break;
             case 2:
-                builder.productDomain(category.getParent().getCategoryName());
+                if (category.getParent() != null) {
+                    builder.productDomain(category.getParent().getCategoryName());
+                }
                 builder.productCategory(category.getCategoryName());
                 break;
             case 3:
-                builder.productDomain(category.getParent().getParent().getCategoryName());
-                builder.productCategory(category.getParent().getCategoryName());
+                ProductCategory parent = category.getParent();
+                if (parent != null) {
+                    ProductCategory grandParent = parent.getParent();
+                    if (grandParent != null) {
+                        builder.productDomain(grandParent.getCategoryName());
+                    }
+                    builder.productCategory(parent.getCategoryName());
+                }
                 builder.manufacturingProcess(category.getCategoryName());
                 break;
             default:

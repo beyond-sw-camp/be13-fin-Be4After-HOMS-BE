@@ -20,4 +20,6 @@ public interface OrderItemService {
     void deleteOrderItem(Long orderId, List<Long> productIds);
 
     OrderItemResponseDto updateOrderItem(Long orderId, Long productId, Long quantity);
+
+    List<OrderItemResponseDto> getAllItems();
 }

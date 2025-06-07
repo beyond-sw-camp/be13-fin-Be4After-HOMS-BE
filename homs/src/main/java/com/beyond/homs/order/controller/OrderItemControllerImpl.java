@@ -86,4 +86,15 @@ public class OrderItemControllerImpl implements OrderItemController {
                 dto
         ));
     }
+
+    @GetMapping("/")
+    @Override
+    public ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> getAllItems(){
+        List<OrderItemResponseDto> list = orderItemService.getAllItems();
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "모든 주문 상품을 성공적으로 조회했습니다.",
+                list
+        ));
+    }
 }
