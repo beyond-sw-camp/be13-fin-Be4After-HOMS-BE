@@ -8,6 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -27,15 +28,19 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
     private final OrderRepository orderRepository;
 
+    @Value("${spring.mail.username}")
+    private String emailUser;
+
     @Override
     public String sendMail(EmailMessage emailMessage, EmailTypeEnum type) { // EmailTypeEnum을 type으로 받음
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
+        System.out.println(emailUser);
         System.out.println(emailMessage.getTo());
 
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
+            mimeMessageHelper.setFrom("homsbeafter@gmail.com");
             Long id = emailMessage.getId(); // 식별자 id
             Order order = null;
             if (id != null) {
