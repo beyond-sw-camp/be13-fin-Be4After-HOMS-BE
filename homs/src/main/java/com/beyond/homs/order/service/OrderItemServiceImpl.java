@@ -112,6 +112,18 @@ public class OrderItemServiceImpl implements OrderItemService {
         return toResponseDto(existing);
     }
 
+    @Override
+    public List<OrderItemResponseDto> getAllItems() {
+        List<OrderItem> orderItemList = orderItemRepository.findAll();
+
+        List<OrderItemResponseDto> dtoList = new ArrayList<>();
+        for (OrderItem orderItem : orderItemList) {
+            dtoList.add(toResponseDto(orderItem));
+        }
+
+        return dtoList;
+    }
+
     private OrderItemResponseDto toResponseDto(OrderItem orderItem) {
 
         Product product = orderItem.getProduct();
@@ -127,7 +139,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 product.getProductName(),
                 product.getProductMinQuantity(),
                 orderItem.getQuantity(),
-                product.getCategory()
+                product.getCategory() != null ? product.getCategory() : null
         );
 
         OrderResponseDto orderResponseDto = OrderResponseDto.builder()
@@ -143,7 +155,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         return new OrderItemResponseDto(
                 orderResponseDto,
-                productListDto
+                productListDto,
+                orderItem.getQuantity()
         );
     }
 }

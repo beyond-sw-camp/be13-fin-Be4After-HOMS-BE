@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class OrderItemResponseDto {
+    public class OrderItemResponseDto {
     private final OrderResponseDto order;
 
     private final ProductListDto product;
 
-    // private final Long quantity;
+     private final Long quantity;
 }
