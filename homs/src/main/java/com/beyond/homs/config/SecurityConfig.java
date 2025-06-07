@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 "/actuator/health"          // Health check 경로 허용
                         ).permitAll()               // 위 경로는 모두 허용
 
-                                .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user", "/api/v1/company").permitAll()
+                                .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user", "/api/v1/company","api/v1/user/*","api/v1/notify/email/").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/ws-stomp/**").permitAll()
                         .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
