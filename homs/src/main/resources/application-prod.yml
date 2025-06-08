@@ -1,5 +1,9 @@
 server:
   port: ${SERVER_PORT}
+management:
+  health:
+    mail:
+      enabled: false
 logging:
   config: classpath:log4j2-spring-prod.xml
 spring:
