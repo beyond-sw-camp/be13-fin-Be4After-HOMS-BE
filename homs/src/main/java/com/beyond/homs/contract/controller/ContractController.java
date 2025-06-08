@@ -2,6 +2,7 @@ package com.beyond.homs.contract.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.contract.data.ContractSearchOption;
+import com.beyond.homs.contract.dto.ContractDataDto;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -34,4 +35,7 @@ public interface ContractController {
     @Operation(summary = "계약 상세 조회", description = "계약을 상세 조회합니다.")
     ResponseEntity<ResponseDto<ContractResponseDto>> contractDetail(
             @PathVariable Long contractId);
+
+    @Operation(summary = "회사와 상품 조회", description = "계약을 작성할때 필요한 회사와 상품 목록을 조회합니다.")
+    ResponseEntity<ResponseDto<ContractDataDto>> contractList();
 }

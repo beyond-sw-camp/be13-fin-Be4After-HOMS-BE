@@ -2,6 +2,7 @@ package com.beyond.homs.contract.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.contract.data.ContractSearchOption;
+import com.beyond.homs.contract.dto.ContractDataDto;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -63,5 +64,14 @@ public class ContractControllerImpl implements ContractController {
                 "계약 상세 정보를 불러왔습니다.",
                 detail
         ));
+    }
+
+    @GetMapping("/data")
+    @Override
+    public ResponseEntity<ResponseDto<ContractDataDto>> contractList(){
+        ContractDataDto data = contractService.getContractData();
+        return ResponseEntity.ok(
+                new ResponseDto<>(HttpStatus.OK.value(), "계약 목록 조회 성공", data)
+        );
     }
 }

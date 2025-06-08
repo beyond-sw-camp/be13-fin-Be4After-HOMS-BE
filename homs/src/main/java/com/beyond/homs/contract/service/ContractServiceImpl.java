@@ -5,6 +5,7 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.contract.data.ContractSearchOption;
+import com.beyond.homs.contract.dto.ContractDataDto;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -18,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,17 +34,11 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional
     public ContractResponseDto createContract(ContractRequestDto contractRequestDto) {
-        // 1) companyName 으로 조회
-        Company company = companyRepository.findByCompanyName(contractRequestDto.getCompanyName())
-                .orElseThrow(() ->
-                        new CustomException(ExceptionMessage.COMPANY_NOT_FOUND)
-                );
+        // 1) companyId로 조회
+        Company company = companyRepository.findByCompanyId(contractRequestDto.getCompanyId());
 
-        // 2) productName 으로 조회
-        Product product = (Product) productRepository.findByProductName(contractRequestDto.getProductName())
-                .orElseThrow(() ->
-                        new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND)
-                );
+        // 2) productId로 조회
+        Product product = productRepository.findByProductId(contractRequestDto.getProductId());
 
         // 3) Contract 엔티티 빌드 및 저장
         Contract contract = Contract.builder()
@@ -75,6 +73,27 @@ public class ContractServiceImpl implements ContractService {
         return toResponseDto(contract);
     }
 
+    @Override
+    public ContractDataDto getContractData(){
+        List<Company> companyList = companyRepository.findAll();
+        List<Product> productList = productRepository.findAll();
+
+        // Company 엔티티를 ContractDataDto.CompanyDto로 변환
+        List<ContractDataDto.CompanyDto> companyDtoList = companyList.stream()
+                .map(company -> new ContractDataDto.CompanyDto(company.getCompanyId(), company.getCompanyName(),company.getRepresentManagerName()))
+                .toList();
+
+        // Product 엔티티를 ContractDataDto.ProductDto로 변환
+        List<ContractDataDto.ProductDto> productDtoList = productList.stream()
+                .map(product -> new ContractDataDto.ProductDto(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getCategory().getParent().getCategoryName()))
+                .toList();
+
+        return new ContractDataDto(companyDtoList, productDtoList);
+    }
+
     private ContractResponseDto toResponseDto(Contract contract) {
         return new ContractResponseDto(
                 contract.getContractId(),
@@ -83,7 +102,7 @@ public class ContractServiceImpl implements ContractService {
                 contract.getCompany().getRepresentManagerName(),
                 contract.getContractStartAt(),
                 contract.getContractStopAt(),
-                contract.getProduct().getCategory().getCategoryName()
+                contract.getProduct().getCategory().getParent().getCategoryName()
         );
     }
 }
