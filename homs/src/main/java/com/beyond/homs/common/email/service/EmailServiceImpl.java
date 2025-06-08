@@ -31,6 +31,7 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setFrom("homsbeafter@gmail.com");
 
             Long id = emailMessage.getId(); // 식별자 id
             Order order = null;
