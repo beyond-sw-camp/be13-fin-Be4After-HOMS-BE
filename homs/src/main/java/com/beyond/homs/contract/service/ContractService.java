@@ -1,6 +1,7 @@
 package com.beyond.homs.contract.service;
 
 import com.beyond.homs.contract.data.ContractSearchOption;
+import com.beyond.homs.contract.dto.ContractDataDto;
 import com.beyond.homs.contract.dto.ContractListDto;
 import com.beyond.homs.contract.dto.ContractRequestDto;
 import com.beyond.homs.contract.dto.ContractResponseDto;
@@ -16,4 +17,6 @@ public interface ContractService {
     Page<ContractListDto> getContracts(ContractSearchOption option, String keyword, Pageable pageable);
 
     ContractResponseDto getContractDetail(Long contractDetail);
+
+    ContractDataDto getContractData();
 }
