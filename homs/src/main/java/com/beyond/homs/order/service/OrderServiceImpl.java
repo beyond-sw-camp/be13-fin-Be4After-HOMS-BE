@@ -5,6 +5,7 @@ import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.data.OrderStatusEnum;
 import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.entity.OrderItem;
@@ -199,6 +200,7 @@ public class OrderServiceImpl implements OrderService {
         return toDeliveryResponseDtoList(orders);
     }
 
+    @Transactional
     @Override
     public void createChildOrder(OrderParentRequestDto requestDto){
 
@@ -211,36 +213,18 @@ public class OrderServiceImpl implements OrderService {
         Product product = productRepository.findById( productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " +  productId));
 
+        // 현재 주문에 대한 정보
+        Order currentOrder = orderRepository.findById(requestDto.getOrderId())
+                .orElseThrow(() -> new EntityNotFoundException("참조할 주문이 없습니다. orderId=" + requestDto.getOrderId()));
+
+        // 승인되지 않고 배송전 상태인 자식 order 리스트
+        List<Order> childOrders = orderRepository.findOrdersByParentOrder_OrderIdAndApprovedAndOrderStatusAndRejectReasonIsNotNull(currentOrder.getOrderId(),false,BEFORE);
+        Order childOrder = childOrders.stream()
+                .findFirst() // 리스트의 첫 번째 요소를 Optional<Order>로 반환 (없으면 Optional.empty())
+                .orElse(null); // Optional이 비어있으면 null을 반환
+
         // 자식 주문이 존재하고 승인되지 않았다면 (이미 클레임 주문이 있다면)
-        if (!requestDto.isApproved()){
-            Order parent = orderRepository.findById(requestDto.getParentOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
-
-            // 만약에 승인되지 않았다면 해당 자식 주문에 추가
-            OrderItem orderItem = OrderItem.builder()
-                    .product(product)
-                    .order(parent)
-                    .quantity(requestDto.getProduct().getQuantity())
-                    .build();
-            // 2-3) 저장
-            OrderItem save = orderItemRepository.save(orderItem);
-        }
-        else{ // 이미 승인되어버린 자식 주문이라면 새롭게 주문 생성
-            Order parent = orderRepository.findById(requestDto.getOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("참조할 주문이 없습니다. orderId2=" + requestDto.getOrderId()));
-
-            // 2-2) 엔티티 생성
-            Order order = Order.builder()
-                    .orderCode(orderNumberGenerator.generateOrderNumber())
-                    .approved(false)
-                    .orderStatus(BEFORE) // 고정값
-                    .user(currentUser)
-                    .parentOrder(parent)
-                    .build();
-
-            // 3-1) 저장
-            Order childOrder = orderRepository.save(order);
-
+        if (requestDto.isApproved() && childOrder != null) {
             // 만약에 승인되지 않았다면 해당 자식 주문에 추가
             OrderItem orderItem = OrderItem.builder()
                     .product(product)
@@ -248,7 +232,34 @@ public class OrderServiceImpl implements OrderService {
                     .quantity(requestDto.getProduct().getQuantity())
                     .build();
             // 2-3) 저장
+            orderItemRepository.save(orderItem);
+            System.out.println(orderItem.getOrder().getOrderId());
+        }
+        else{ // 이미 승인되어버린 자식 주문이라면 새롭게 주문 생성
+            // 2-2) 엔티티 생성
+            Order order = Order.builder()
+                    .orderCode(orderNumberGenerator.generateOrderNumber())
+                    .approved(false)
+                    .orderStatus(BEFORE) // 고정값
+                    .user(currentUser)
+                    .parentOrder(currentOrder)
+                    .build();
+
+            // 3-1) 저장
+            childOrder = orderRepository.save(order);
+
+            System.out.println(childOrder.getOrderCode());
+
+            // 해당 자식 주문에 추가
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .order(childOrder)
+                    .quantity(requestDto.getProduct().getQuantity())
+                    .build();
+            // 2-3) 저장
             OrderItem save = orderItemRepository.save(orderItem);
+
+            System.out.println(childOrder.getOrderId());
         }
     }
 

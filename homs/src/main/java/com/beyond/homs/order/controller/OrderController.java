@@ -59,11 +59,6 @@ public interface OrderController {
             @PathVariable("orderCode") String orderCode
     );
 
-    // @Operation(summary = "사용자별 주문 조회", description = "userId에 속한 모든 주문을 조회합니다.")
-    // ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrdersByUser(
-    //         @PathVariable("userId") Long userId
-    // );
-
     @Operation(summary = "하위 주문 조회", description = "parentOrderId의 모든 하위 주문을 조회합니다.")
     ResponseEntity<ResponseDto<List<OrderResponseDto>>> getChildOrders(
             @PathVariable("parentOrderId") Long parentOrderId
@@ -75,4 +70,7 @@ public interface OrderController {
     @Operation(summary = "사용자별 배송목록 조회", description = "사용자별 배송 정보를 조회합니다.")
     ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(Long userId);
 
+    @Operation(summary = "클레임 주문 생성", description = "클레임에 대한 자식 주문을 생성합니다.")
+    ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(
+            @RequestBody OrderParentRequestDto requestDto);
 }
