@@ -31,7 +31,7 @@ public class OrderControllerImpl implements OrderController {
 
     @PostMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder() {
+    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(){
         OrderResponseDto dto = orderService.createOrder();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
@@ -173,4 +173,15 @@ public class OrderControllerImpl implements OrderController {
                  "사용자별 주문 조회 성공",
                  list));
      }
+
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(
+            @PathVariable Long userId) {
+        List<OrderDeliveryResponseDTO> list = orderService.getDeliveryInfoByUser(userId);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "사용자별 주문 조회 성공",
+                list));
+    }
 }

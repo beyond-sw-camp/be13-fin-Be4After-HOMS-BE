@@ -38,7 +38,7 @@ public class OrderItem {
 
     @Builder
     public OrderItem(Product product, Order order, Long quantity) {
-        this.orderItemId = new OrderItemId(product.getProductId(), order.getOrderId());
+        this.orderItemId = new OrderItemId(order.getOrderId(),product.getProductId());
         this.product = product;
         this.order = order;
         this.quantity = quantity;
