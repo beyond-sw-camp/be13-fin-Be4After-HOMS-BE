@@ -15,6 +15,4 @@ public class OrderParentRequestDto {
     private final boolean approved;
 
     private final Long orderId;
-
-    private final Long parentOrderId;
 }
