@@ -66,13 +66,6 @@ public class ClaimServiceImpl implements ClaimService {
         return toResponseDto(saved);
     }
 
-    // @Override
-    // public List<ClaimResponseDto> getClaims(Long orderId) {
-    //     return claimRepository.findAllByOrderItem_OrderItemId_OrderId(orderId).stream()
-    //             .map(this::toResponseDto)
-    //             .collect(Collectors.toList());
-    // }
-
     @Override
     public Page<ClaimResponseDto> getClaims(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable){
         Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, claimId, option, keyword, pageable);

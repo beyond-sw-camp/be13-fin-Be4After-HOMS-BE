@@ -24,6 +24,7 @@ import static com.beyond.homs.product.entity.QProduct.product;
 import static com.beyond.homs.order.entity.QOrderItem.orderItem;
 import static com.beyond.homs.user.entity.QUser.user;
 import static com.beyond.homs.wms.entity.QDeliveryAddress.deliveryAddress;
+import static com.beyond.homs.order.entity.QClaim.claim;
 
 @Repository
 @RequiredArgsConstructor
@@ -69,6 +70,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
                         order.dueDate,
                         order.orderStatus,
                         order.approved,
+                        claim.status,
                         order.rejectReason,
                         deliveryAddress.deliveryName,
                         product.productId,
@@ -81,6 +83,8 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
                 .from(order)
                 .leftJoin(order.orderItems,orderItem)
                 .leftJoin(orderItem.product, product)
+                .leftJoin(claim)
+                .on(claim.orderItem.eq(orderItem)) // 조인 조건 명시
                 .leftJoin(product.category, category)
                 .leftJoin(category.parent, parentCategory)
                 .leftJoin(order.user,user)

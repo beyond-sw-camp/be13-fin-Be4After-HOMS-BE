@@ -7,7 +7,11 @@ import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
+import com.beyond.homs.order.entity.OrderItem;
+import com.beyond.homs.order.repository.OrderItemRepository;
 import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.product.entity.Product;
+import com.beyond.homs.product.repository.ProductRepository;
 import com.beyond.homs.user.entity.User;
 import com.beyond.homs.wms.entity.DeliveryAddress;
 import com.beyond.homs.wms.repository.DeliveryAddRepository;
@@ -34,34 +38,22 @@ public class OrderServiceImpl implements OrderService {
     private final OrderNumberGenerator orderNumberGenerator;
     private final CompanyRepository companyRepository;
     private final DeliveryAddRepository deliveryAddRepository;
+    private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    @Override
     @Transactional
+    @Override
     public OrderResponseDto createOrder() {
         // 1) 사용자 조회
         User currentUser = SecurityUtil.getCurrentUser();
-       //
-       // DeliveryAddress addr = addressRepository.findById(dto.getDeliveryAddressId())
-       //         .orElseThrow(() -> new EntityNotFoundException("Address not found: " + dto.getDeliveryAddressId()));
-//
-//         // 2-1) 재귀
-//         Order parent = null;
-//         if (requestDto.getParentOrderId() != null) {
-//             parent = orderRepository.findById(requestDto.getParentOrderId())
-//                     .orElseThrow(() -> new EntityNotFoundException(
-//                             "참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
-//         }
 
         // 2-2) 엔티티 생성
         Order order = Order.builder()
                 .orderCode(orderNumberGenerator.generateOrderNumber())
-                // .dueDate(LocalDateTime.now()) // 현재 시간 대입 (임시)
                 .approved(false)
                 .orderStatus(BEFORE) // 고정값
                 .user(currentUser)
-               // .deliveryAddress(null)
                 .build();
-//                .linkParent(parent);
 
         // 3-1) 저장
         Order saved = orderRepository.save(order);
@@ -205,6 +197,59 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId) {
         List<Order> orders = orderRepository.findAllByUser_UserId(userId);
         return toDeliveryResponseDtoList(orders);
+    }
+
+    @Override
+    public void createChildOrder(OrderParentRequestDto requestDto){
+
+        // 1) 사용자 조회
+        User currentUser = SecurityUtil.getCurrentUser();
+
+        Long productId = requestDto.getProduct().getProductId();
+
+        // 현재 선택한 상품에 대한 정보를 저장
+        Product product = productRepository.findById( productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found: " +  productId));
+
+        // 자식 주문이 존재하고 승인되지 않았다면 (이미 클레임 주문이 있다면)
+        if (!requestDto.isApproved()){
+            Order parent = orderRepository.findById(requestDto.getParentOrderId())
+                    .orElseThrow(() -> new EntityNotFoundException("참조할 주문이 없습니다. orderId2=" + requestDto.getParentOrderId()));
+
+            // 만약에 승인되지 않았다면 해당 자식 주문에 추가
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .order(parent)
+                    .quantity(requestDto.getProduct().getQuantity())
+                    .build();
+            // 2-3) 저장
+            OrderItem save = orderItemRepository.save(orderItem);
+        }
+        else{ // 이미 승인되어버린 자식 주문이라면 새롭게 주문 생성
+            Order parent = orderRepository.findById(requestDto.getOrderId())
+                    .orElseThrow(() -> new EntityNotFoundException("참조할 주문이 없습니다. orderId2=" + requestDto.getOrderId()));
+
+            // 2-2) 엔티티 생성
+            Order order = Order.builder()
+                    .orderCode(orderNumberGenerator.generateOrderNumber())
+                    .approved(false)
+                    .orderStatus(BEFORE) // 고정값
+                    .user(currentUser)
+                    .parentOrder(parent)
+                    .build();
+
+            // 3-1) 저장
+            Order childOrder = orderRepository.save(order);
+
+            // 만약에 승인되지 않았다면 해당 자식 주문에 추가
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .order(childOrder)
+                    .quantity(requestDto.getProduct().getQuantity())
+                    .build();
+            // 2-3) 저장
+            OrderItem save = orderItemRepository.save(orderItem);
+        }
     }
 
     private OrderResponseDto toResponseDto(Order order) {
