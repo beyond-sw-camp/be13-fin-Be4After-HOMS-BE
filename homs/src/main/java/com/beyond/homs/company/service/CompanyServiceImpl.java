@@ -5,6 +5,7 @@ import com.beyond.homs.company.dto.ResponseCompanyDto;
 import com.beyond.homs.company.entity.Company;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.company.repository.CountryRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CountryRepository countryRepository;
 
     @Override
+    @Transactional
     public void enrollmentCompany(CompanyDto enrollmentCompanyDto) {
         Company company = Company.builder()
                 .companyName(enrollmentCompanyDto.companyName())

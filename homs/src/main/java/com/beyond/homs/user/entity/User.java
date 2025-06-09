@@ -88,6 +88,9 @@ public class User implements UserDetails {
             orphanRemoval=true)
     private UserLogin userLogin;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @Builder
     public User(String userName, String managerName, String managerEmail, String managerPhone
             , UserRole role, Company company, Department department) {
@@ -118,5 +121,13 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.userName;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
     }
 }

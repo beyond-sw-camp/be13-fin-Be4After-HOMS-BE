@@ -5,9 +5,6 @@ import com.beyond.homs.menu.dto.MenuListDto;
 import com.beyond.homs.menu.dto.MenuRequestDto;
 import com.beyond.homs.menu.dto.MenuResponseDto;
 import com.beyond.homs.menu.service.MenuService;
-import com.beyond.homs.product.controller.ProductCategoryController;
-import com.beyond.homs.product.dto.ProductCategoryListDto;
-import com.beyond.homs.product.dto.ProductCategoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/menu/")
+@RequestMapping("api/v1/menu")
 public class MenuControllerImpl implements MenuController {
     private final MenuService  menuService;
 
@@ -27,12 +24,27 @@ public class MenuControllerImpl implements MenuController {
     public ResponseEntity<ResponseDto<List<MenuListDto>>> MenuList() {
         List<MenuListDto> menuList = menuService.getMenus();
 
-        return ResponseEntity.ok(
+        return ResponseEntity.ok( 
                 new ResponseDto<>(
                         HttpStatus.OK.value(),
                         "메뉴 목록을 불러왔습니다.",
                         menuList
                 ));
+    }
+
+    @GetMapping("/dept")
+    @Override
+    public ResponseEntity<ResponseDto<List<MenuListDto>>> MenuListByDept(
+            @RequestParam String menuName) {
+
+        List<MenuListDto> menuList = menuService.getMenusByDept(menuName);
+
+        return ResponseEntity.ok(
+            new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "메뉴 목록을 불러왔습니다.",
+                menuList
+            ));
     }
 
     //메뉴 등록

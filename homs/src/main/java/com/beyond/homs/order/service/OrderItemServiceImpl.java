@@ -1,24 +1,29 @@
 package com.beyond.homs.order.service;
 
+import com.beyond.homs.common.exception.exceptions.CustomException;
+import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
+import com.beyond.homs.order.dto.OrderItemSearchResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.entity.OrderItem;
 import com.beyond.homs.order.entity.OrderItemId;
 import com.beyond.homs.order.repository.OrderItemRepository;
 import com.beyond.homs.order.repository.OrderRepository;
+import com.beyond.homs.product.data.ProductSearchOption;
 import com.beyond.homs.product.dto.ProductListDto;
 import com.beyond.homs.product.entity.Product;
 import com.beyond.homs.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,10 +71,15 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItemResponseDto> getOrderItems(Long orderId) {
-        return orderItemRepository.findAllByOrder_OrderId(orderId).stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
+    public Page<OrderItemSearchResponseDto> getOrderItems(Long orderId, ProductSearchOption option, String keyword, Pageable pageable) {
+        Page<OrderItemSearchResponseDto> searchResult = orderItemRepository.findOrderItems(orderId, option, keyword, pageable);
+
+        // 검색결과가 없는 경우 예외 처리
+        if (searchResult.isEmpty()) {
+            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
+        }
+
+        return searchResult;
     }
 
     @Transactional
@@ -102,6 +112,18 @@ public class OrderItemServiceImpl implements OrderItemService {
         return toResponseDto(existing);
     }
 
+    @Override
+    public List<OrderItemResponseDto> getAllItems() {
+        List<OrderItem> orderItemList = orderItemRepository.findAll();
+
+        List<OrderItemResponseDto> dtoList = new ArrayList<>();
+        for (OrderItem orderItem : orderItemList) {
+            dtoList.add(toResponseDto(orderItem));
+        }
+
+        return dtoList;
+    }
+
     private OrderItemResponseDto toResponseDto(OrderItem orderItem) {
 
         Product product = orderItem.getProduct();
@@ -117,7 +139,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 product.getProductName(),
                 product.getProductMinQuantity(),
                 orderItem.getQuantity(),
-                product.getCategory()
+                product.getCategory() != null ? product.getCategory() : null
         );
 
         OrderResponseDto orderResponseDto = OrderResponseDto.builder()
@@ -133,7 +155,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         return new OrderItemResponseDto(
                 orderResponseDto,
-                productListDto
+                productListDto,
+                orderItem.getQuantity()
         );
     }
 }

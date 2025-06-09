@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
 public class SettlementResponseDto {
     private final Long settlementId;
+
+    private final Long orderId;
 
     private final String orderCode;
 
@@ -16,14 +19,12 @@ public class SettlementResponseDto {
 
     private final String companyAddress;
 
-    private final LocalDateTime orderDate;
+    private final Date orderDate;
 
     private final LocalDateTime settlementDate;
 
     private final String isSettled;
 
     private final String taxInvoice;
-
-
 
 }

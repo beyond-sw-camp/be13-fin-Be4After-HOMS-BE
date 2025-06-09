@@ -3,14 +3,13 @@ package com.beyond.homs.settlement.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
-import com.beyond.homs.settlement.dto.SettlementCompanyInfoDto;
-import com.beyond.homs.settlement.dto.SettlementOrderInfoDto;
-import com.beyond.homs.settlement.dto.SettlementResponseDto;
-import com.beyond.homs.settlement.dto.SettlementUpdateRequestDto;
+import com.beyond.homs.settlement.dto.*;
 import com.beyond.homs.settlement.service.SettlementService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +21,7 @@ public class SettlementControllerImpl implements SettlementController {
     private final OrderService orderService;
     private final SettlementService settlementService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     @Override
     public ResponseEntity<ResponseDto<List<SettlementResponseDto>>> getAllSettlement() {
@@ -33,6 +33,7 @@ public class SettlementControllerImpl implements SettlementController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("user/{userId}")
     @Override
     public ResponseEntity<ResponseDto<List<SettlementResponseDto>>> getSettlementByUser(
@@ -76,5 +77,19 @@ public class SettlementControllerImpl implements SettlementController {
                 "정산 상태가 SETTLED로 업데이트되었습니다.",
                 "SUCCESS"
         ));
+    }
+
+    @PostMapping("/{orderId}")
+    @Override
+    public ResponseEntity<ResponseDto<SettlementResponseDto>> createSettlement(
+            @PathVariable Long orderId,
+            @RequestBody SettlementRequestDto requestDto){
+        SettlementResponseDto dto = settlementService.createSettlement(orderId,requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseDto<>(
+                        HttpStatus.CREATED.value(),
+                        "새로운 정산이 생성되었습니다.",
+                        dto
+                ));
     }
 }

@@ -22,11 +22,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -46,12 +48,12 @@ public class Order {
     @Column(name = "order_code", nullable = false, length = 1024, unique = true)
     private String orderCode;
 
-    @Column(name = "due_date", nullable = false)
-    private LocalDateTime dueDate;
+    @Column(name = "due_date")
+    private Date dueDate;
 
     @Column(name = "order_date", nullable = false)
     @CreatedDate
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     @Column(name = "is_approved", nullable = false)
     private boolean approved;
@@ -67,8 +69,10 @@ public class Order {
     @Column(name = "reject_reason", length = 1024)
     private String rejectReason;
 
+    // ON DELETE SET NUL를 적용하여 주소를 삭제해도 주문에는 영향이 안감
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = true) // nullable = true 추가
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private DeliveryAddress deliveryAddress;
 
     @Column(name = "order_status", nullable = false)
@@ -80,7 +84,7 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Builder
-    public Order(String orderCode, LocalDateTime dueDate, boolean approved,
+    public Order(String orderCode, Date dueDate, boolean approved,
                  User user, Order parentOrder, String rejectReason, DeliveryAddress deliveryAddress, OrderStatusEnum orderStatus) {
         this.orderCode = orderCode;
         this.dueDate = dueDate;
@@ -103,11 +107,11 @@ public class Order {
 
     // 새 납기일은 주문일(orderDate) 이후여야 한다.
     // 이미 완료된 주문은 납기일을 바꿀 수 없다.
-    public void updateDueDate(LocalDateTime newDueDate) {
+    public void updateDueDate(Date newDueDate) {
         if (newDueDate == null) {
             throw new IllegalArgumentException("납기일을 반드시 입력해야 합니다.");
         }
-        if (newDueDate.isBefore(this.orderDate)) {
+        if (newDueDate.before(this.orderDate)) {
             throw new IllegalArgumentException("납기일은 주문일("
                     + this.orderDate + ") 이후여야 합니다.");
         }
@@ -167,8 +171,8 @@ public class Order {
 //        if (newAddress == null) {
 //            throw new IllegalArgumentException("새 배송지를 입력하세요.");
 //        }
-//        LocalDateTime cutoff = this.orderDate.plusHours(24);
-//        if (LocalDateTime.now().isAfter(cutoff)) {
+//        Date cutoff = this.orderDate.plusHours(24);
+//        if (Date.now().isAfter(cutoff)) {
 //            throw new IllegalStateException("주문 후 24시간이 지나면 배송지를 변경할 수 없습니다.");
 //        }
 //        this.deliveryAddress = newAddress;
@@ -176,5 +180,11 @@ public class Order {
 
     public void updateOrderStatus(OrderStatusEnum orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public void updateApprove(Boolean approved) {this.approved = approved;}
+
+    public void updateDeliveryAddress(DeliveryAddress addr) {
+        this.deliveryAddress = addr;
     }
 }

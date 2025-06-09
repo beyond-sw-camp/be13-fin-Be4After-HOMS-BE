@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Tag(name = "Excel API", description = "Excel API 목록")
@@ -23,5 +24,5 @@ public interface ExcelController {
     @Operation(summary = "엑셀 파일 다운로드", description = "엑셀 파일을 다운로드 합니다.")
     ResponseEntity<Resource> downloadExcel(
             @RequestParam ExcelTypeEnum type,
-            @RequestParam(required = false) Long orderId);
+            @RequestParam(required = false) Long orderId) throws UnsupportedEncodingException;
 }

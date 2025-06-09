@@ -2,6 +2,7 @@ package com.beyond.homs.product.service;
 
 import com.beyond.homs.common.exception.exceptions.CustomException;
 import com.beyond.homs.common.exception.messages.ExceptionMessage;
+import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.product.dto.ProductFileRequestDto;
 import com.beyond.homs.product.dto.ProductFileResponseDto;
 import com.beyond.homs.product.dto.ProductListDto;
@@ -13,6 +14,7 @@ import com.beyond.homs.product.entity.ProductFile;
 import com.beyond.homs.product.repository.ProductCategoryRepository;
 import com.beyond.homs.product.repository.ProductFileRepository;
 import com.beyond.homs.product.repository.ProductRepository;
+import com.beyond.homs.user.data.UserRole;
 import com.beyond.homs.wms.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,7 @@ public class ProductServiceImpl implements ProductService{
                 .productName(product.getProductName())
                 .productFeature(product.getProductFeature())
                 .productUsage(product.getProductUsage())
+                .productMinQuantity(product.getProductMinQuantity())
                 .category(product.getCategory())
                 .build();
     }
@@ -58,6 +61,12 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public ProductResponseDto createProduct(ProductRequestDto requestDto){
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
 
         ProductCategory productCategory = productCategoryRepository.findById(requestDto.getCategoryId())
                 .orElseThrow(() -> new CustomException(ExceptionMessage.CATEGORY_NOT_FOUND));
@@ -85,6 +94,13 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto){
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
@@ -109,6 +125,12 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void deleteProduct(Long productId){
 
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
@@ -127,9 +149,6 @@ public class ProductServiceImpl implements ProductService{
                 .s3Image(productFile.getS3Image())
                 .s3Msds(productFile.getS3Msds())
                 .s3Tds1(productFile.getS3Tds1())
-                .s3Tds2(productFile.getS3Tds2())
-                .s3Property(productFile.getS3Property())
-                .s3Guide(productFile.getS3Guide())
                 .build();
     }
 
@@ -137,6 +156,12 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public void uploadProductFile(ProductFileRequestDto requestDto){
+
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
 
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
@@ -146,9 +171,6 @@ public class ProductServiceImpl implements ProductService{
                 .s3Image(requestDto.getS3Image())
                 .s3Msds(requestDto.getS3Msds())
                 .s3Tds1(requestDto.getS3Tds1())
-                .s3Tds2(requestDto.getS3Tds2())
-                .s3Property(requestDto.getS3Property())
-                .s3Guide(requestDto.getS3Guide())
                 .build();
 
         productFileRepository.save(productFile);
@@ -158,6 +180,12 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public void updateProductFile(ProductFileRequestDto requestDto){
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
         ProductFile productFile = productFileRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ExceptionMessage.PRODUCT_NOT_FOUND));
 
@@ -168,8 +196,13 @@ public class ProductServiceImpl implements ProductService{
     // 파일 삭제
     @Transactional
     @Override
-    public void deleteProductFile(Long productId)
-    {
+    public void deleteProductFile(Long productId) {
+        // 현재 유저의 권한을 가져옴
+        UserRole role = SecurityUtil.getCurrentUserRole();
+        if(role != UserRole.ROLE_ADMIN){
+            throw new CustomException(ExceptionMessage.NOT_PERMISSION_USER);
+        }
+
         productFileRepository.deleteById(productId);
     }
 }

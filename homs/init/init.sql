@@ -6,3 +6,5 @@ insert into department(dept_name) values ('SALES');
 insert into department(dept_name) values ('BUY');
 insert into department(dept_name) values ('DELIVERY');
 insert into department(dept_name) values ('MATERIALS');
+
+select * from department;

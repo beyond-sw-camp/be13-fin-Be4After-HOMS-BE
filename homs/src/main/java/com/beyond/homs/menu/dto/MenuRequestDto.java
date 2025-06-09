@@ -1,5 +1,6 @@
 package com.beyond.homs.menu.dto;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 
 @Getter
@@ -8,7 +9,17 @@ public class MenuRequestDto {
 
     private int sortNo;
 
-    private Long parentId;
+    private String image;
 
-    private Long deptId;
+    private String path;
+
+    private Boolean buy;
+
+    private Boolean delivery;
+
+    private Boolean materials;
+
+    private Boolean sales;
+
+    private Long parentId;
 }

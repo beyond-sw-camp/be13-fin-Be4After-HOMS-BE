@@ -1,6 +1,7 @@
 package com.beyond.homs.wms.entity;
 
 import com.beyond.homs.company.entity.Company;
+import com.beyond.homs.wms.dto.DeliveryAddRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,4 +44,24 @@ public class DeliveryAddress {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @Builder
+    public DeliveryAddress(String deliveryName, String postalCode, String streetAddress, String detailedAddress, String reference, Company company)
+    {
+        this.deliveryName = deliveryName;
+        this.postalCode = postalCode;
+        this.streetAddress = streetAddress;
+        this.detailedAddress = detailedAddress;
+        this.reference = reference;
+        this.company = company;
+    }
+
+    public void updateDeliveryAddress(DeliveryAddRequestDto requestDto, Company company) {
+        this.deliveryName = requestDto.getDeliveryName();
+        this.postalCode = requestDto.getPostalCode();
+        this.streetAddress = requestDto.getStreetAddress();
+        this.detailedAddress = requestDto.getDetailedAddress();
+        this.reference = requestDto.getReference();
+        this.company = company;
+    }
 }

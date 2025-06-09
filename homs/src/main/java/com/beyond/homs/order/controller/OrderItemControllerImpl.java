@@ -3,9 +3,14 @@ package com.beyond.homs.order.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.dto.OrderItemRequestDto;
 import com.beyond.homs.order.dto.OrderItemResponseDto;
+import com.beyond.homs.order.dto.OrderItemSearchResponseDto;
 import com.beyond.homs.order.service.OrderItemService;
+import com.beyond.homs.product.data.ProductSearchOption;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,9 +47,12 @@ public class OrderItemControllerImpl implements OrderItemController {
 
     @GetMapping("/{orderId}")
     @Override
-    public ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> getAllOrderItems(
-            @PathVariable Long orderId) {
-        List<OrderItemResponseDto> list = orderItemService.getOrderItems(orderId);
+    public ResponseEntity<ResponseDto<Page<OrderItemSearchResponseDto>>> getAllOrderItems(
+            @PathVariable Long orderId,
+            @RequestParam(required = false) ProductSearchOption option,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        Page<OrderItemSearchResponseDto> list = orderItemService.getOrderItems(orderId, option, keyword, pageable );
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "모든 주문 상품을 성공적으로 조회했습니다.",
@@ -76,6 +84,17 @@ public class OrderItemControllerImpl implements OrderItemController {
                 HttpStatus.OK.value(),
                 "주문 상품이 성공적으로 수정되었습니다.",
                 dto
+        ));
+    }
+
+    @GetMapping("/")
+    @Override
+    public ResponseEntity<ResponseDto<List<OrderItemResponseDto>>> getAllItems(){
+        List<OrderItemResponseDto> list = orderItemService.getAllItems();
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "모든 주문 상품을 성공적으로 조회했습니다.",
+                list
         ));
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,16 +30,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(Long userId, UpdateUserDto updateUserDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
         user.setManagerName(updateUserDto.managerName());
         user.setManagerEmail(updateUserDto.managerEmail());
         user.setManagerPhone(updateUserDto.managerPhone());
+
+        if (updateUserDto.newPassword() != null) {
+            UserLogin userLogin = user.getUserLogin();
+            userLogin.setPasswordHash(
+                    passwordEncoder.encode(updateUserDto.newPassword())
+            );
+            userLoginRepository.save(userLogin);
+        }
+
         userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void resetPassword(String userName) {
         /**
          * email 전송 추가 해야 함

@@ -15,7 +15,17 @@ public class MenuResponseDto {
 
     private int sortNo;
 
-    private Long parentId;
+    private String image;
 
-    private Long deptId;
+    private String path;
+
+    private Boolean buy;
+
+    private Boolean delivery;
+
+    private Boolean materials;
+
+    private Boolean sales;
+
+    private Long parentId;
 }

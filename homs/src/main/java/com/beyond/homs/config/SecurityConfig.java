@@ -1,12 +1,17 @@
 package com.beyond.homs.config;
 
+import com.beyond.homs.auth.handler.AccessDeniedHandlerImpl;
+import com.beyond.homs.auth.handler.AuthenticationEntryPointImpl;
 import com.beyond.homs.auth.jwt.JwtAuthFilter;
 import com.beyond.homs.auth.jwt.JwtAuthProvider;
 import com.beyond.homs.common.jwt.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -19,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +33,7 @@ public class SecurityConfig {
     private final JwtAuthProvider jwtAuthProvider;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,10 +42,13 @@ public class SecurityConfig {
                                 "/api-docs/**",          // Swagger 관련 경로 허용
                                 "/swagger-ui/**",        // Swagger UI 경로 허용
                                 "/v3/api-docs/**",       // OpenAPI 문서 경로 허용
-                                "/swagger-resources/**"  // Swagger 리소스 허용
+                                "/swagger-resources/**",  // Swagger 리소스 허용
+                                "/actuator/health"          // Health check 경로 허용
                         ).permitAll()               // 위 경로는 모두 허용
-                                .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user").permitAll()
+
+                                .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh","/api/v1/admin/user", "/api/v1/company").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/ws-stomp/**").permitAll()
                         .anyRequest().authenticated()  // 나머지 요청도 모두 허용 (개발 단계에서)
 //                                .anyRequest().permitAll() // 개발 이후 삭제
                 )
@@ -55,6 +65,10 @@ public class SecurityConfig {
                 .addFilterBefore(
                         new JwtAuthFilter(jwtAuthProvider, jwtService, userDetailsService), // JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new AuthenticationEntryPointImpl(handlerExceptionResolver))
+                        .accessDeniedHandler(new AccessDeniedHandlerImpl(handlerExceptionResolver))
                 );
 
         return http.build();
@@ -68,10 +82,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // 모든 Origin 허용 (개발 단계에서만 사용)
-        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "https://app.be4after-homs.com"));
+        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(java.util.List.of("*")); // 모든 헤더 허용
-        configuration.setExposedHeaders(java.util.List.of("Authorization", "Link", "X-Total-Count")); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
+        configuration.setExposedHeaders(java.util.List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.LINK, "X-Total-Count", HttpHeaders.CONTENT_DISPOSITION)); // 클라이언트가 접근 가능한 헤더 추가 (필요시)
         configuration.setAllowCredentials(true); // 인증 정보 포함 여부 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

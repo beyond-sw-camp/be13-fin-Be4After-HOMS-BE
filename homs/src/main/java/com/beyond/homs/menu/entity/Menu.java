@@ -44,6 +44,24 @@ public class Menu {
     @Column(name = "sort_no")
     private int sortNo;
 
+    @Column(name = "image")
+    private String image;
+
+    @Column(name = "path")
+    private String path;
+
+    @Column(name = "is_buy")
+    private Boolean buy;
+
+    @Column(name = "is_delivery")
+    private Boolean delivery;
+
+    @Column(name = "is_materials")
+    private Boolean materials;
+
+    @Column(name = "is_sales")
+    private Boolean sales;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "menu_id_parent", nullable = true)
     private Menu parent;
@@ -55,20 +73,27 @@ public class Menu {
     @OrderBy("sortNo ASC")
     private List<Menu> children = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dept_id")
-    private Department department;
-
     @Builder
-    public Menu(String menuName, int sortNo, Menu parent, Department department) {
+    public Menu(String menuName, int sortNo, String image, String path, Boolean buy, Boolean delivery, Boolean materials, Boolean sales, Menu parent) {
         this.menuName = menuName;
         this.sortNo = sortNo;
+        this.image = image;
+        this.path = path;
+        this.buy = buy;
+        this.delivery = delivery;
+        this.materials = materials;
+        this.sales = sales;
         this.parent = parent;
-        this.department = department;
     }
 
     public void updateMenu(MenuRequestDto requestDto) {
         this.menuName = requestDto.getMenuName();
         this.sortNo = requestDto.getSortNo();
+        this.image = requestDto.getImage();
+        this.path = requestDto.getPath();
+        this.buy = requestDto.getBuy();
+        this.delivery = requestDto.getDelivery();
+        this.materials = requestDto.getMaterials();
+        this.sales = requestDto.getSales();
     }
 }

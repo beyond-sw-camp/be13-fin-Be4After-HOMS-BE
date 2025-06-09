@@ -32,8 +32,8 @@ public class OrderItemId implements Serializable {
     private Long productId;
 
     @Builder
-    public OrderItemId(Long productId, Long orderId) {
-        this.productId = productId;
+    public OrderItemId(Long orderId, Long productId) {
         this.orderId = orderId;
+        this.productId = productId;
     }
 }

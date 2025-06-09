@@ -1,8 +1,5 @@
 package com.beyond.homs.menu.service;
 
-
-import com.beyond.homs.company.entity.Department;
-import com.beyond.homs.company.repository.DepartmentRepository;
 import com.beyond.homs.menu.dto.MenuListDto;
 import com.beyond.homs.menu.dto.MenuRequestDto;
 import com.beyond.homs.menu.dto.MenuResponseDto;
@@ -18,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService{
     private final MenuRepository menuRepository;
-    private final DepartmentRepository departmentRepository;
 
     // 메뉴 조회
     @Override
@@ -31,6 +27,26 @@ public class MenuServiceImpl implements MenuService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MenuListDto> getMenusByDept(String menuEnum) {
+        List<Menu> rootMenus = menuRepository.findByParentIsNullOrderBySortNoAsc();
+        List<Menu> filteredChildren = menuRepository.findMenusByDeptMenu(menuEnum);
+        System.out.println(filteredChildren);
+        System.out.println(rootMenus);
+        System.out.println("1111111111111111");
+        for (Menu root : rootMenus) {
+            List<Menu> children = filteredChildren.stream()
+                .filter(child -> child.getParent().getMenuId().equals(root.getMenuId()))
+                .collect(Collectors.toList());
+            root.getChildren().clear();
+            root.getChildren().addAll(children);
+        }
+
+        return rootMenus.stream()
+            .map(MenuListDto::of)
+            .collect(Collectors.toList());
+    }
+
     // 메뉴 등록
     @Override
     public MenuResponseDto createMenu(MenuRequestDto requestDto) {
@@ -41,15 +57,16 @@ public class MenuServiceImpl implements MenuService{
                     .orElseThrow(() -> new IllegalArgumentException("부모 카테고리가 존재하지 않습니다."));
         }
 
-        // Department 조회
-        Department department = departmentRepository.findById(requestDto.getDeptId())
-                .orElseThrow(() -> new IllegalArgumentException("부서 정보가 존재하지 않습니다."));
-
         Menu menu = Menu.builder()
                 .menuName(requestDto.getMenuName())
                 .sortNo(requestDto.getSortNo())
+                .image(requestDto.getImage())
+                .path(requestDto.getPath())
+                .buy(requestDto.getBuy())
+                .delivery(requestDto.getDelivery())
+                .materials(requestDto.getMaterials())
+                .sales(requestDto.getSales())
                 .parent(parent)
-                .department(department)
                 .build();
 
         Menu saved = menuRepository.save(menu);
@@ -58,6 +75,12 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(saved.getMenuId())
                 .menuName(saved.getMenuName())
                 .sortNo(saved.getSortNo())
+                .image(saved.getImage())
+                .path(saved.getPath())
+                .buy(saved.getBuy())
+                .delivery(saved.getDelivery())
+                .materials(saved.getMaterials())
+                .sales(saved.getSales())
                 .parentId(saved.getParent() != null ? saved.getParent().getMenuId() : null)
                 .build();
     }
@@ -68,7 +91,6 @@ public class MenuServiceImpl implements MenuService{
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new RuntimeException("해당 메뉴가 존재하지 않습니다."));
 
-
         menu.updateMenu(requestDto);
         menuRepository.save(menu);
 
@@ -76,7 +98,13 @@ public class MenuServiceImpl implements MenuService{
                 .menuId(menu.getMenuId())
                 .menuName(menu.getMenuName())
                 .sortNo(menu.getSortNo())
-                .parentId(menu.getParent().getMenuId())
+                .image(menu.getImage())
+                .path(menu.getPath())
+                .buy(menu.getBuy())
+                .delivery(menu.getDelivery())
+                .materials(menu.getMaterials())
+                .sales(menu.getSales())
+                .parentId(menu.getParent() != null ? menu.getParent().getMenuId() : null)
                 .build();
     }
 
