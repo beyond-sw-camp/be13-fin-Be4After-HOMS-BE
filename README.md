@@ -1,4 +1,50 @@
-## 💻 프로젝트
+
+# HOMS(Hanhwa Order Management System)
+<p align="middle" style="margin: 0; padding: 0;">
+  <img width="250px" src="https://github.com/user-attachments/assets/f3a0f96a-a148-4b7e-ac0f-f98d6ab7b30b">
+</p>
+
+## 팀원 소개
+  |<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|
+|:-:|:-:|:-:|:-:|
+|오영광<br/>[@OhGlory](https://github.com/OhGlory)|김범석<br/>[@g00dbyul](https://github.com/g00dbyul)|박서준<br/>[@pppseojun](https://github.com/pppseojun)|홍재민<br/>[@MSP-31](https://github.com/MSP-31)|
+
+
+## 프로젝트 소개
+
+## 배경
+
+## 제안
+
+## 주요 기능
+
+## 기술 스택
+
+### &nbsp;　[ Backend ]
+&nbsp;&nbsp;&nbsp;&nbsp; ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/Springdata jpa-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white" style="border-radius: 5px;">
+
+### &nbsp;　[ Frontend ]
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white" style="border-radius: 5px;"/>
+<img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white" style="border-radius: 5px;"/>
+<img src="https://img.shields.io/badge/TypeScript-1572B6?style=for-the-badge&logo=TypeScript&logoColor=white" style="border-radius: 5px;"/>
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+<img src="https://img.shields.io/badge/pinia-gold?style=for-the-badge&logo=Pinia&logoColor=white" style="border-radius: 5px;"/>
+
+### &nbsp;　[ DB ]
+&nbsp;&nbsp;&nbsp;</a>
+<img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/Redis-E34F26?style=for-the-badge&logo=redis&logoColor=white" style="border-radius: 5px;">
+
+### &nbsp;　[ CI/CD ]
+&nbsp;&nbsp;&nbsp;&nbsp;</a>
+<img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/githubactions-007396?style=for-the-badge&logo=githubactions&logoColor=white" style="border-radius: 5px;">
+
+
+## 산출물
 
 <details>
 <summary><strong>📂 프로젝트 기획서</strong></summary>
@@ -77,9 +123,12 @@
 
 </details>
 
+
 <details>
 <summary><strong>📂 통합 테스트 결과서</strong></summary>
 
 [통합 테스트 결과서 바로가기](https://playdatacademy.notion.site/1d6d943bcac28132b060cf911ec43ab6?source=copy_link)
 
 </details>
+
+## 회고
