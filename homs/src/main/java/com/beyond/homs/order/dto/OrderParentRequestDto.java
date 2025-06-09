@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
 public class OrderParentRequestDto {
 
-    private final OrderItemRequestDto product;
-
-    private final boolean approved;
+    private final List<OrderItemRequestDto> product;
 
     private final Long orderId;
 }

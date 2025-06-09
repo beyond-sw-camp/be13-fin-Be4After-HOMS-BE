@@ -4,6 +4,6 @@ public enum ClaimStatusEnum {
     EXCHANGE, CANCEL, COMPLETE;
 
     public boolean isResolved(){
-        return this == COMPLETE;
+        return this != EXCHANGE;
     }
 }

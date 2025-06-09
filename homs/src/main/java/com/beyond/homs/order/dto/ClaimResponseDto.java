@@ -10,7 +10,11 @@ import lombok.RequiredArgsConstructor;
 public class ClaimResponseDto {
     private final Long claimId;
 
+    private final Long orderId;
+
     private final String orderCode;
+
+    private final Long productId;
 
     private final String productName;
 
