@@ -70,11 +70,6 @@ public class ClaimServiceImpl implements ClaimService {
     public Page<ClaimResponseDto> getClaims(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable){
         Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, claimId, option, keyword, pageable);
 
-        // 검색결과가 없는 경우 예외 처리
-        if (searchResult.isEmpty()) {
-            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
-        }
-
         return searchResult;
     }
 
@@ -89,11 +84,6 @@ public class ClaimServiceImpl implements ClaimService {
 
         Page<ClaimListResponseDto> searchResult = orderRepository.findClaimOrders(option, keyword, userId, pageable);
         List<ClaimListResponseDto> orderDtos = searchResult.getContent();
-
-        // 검색결과가 없는 경우 예외 처리
-        if (orderDtos.isEmpty()) {
-            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
-        }
 
         // 각 주문에 대한 클레임 해결 상태 판단 및 DTO에 설정
         List<ClaimListResponseDto> processedOrderDtos = orderDtos.stream()

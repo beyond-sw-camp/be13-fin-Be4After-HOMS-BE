@@ -74,11 +74,6 @@ public class OrderItemServiceImpl implements OrderItemService {
     public Page<OrderItemSearchResponseDto> getOrderItems(Long orderId, ProductSearchOption option, String keyword, Pageable pageable) {
         Page<OrderItemSearchResponseDto> searchResult = orderItemRepository.findOrderItems(orderId, option, keyword, pageable);
 
-        // 검색결과가 없는 경우 예외 처리
-        if (searchResult.isEmpty()) {
-            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
-        }
-
         return searchResult;
     }
 
