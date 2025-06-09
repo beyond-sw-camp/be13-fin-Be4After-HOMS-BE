@@ -17,7 +17,8 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
-![_drawio](https://github.com/user-attachments/assets/530484c9-51d4-4d51-8f87-f4590d6603e9)
+![architecture](https://github.com/user-attachments/assets/abd45355-edbe-4947-9abb-a0243a9acb20)
+
 
 
 </details>
