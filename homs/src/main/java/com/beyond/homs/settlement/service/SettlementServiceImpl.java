@@ -51,7 +51,7 @@ public class SettlementServiceImpl implements SettlementService {
                 company.getCompanyName(),
                 company.getRegistrationNumber(),
                 company.getRepresentName(),
-                deliveryAddress.getDetailedAddress()
+                deliveryAddress.getStreetAddress()
         );
     }
 
