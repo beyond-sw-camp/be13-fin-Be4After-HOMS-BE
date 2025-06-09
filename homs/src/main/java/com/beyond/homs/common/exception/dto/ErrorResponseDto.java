@@ -13,6 +13,8 @@ import java.util.List;
 public class ErrorResponseDto {
     private final int status;
 
+    private final String requestId;
+
     private final String message;
 
     private final LocalDateTime time;
