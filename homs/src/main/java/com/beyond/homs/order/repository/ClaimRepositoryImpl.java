@@ -47,7 +47,9 @@ public class ClaimRepositoryImpl implements ClaimRepositoryCustom {
                 // select문 시작
                 .select(Projections.constructor(ClaimResponseDto.class, // DTO 인트턴스 직접 생성
                         claim.claimId,
+                        order.orderId,
                         order.orderCode,
+                        product.productId,
                         product.productName,
                         company.companyName,
                         claim.reason,

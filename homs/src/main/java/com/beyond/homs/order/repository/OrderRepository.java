@@ -1,5 +1,6 @@
 package com.beyond.homs.order.repository;
 
+import com.beyond.homs.order.data.OrderStatusEnum;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.product.dto.ProductListDto;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -26,5 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     Optional<Order> findByIdWithUserAndCompany(Long orderId);
 
     List<Order> findByOrderId(Long orderId);
+
+    List<Order> findOrdersByParentOrder_OrderIdAndApprovedAndOrderStatusAndRejectReasonIsNotNull(Long orderId, boolean b, OrderStatusEnum orderStatusEnum);
 }
 

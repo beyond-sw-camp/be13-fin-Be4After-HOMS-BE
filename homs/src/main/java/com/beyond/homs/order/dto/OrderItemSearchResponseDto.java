@@ -1,5 +1,6 @@
 package com.beyond.homs.order.dto;
 
+import com.beyond.homs.order.data.ClaimStatusEnum;
 import com.beyond.homs.order.data.OrderStatusEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class OrderItemSearchResponseDto {
     private final OrderStatusEnum orderStatus;
 
     private final boolean approved;
+
+    private final ClaimStatusEnum claimStatus;
 
     private final String rejectReason;
 

@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,4 +34,6 @@ public interface OrderService {
     List<OrderDeliveryResponseDTO> getDeliveryInfo();
 
     List<OrderDeliveryResponseDTO> getDeliveryInfoByUser(Long userId);
+
+    Long createChildOrder(OrderParentRequestDto requestDto);
 }

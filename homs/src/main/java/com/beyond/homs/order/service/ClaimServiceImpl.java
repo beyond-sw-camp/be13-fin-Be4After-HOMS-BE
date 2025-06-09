@@ -66,13 +66,6 @@ public class ClaimServiceImpl implements ClaimService {
         return toResponseDto(saved);
     }
 
-    // @Override
-    // public List<ClaimResponseDto> getClaims(Long orderId) {
-    //     return claimRepository.findAllByOrderItem_OrderItemId_OrderId(orderId).stream()
-    //             .map(this::toResponseDto)
-    //             .collect(Collectors.toList());
-    // }
-
     @Override
     public Page<ClaimResponseDto> getClaims(Long orderId, Long claimId, ClaimSearchOption option, String keyword, Pageable pageable){
         Page<ClaimResponseDto> searchResult = claimRepository.findClaim(orderId, claimId, option, keyword, pageable);
@@ -128,7 +121,9 @@ public class ClaimServiceImpl implements ClaimService {
     private ClaimResponseDto toResponseDto(Claim claim) {
         return new ClaimResponseDto(
                 claim.getClaimId(),
+                claim.getOrderItem().getOrder().getOrderId(),
                 claim.getOrderItem().getOrder().getOrderCode(),
+                claim.getOrderItem().getProduct().getProductId(),
                 claim.getOrderItem().getProduct().getProductName(),
                 // 배송지 완성 아직 안되서 이렇게 타야됨.
                 claim.getOrderItem().getOrder().getUser().getCompany().getCompanyName(),

@@ -31,7 +31,7 @@ public class OrderControllerImpl implements OrderController {
 
     @PostMapping("/")
     @Override
-    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder() {
+    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(){
         OrderResponseDto dto = orderService.createOrder();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto<>(
@@ -130,17 +130,6 @@ public class OrderControllerImpl implements OrderController {
                 dto));
     }
 
-    // @GetMapping("/user/{userId}")
-    // @Override
-    // public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrdersByUser(
-    //         @PathVariable Long userId) {
-    //     List<OrderResponseDto> list = orderService.getOrdersByUser(userId);
-    //     return ResponseEntity.ok(new ResponseDto<>(
-    //             HttpStatus.OK.value(),
-    //             "사용자별 주문 조회 성공",
-    //             list));
-    // }
-
     @GetMapping("/{parentOrderId}/children")
     @Override
     public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getChildOrders(
@@ -173,4 +162,15 @@ public class OrderControllerImpl implements OrderController {
                  "사용자별 주문 조회 성공",
                  list));
      }
+
+    @PostMapping("/child")
+    @Override
+    public ResponseEntity<ResponseDto<Long>> getDeliveryInfoByUser(
+            @RequestBody OrderParentRequestDto requestDto) {
+        Long childOrder = orderService.createChildOrder(requestDto);
+        return ResponseEntity.ok(new ResponseDto<>(
+                HttpStatus.OK.value(),
+                "하위 주문 생성 성공",
+                childOrder));
+    }
 }
