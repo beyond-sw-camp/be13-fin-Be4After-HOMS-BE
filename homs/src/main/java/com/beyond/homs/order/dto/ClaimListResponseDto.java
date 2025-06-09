@@ -1,5 +1,6 @@
 package com.beyond.homs.order.dto;
 
+import com.beyond.homs.order.data.ClaimStatusEnum;
 import com.beyond.homs.order.data.OrderStatusEnum;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class ClaimListResponseDto {
 
     private boolean isAllClaimsRejected;
 
+    private ClaimStatusEnum claimStatus;
+
     @QueryProjection //
     public ClaimListResponseDto(
             Long orderId,
@@ -45,7 +48,8 @@ public class ClaimListResponseDto {
             boolean approved, // QueryDSL 에러 메시지가 Boolean이면 여기도 Boolean으로 변경 고려
             Long parentOrderId,
             String rejectReason,
-            OrderStatusEnum orderStatus
+            OrderStatusEnum orderStatus,
+            ClaimStatusEnum claimStatus
     ) {
         this.orderId = orderId;
         this.orderCode = orderCode;
@@ -56,6 +60,7 @@ public class ClaimListResponseDto {
         this.parentOrderId = parentOrderId;
         this.rejectReason = rejectReason;
         this.orderStatus = orderStatus;
+        this.claimStatus = claimStatus;
         this.isAllClaimsRejected = false; // 기본값 설정
     }
 

@@ -113,7 +113,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         order.approved,
                         order.parentOrder.orderId,
                         order.rejectReason,
-                        order.orderStatus
+                        order.orderStatus,
+                        claim.status
                 ))
                 .from(claim)
                 .leftJoin(claim.orderItem.order,order)
