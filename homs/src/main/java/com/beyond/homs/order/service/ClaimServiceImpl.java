@@ -121,7 +121,9 @@ public class ClaimServiceImpl implements ClaimService {
     private ClaimResponseDto toResponseDto(Claim claim) {
         return new ClaimResponseDto(
                 claim.getClaimId(),
+                claim.getOrderItem().getOrder().getOrderId(),
                 claim.getOrderItem().getOrder().getOrderCode(),
+                claim.getOrderItem().getProduct().getProductId(),
                 claim.getOrderItem().getProduct().getProductName(),
                 // 배송지 완성 아직 안되서 이렇게 타야됨.
                 claim.getOrderItem().getOrder().getUser().getCompany().getCompanyName(),

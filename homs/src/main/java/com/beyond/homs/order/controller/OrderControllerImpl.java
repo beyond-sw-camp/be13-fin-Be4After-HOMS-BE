@@ -165,12 +165,12 @@ public class OrderControllerImpl implements OrderController {
 
     @PostMapping("/child")
     @Override
-    public ResponseEntity<ResponseDto<List<OrderDeliveryResponseDTO>>> getDeliveryInfoByUser(
+    public ResponseEntity<ResponseDto<Long>> getDeliveryInfoByUser(
             @RequestBody OrderParentRequestDto requestDto) {
-        orderService.createChildOrder(requestDto);
+        Long childOrder = orderService.createChildOrder(requestDto);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
-                "사용자별 주문 조회 성공",
-                null));
+                "하위 주문 생성 성공",
+                childOrder));
     }
 }
