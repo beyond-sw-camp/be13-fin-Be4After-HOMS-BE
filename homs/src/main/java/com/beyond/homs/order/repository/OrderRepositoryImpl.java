@@ -78,7 +78,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         searchOptions(keyword, option),  // 동적 검색 조건
                         userEq(userId)                   // 사용자 필터링 조건 추가
                 )
-                .orderBy(order.orderId.desc()) // 정렬
+                .orderBy(order.orderDate.desc()) // 정렬
                 .offset(pageable.getOffset()) // 페이징 시작 오프셋
                 .limit(pageable.getPageSize()) // 페이지 크기
                 .fetch(); // 실제 쿼리 실행 및 결과 리스트 반환
