@@ -16,13 +16,13 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 
 ## 배경
 ### 기존 주문 프로세스의 문제점
-기존의 주문 시스템은 약 49% 정도 이메일, FAX, 전화, 문서 형태의 발주서를 제출하고 영업팀이 수작업으로 처리 됩니다. 이 과정에서 4% 정도의 오타 및 누락 등으로 인해 처리 지연의 문제가 발생합니다. 또한, 소통 단절의 문제로 인해 주문 및 배송 조회 시 별도 문의가 필요하며 이력 관리의 어려움도 있습니다. 
+기존의 주문 시스템은 약 49% 정도 이메일, FAX, 전화, 문서 형태의 발주서를 제출하고 영업팀이 수작업으로 처리 됩니다. 이 과정에서 4% 정도의 __오타 및 누락__ 등으로 인해 처리 지연의 문제가 발생합니다. 또한, __소통 단절의 문제__ 로 인해 주문 및 배송 조회 시 별도 문의가 필요하며 이력 관리의 어려움도 있습니다. 
 
 ### 주문 통합 관리 플랫폼의 필요성
-이런 문제를 해결하기 위해 주문 통합 관리 플랫폼 HOMS(Hanhwa Order Management System)을 개발하게 되었습니다.
+비효율적이고 오류에 취약한 기존 주문 방식을 개선하고, 실시간 소통과 정확한 주문 이력 관리가 가능한 시스템이 요구되었습니다. 이에 따라 문제를 해결하기 위해 주문 통합 관리 플랫폼 __HOMS(Hanhwa Order Management System)__ 을 개발하게 되었습니다.
 
 ## 제안
-수작업으로 처리 되는 주문 프로세스를 엑셀 템플릿 기반의 원클릭 주문과 플랫폼 통합으로 주문 -> 출고 -> 배송 -> 정산 -> 클레임 관리를 일원화 합니다. 실시간 채팅 기능을 지원해 기업 고객의 민원에 효율적으로 대응할 수 있습니다. 또한, 데이터 시각화 및 통계 자료를 제공해 주문과 관련된 지표를 점검하고 관리할 수 있습니다.
+수작업으로 처리 되는 주문 프로세스를 엑셀 템플릿 기반의 원클릭 주문과 플랫폼 통합으로 __주문 -> 출고 -> 배송 -> 정산 -> 클레임__ 관리를 일원화 합니다. 실시간 채팅 기능을 지원해 기업 고객의 민원에 효율적으로 대응할 수 있습니다. 또한, 데이터 시각화 및 통계 자료를 제공해 주문과 관련된 지표를 점검하고 관리할 수 있습니다.
 
 ## 주요 기능
 ### 엑셀 템플릿 주문
@@ -61,6 +61,9 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white" style="border-radius: 5px;">
 <img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white" style="border-radius: 5px;">
 <img src="https://img.shields.io/badge/Springdata jpa-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white" />
+<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white" />
+
 
 ### &nbsp;　[ Frontend ]
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white" style="border-radius: 5px;"/>
@@ -68,6 +71,11 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 <img src="https://img.shields.io/badge/TypeScript-1572B6?style=for-the-badge&logo=TypeScript&logoColor=white" style="border-radius: 5px;"/>
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 <img src="https://img.shields.io/badge/pinia-gold?style=for-the-badge&logo=Pinia&logoColor=white" style="border-radius: 5px;"/>
+<img src="https://img.shields.io/badge/SockJS-4D4D4D?style=for-the-badge&logo=socketdotio&logoColor=white" />
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" />
+
+<img src="https://img.shields.io/badge/Vue_Router-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" />
+
 
 ### &nbsp;　[ DB ]
 &nbsp;&nbsp;&nbsp;</a>
@@ -78,6 +86,12 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 &nbsp;&nbsp;&nbsp;&nbsp;</a>
 <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" style="border-radius: 5px;">
 <img src="https://img.shields.io/badge/githubactions-007396?style=for-the-badge&logo=githubactions&logoColor=white" style="border-radius: 5px;">
+<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge" />
+
+### &nbsp;　[ INFRA ]
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/CloudFront-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white" />
+<img src="https://img.shields.io/badge/AWS_ECR-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" />
+<img src="https://img.shields.io/badge/AWS_ECS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white" />
 
 
 ## 산출물
@@ -166,10 +180,10 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 </details>
 
 ## 회고
-| 팀원 | 회고록 |
+| 팀&nbsp;&nbsp;&nbsp;&nbsp;원 | 회고록 |
 | ---- | ------ |
 | 오영광 |  |
-| 김범석 | 다른 팀들 보다 인원은 적은데 개발 할 것은 많아서 걱정 되었습니다. 힘들었지만 팀원들과 함께한 노력, 강사님 매니저님들의 관심으로 프로젝트를 마무리 지을 수 있었습니다. <br/><br/>개발하면서 왜 이렇게 해야하지? 이론만 알고 머리로 이해하지 못했던 부분들을 깨달으면서 개발 역량을 성장시킬 수 있었습니다. |
-| 홍재민 | 안녕하세요, 저는 홍재민입니다. 먼저 이 뜻깊은 프로젝트를  마치게 되어 큰 영광이며, 이 자리에 설 수 있도록 함께해 주신 모든 분께 감사의 인사를 전합니다.<br/><br/> 이번 HOMS 프로젝트는 단순한 주문관리시스템을 구축하는 것이 아니라, 보다 효율적인 프로세스를 설계하고, 사용자 중심의 편리한 시스템을 개발하는 데 초점을 맞춘 프로젝트였습니다.<br/><br/> 처음 시작할 때에는 많은 도전이 있었지만, 팀원들의 열정과 협력 덕분에 성공적으로 마무리할 수 있었습니다.<br/><br/> 이 자리를 빌려, 프로젝트를 함께 이끌어 준 Be4after팀원들에게 깊은 감사를 전합니다. 또한, 지속적으로 피드백을 주며 성장할 수 있도록 도와주신 문인수 강사님과 정민환 멘토님께도 감사드립니다.<br/><br/> 이 프로젝트는 팀원 모두가 함께 힘을 모은 노력의 결과라고 생각합니다. 앞으로도 최고의 프로젝트와 협업을 할 수 있도록 최선을 다하겠습니다. 다시 한번 감사드리며, 앞으로도 좋은 모습으로 찾아뵙겠습니다. <br/><br/>감사합니다! |
-| 박서준 |  |
+| 김범석 | 다른 팀들 보다 인원은 적은데 개발 할 것은 많아서 걱정 되었습니다. 힘들었지만 팀원들과 함께한 노력, 강사님 매니저님들의 관심으로 프로젝트를 마무리 지을 수 있었습니다. <br/>개발하면서 왜 이렇게 해야하지? 이론만 알고 머리로 이해하지 못했던 부분들을 깨달으면서 개발 역량을 성장시킬 수 있었습니다. |
+| 홍재민 |  이번 HOMS 프로젝트는 저에게 있어 프론트엔드와 백엔드 개발을 통합적으로 경험할 수 있었던 의미 있는 시간이었습니다. 한쪽에만 매몰되지 않고 양쪽 모두를 진행하며 다양한 기술 스택과 실제 개발 사례들을 깊이 있게 접할 수 있었습니다.  <br/>특히, 평소 접하기 어려웠던 B2B(기업 간 거래) 주문 관리 시스템의 전반적인 흐름과 특성을 이해하는 데 큰 도움이 되었습니다. 이는 비즈니스 도메인에 대한 시야를 넓히는 귀중한 기회가 되었습니다.프로젝트 초반에는 9주라는 짧은 기간 안에 계획했던 목표를 달성할 수 있을지에 대한 우려가 있었습니다. <br/> 하지만 시작 후 1~2주간 탄탄한 기반을 마련하고, 팀원들과의 명확한 역할 분담 및 체계적인 일정 계획을 수립했던 것이 최종적인 완성도를 높이는 데 결정적인 역할을 했습니다.개인적으로는 아직 부족한 점이 많다고 느꼈지만, <br/> 이러한 부분들을 팀원들과 긴밀하게 협력하며 보완해나간 덕분에 만족스러운 결과물을 만들어낼 수 있었다고 생각합니다.마지막으로, 이번 프로젝트를 성공적으로 이끌어주신 모든 팀원분들께 진심으로 감사드립니다. |
+| 박서준 | 좋은 팀원들과 프로젝트를 함께 하게 되어 걱정과 큰 무리없이 좋은 프로젝트 진행하고 성공적으로 마쳤습니다. <br/> git협업 방식과 웹 프로젝트를 제작하며 전반적인 프로세스를 익히는데 도움이 되었으며 백엔드 역량 뿐만 아니라 프론트엔드 역량 역시 많이 성장 함을 깨닳게 되었습니다. 이번 프로젝트를 통해 배포 과정과 CI/CD 방식도 배우고 혼자라면 어려웠을 DEVOPS영역도 접해볼수 있어 좋은 프로젝트 경험이 되었습니다. 이번 프로젝트를 통해 풀스택 개발자를 지향하는 계기가 되었고 실력 향상에 도움이 되었습니다. |
 
