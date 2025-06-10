@@ -4,7 +4,6 @@ import com.beyond.homs.company.entity.QCompany;
 import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.dto.ClaimListResponseDto;
 import com.beyond.homs.order.dto.OrderResponseDto;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -54,8 +53,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         return order.user.userId.eq(userId);
     }
 
+    // 관리자 역할에 따른 추가 필터링 조건
+    private BooleanExpression adminSpecificFilter(boolean isAdmin) {
+        if (isAdmin) {
+            // 관리자일 경우 deliveryName과 dueDate가 모두 null인 주문은 보지 못하게 필터링
+            return order.deliveryAddress.deliveryName.isNotNull().or(order.dueDate.isNotNull());
+        }
+        return null; // 관리자가 아니면 이 조건은 적용하지 않음
+    }
+
     @Override
-    public Page<OrderResponseDto> findOrders(OrderSearchOption option, String keyword, Long userId, Pageable pageable) {
+    public Page<OrderResponseDto> findOrders(OrderSearchOption option, String keyword, Long userId, boolean isAdmin, Pageable pageable) {
         List<OrderResponseDto> content = queryFactory // JPAQueryFactory 사용
                 // select문 시작
                 .select(Projections.constructor(OrderResponseDto.class, // DTO 인트턴스 직접 생성
@@ -76,7 +84,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .leftJoin(deliveryAddress.company,deliveryCompany)
                 .where(
                         searchOptions(keyword, option),  // 동적 검색 조건
-                        userEq(userId)                   // 사용자 필터링 조건 추가
+                        userEq(userId) ,                 // 사용자 필터링 조건 추가
+                        adminSpecificFilter(isAdmin)     // 관리자 필터링 조건 추가
                 )
                 .orderBy(order.orderDate.desc()) // 정렬
                 .offset(pageable.getOffset()) // 페이징 시작 오프셋
@@ -92,7 +101,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .leftJoin(deliveryAddress.company,deliveryCompany)
                 .where(
                         searchOptions(keyword, option),
-                        userEq(userId)
+                        userEq(userId),
+                        adminSpecificFilter(isAdmin)     // 관리자 필터링 조건 추가
                 );
         
         // Spring Data JPA의 PageableExecutionUtils를 사용하여 Page 객체 생성
