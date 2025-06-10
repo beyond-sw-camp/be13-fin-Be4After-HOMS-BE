@@ -57,7 +57,6 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<ContractListDto> getContracts(ContractSearchOption option, String keyword, Pageable pageable) {
         Page<ContractListDto> searchResult = contractRepository.findContractList(option, keyword, pageable);
-
         return searchResult;
     }
 

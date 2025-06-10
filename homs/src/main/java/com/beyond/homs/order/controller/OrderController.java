@@ -3,6 +3,7 @@ package com.beyond.homs.order.controller;
 import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.order.data.OrderSearchOption;
 import com.beyond.homs.order.data.OrderStatusEnum;
+
 import com.beyond.homs.order.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,6 +58,7 @@ public interface OrderController {
     ResponseEntity<ResponseDto<Void>> updateStatus(
             @PathVariable Long orderId,
             @Valid @RequestParam OrderStatusEnum requestStatus);
+
 
     @Operation(summary = "주문 코드로 조회", description = "orderCode로 단건 조회합니다.")
     ResponseEntity<ResponseDto<OrderResponseDto>> getOrderByCode(
