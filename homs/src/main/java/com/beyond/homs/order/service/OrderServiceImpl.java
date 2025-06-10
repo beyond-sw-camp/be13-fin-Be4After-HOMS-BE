@@ -1,10 +1,9 @@
 package com.beyond.homs.order.service;
 
-import com.beyond.homs.common.exception.exceptions.CustomException;
-import com.beyond.homs.common.exception.messages.ExceptionMessage;
 import com.beyond.homs.common.util.SecurityUtil;
 import com.beyond.homs.company.repository.CompanyRepository;
 import com.beyond.homs.order.data.OrderSearchOption;
+import com.beyond.homs.order.data.OrderStatusEnum;
 import com.beyond.homs.order.dto.*;
 import com.beyond.homs.order.entity.Order;
 import com.beyond.homs.order.entity.OrderItem;
@@ -34,7 +33,6 @@ import static com.beyond.homs.user.data.UserRole.ROLE_USER;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-//    private final DeliveryAddressRepository addressRepository;
     private final OrderNumberGenerator orderNumberGenerator;
     private final CompanyRepository companyRepository;
     private final DeliveryAddRepository deliveryAddRepository;
@@ -162,6 +160,21 @@ public class OrderServiceImpl implements OrderService {
 
        DeliveryAddress addr = deliveryAddRepository.findByAddressId(requestDto.getDeliveryAddressId());
        order.updateDeliveryAddress(addr);
+
+        // flush & update
+        Order updated = orderRepository.save(order);
+        return toResponseDto(updated);
+    }
+
+    @Transactional
+    @Override
+    public OrderResponseDto updateOrderStatus(Long orderId, OrderStatusEnum orderStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "해당 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        // 배송 상태 업데이트
+        order.updateOrderStatus(orderStatus);
 
         // flush & update
         Order updated = orderRepository.save(order);

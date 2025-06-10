@@ -4,6 +4,9 @@ import com.beyond.homs.common.dto.ResponseDto;
 import com.beyond.homs.settlement.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +31,9 @@ public interface SettlementController {
     );
 
     @Operation(summary = "세금계산서 주문 정보 조회", description = "세금계산서 정산에 필요하 주문 정보를 조회합니다")
-    ResponseEntity<ResponseDto<List<SettlementOrderInfoDto>>> getOrderInfo(
-            @PathVariable Long orderId
-    );
+    ResponseEntity<ResponseDto<Page<SettlementOrderInfoDto>>> getOrderInfo(
+            @PathVariable("orderId") Long orderId,
+            @PageableDefault(size = 3, page = 0) Pageable pageable);
 
     @Operation(summary = "세금명세서 상태 변경", description = "정산 관리 상태 변경합니다")
     ResponseEntity<ResponseDto<String>> updateSettlementStatus(
