@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class SettlementRequestDto {
-    private final Long orderId;
-
     private final LocalDateTime settlementDate;
 
     private final String texInvoice;

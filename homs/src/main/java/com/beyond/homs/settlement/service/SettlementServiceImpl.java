@@ -11,6 +11,9 @@ import com.beyond.homs.settlement.entity.Settlement;
 import com.beyond.homs.settlement.repository.SettlementRepository;
 import com.beyond.homs.wms.entity.DeliveryAddress;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,11 +59,13 @@ public class SettlementServiceImpl implements SettlementService {
     }
 
     @Override
-    public List<SettlementOrderInfoDto> getOrderInfo(Long orderId){
+    public Page<SettlementOrderInfoDto> getOrderInfo(Long orderId, Pageable pageable) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을수 없습니다 ID=" + orderId));
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrder_OrderId(orderId);
-        return orderItems.stream()
+
+        Page<OrderItem> orderItemsPage = orderItemRepository.findAllByOrder_OrderId(orderId, pageable);
+
+        List<SettlementOrderInfoDto> dtoList =orderItemsPage.getContent().stream()
                 .map(orderItem -> {
                     var product = orderItem.getProduct();
                     return SettlementOrderInfoDto.builder()
@@ -69,7 +74,19 @@ public class SettlementServiceImpl implements SettlementService {
                             .orderDate(order.getOrderDate())
                             .build();
                 }).toList();
+
+        return new PageImpl<>(dtoList, pageable, orderItemsPage.getTotalElements());
     }
+        // List<OrderItem> orderItems = orderItemRepository.findAllByOrder_OrderId(orderId);
+        // return orderItems.stream()
+        //         .map(orderItem -> {
+        //             var product = orderItem.getProduct();
+        //             return SettlementOrderInfoDto.builder()
+        //                     .productName(product.getProductName())
+        //                     .quantity(orderItem.getQuantity())
+        //                     .orderDate(order.getOrderDate())
+        //                     .build();
+        //         }).toList();
 
     @Override
     @Transactional

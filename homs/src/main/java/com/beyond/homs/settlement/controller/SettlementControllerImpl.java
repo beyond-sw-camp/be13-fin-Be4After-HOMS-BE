@@ -1,12 +1,13 @@
 package com.beyond.homs.settlement.controller;
 
 import com.beyond.homs.common.dto.ResponseDto;
-import com.beyond.homs.order.dto.OrderResponseDto;
 import com.beyond.homs.order.service.OrderService;
 import com.beyond.homs.settlement.dto.*;
 import com.beyond.homs.settlement.service.SettlementService;
-import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,14 +59,14 @@ public class SettlementControllerImpl implements SettlementController {
 
     @GetMapping("/{orderId}/orderInfo")
     @Override
-    public ResponseEntity<ResponseDto<List<SettlementOrderInfoDto>>> getOrderInfo(
-            @PathVariable("orderId") Long orderId) {
-        List<SettlementOrderInfoDto> list = settlementService.getOrderInfo(orderId);
+    public ResponseEntity<ResponseDto<Page<SettlementOrderInfoDto>>> getOrderInfo(
+            @PathVariable("orderId") Long orderId,
+            @PageableDefault(size = 3, page = 0) Pageable pageable) {
+        Page<SettlementOrderInfoDto> list = settlementService.getOrderInfo(orderId, pageable);
         return ResponseEntity.ok(new ResponseDto<>(
                 HttpStatus.OK.value(),
                 "주문별 주문 상품 조회",
                 list));
-
     }
 
     @PutMapping("/update")
