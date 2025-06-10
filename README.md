@@ -95,9 +95,7 @@
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
 
-![architecture](https://github.com/user-attachments/assets/abd45355-edbe-4947-9abb-a0243a9acb20)
-
-
+![300drawio](https://github.com/user-attachments/assets/561161fd-2170-436e-9b59-2cd200907a87)
 
 </details>
 
