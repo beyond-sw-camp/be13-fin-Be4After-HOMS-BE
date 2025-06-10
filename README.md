@@ -130,7 +130,9 @@ HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 
 
 <details>
 <summary><strong>📂 시스템 아키텍쳐</strong></summary>
-![300drawio](https://github.com/user-attachments/assets/561161fd-2170-436e-9b59-2cd200907a87)
+
+![300drawio(3)](https://github.com/user-attachments/assets/653e5844-09a8-4dbb-a596-dcdbd7a75f85)
+
 
 
 </details>
