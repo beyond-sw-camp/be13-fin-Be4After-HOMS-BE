@@ -8,6 +8,7 @@
   |<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|
 |:-:|:-:|:-:|:-:|
 |오영광<br/>[@OhGlory](https://github.com/OhGlory)|김범석<br/>[@g00dbyul](https://github.com/g00dbyul)|박서준<br/>[@pppseojun](https://github.com/pppseojun)|홍재민<br/>[@MSP-31](https://github.com/MSP-31)|
+|팀장, 백엔드 개발 리드|인프라 설계 및 구축|프론트엔드 개발 리드|풀스택 개발|
 
 
 ## 프로젝트 소개
@@ -159,3 +160,10 @@
 </details>
 
 ## 회고
+| 팀원 | 회고록 |
+| ---- | ------ |
+| 오영광 |  |
+| 김범석 |  |
+| 홍재민 |  |
+| 박서준 |  |
+
