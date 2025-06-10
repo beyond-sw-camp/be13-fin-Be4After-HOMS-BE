@@ -97,7 +97,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private void errorReport(String message, String requestUri) {
         if ("prod".equals(profile)) { // Only send error reports in production
             String rid = ThreadContext.get("requestId");
-//            messageSender.send(String.format("```Exception occurred\n \tRequestId=%s \n \tMessage=%s \n \t%s```", rid, message, requestUri));
+            messageSender.send(String.format("```Exception occurred\n \tRequestId=%s \n \tMessage=%s \n \t%s```", rid, message, requestUri));
         }
     }
 }

@@ -1,6 +1,10 @@
 package com.beyond.homs.settlement.service;
 
 import com.beyond.homs.settlement.dto.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +15,7 @@ public interface SettlementService {
 
     List<SettlementResponseDto> getSettlementByUser(Long userId);
 
-    List<SettlementOrderInfoDto> getOrderInfo(Long orderId);
+    Page<SettlementOrderInfoDto> getOrderInfo(Long orderId, Pageable pageable);
 
     SettlementCompanyInfoDto getCompanyInfoByOrderId(Long orderId);
 

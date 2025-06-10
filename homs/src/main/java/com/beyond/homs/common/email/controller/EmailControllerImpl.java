@@ -5,6 +5,8 @@ import com.beyond.homs.common.email.dto.EmailPostDto;
 import com.beyond.homs.common.email.entity.EmailMessage;
 import com.beyond.homs.common.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,11 @@ public class EmailControllerImpl implements EmailController {
                 .build();
         emailService.sendMail(emailMessage,emailPostDto.getEmailType());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.OK.value(),
+                        "성공적으로 이메일을 발송하였습니다.",
+                        null
+                ));
     }
 }

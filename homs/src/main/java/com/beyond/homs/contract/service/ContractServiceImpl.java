@@ -57,12 +57,6 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<ContractListDto> getContracts(ContractSearchOption option, String keyword, Pageable pageable) {
         Page<ContractListDto> searchResult = contractRepository.findContractList(option, keyword, pageable);
-
-        // 검색결과가 없는 경우 예외 처리
-        // if (searchResult.isEmpty()) {
-        //     throw new CustomException(ExceptionMessage.INVALID_SEARCH_KEYWORD);
-        // }
-
         return searchResult;
     }
 

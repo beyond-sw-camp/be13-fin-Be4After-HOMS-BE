@@ -38,6 +38,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
+    implementation('org.springframework.boot:spring-boot-starter-webflux') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
     implementation('org.springframework.boot:spring-boot-starter-data-redis') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
