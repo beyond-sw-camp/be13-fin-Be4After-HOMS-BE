@@ -5,17 +5,21 @@
 </p>
 
 ## 팀원 소개
-  |<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|<img src="https://github.com/user-attachments/assets/973ece43-16c1-4b23-95fd-0bb34edcdbc8" width="150" height="150"/>|
+  | <img src="https://github.com/user-attachments/assets/a0586f90-9c45-4d7a-894d-a297ad4ef9f1" width="150" height="150"> | <img src="https://github.com/user-attachments/assets/dae8b52f-052b-4fc1-a4c4-ddaa9e3aa6bd" width="150" height="150"> | <img src="https://github.com/user-attachments/assets/8a78e39e-37af-449b-8bfc-787e22b2eb22" width="150" height="150"> | <img src="https://github.com/user-attachments/assets/49d61e1d-ed1f-4e49-b492-0e577816c61a" width="150" height="150"> |
 |:-:|:-:|:-:|:-:|
 |오영광<br/>[@OhGlory](https://github.com/OhGlory)|김범석<br/>[@g00dbyul](https://github.com/g00dbyul)|박서준<br/>[@pppseojun](https://github.com/pppseojun)|홍재민<br/>[@MSP-31](https://github.com/MSP-31)|
 |팀장, 백엔드 개발 리드|인프라 설계 및 구축|프론트엔드 개발 리드|풀스택 개발|
 
 
 ## 프로젝트 소개
-한화솔루션 케미칼 부문의 B2B OMS(Order Management System)을 고도화 하기 위한 프로젝트 입니다. 
+HOMS(Hanwha Order Management System)은 기존 주문 프로세스를 개선해 주문 관련 업무의 효율성 향상을 목표로 하여 한화솔루션 케미칼 부문의 B2B OMS(Order Management System)을 고도화 하기 위한 프로젝트 입니다. 
 
 ## 배경
-기존의 주문 시스템은 약 49% 정도 이메일, FAX, 전화, 문서 형태의 발주서를 제출하고 영업팀이 수작업으로 처리 됩니다. 이 과정에서 4% 정도의 오타 및 누락 등으로 인해 처리 지연의 문제가 발생합니다. 또한, 소통 단절의 문제로 인해 주문 및 배송 조회 시 별도 문의가 필요하며 이력 관리의 어려움도 있습니다. 이런 문제를 해결하기 위해 주문 통합 관리 플랫폼 HOMS(Hanhwa Order Management System)을 개발하게 되었습니다.
+### 기존 주문 프로세스의 문제점
+기존의 주문 시스템은 약 49% 정도 이메일, FAX, 전화, 문서 형태의 발주서를 제출하고 영업팀이 수작업으로 처리 됩니다. 이 과정에서 4% 정도의 오타 및 누락 등으로 인해 처리 지연의 문제가 발생합니다. 또한, 소통 단절의 문제로 인해 주문 및 배송 조회 시 별도 문의가 필요하며 이력 관리의 어려움도 있습니다. 
+
+### 주문 통합 관리 플랫폼의 필요성
+이런 문제를 해결하기 위해 주문 통합 관리 플랫폼 HOMS(Hanhwa Order Management System)을 개발하게 되었습니다.
 
 ## 제안
 수작업으로 처리 되는 주문 프로세스를 엑셀 템플릿 기반의 원클릭 주문과 플랫폼 통합으로 주문 -> 출고 -> 배송 -> 정산 -> 클레임 관리를 일원화 합니다. 실시간 채팅 기능을 지원해 기업 고객의 민원에 효율적으로 대응할 수 있습니다. 또한, 데이터 시각화 및 통계 자료를 제공해 주문과 관련된 지표를 점검하고 관리할 수 있습니다.
@@ -165,7 +169,7 @@
 | 팀원 | 회고록 |
 | ---- | ------ |
 | 오영광 |  |
-| 김범석 |  |
-| 홍재민 |  |
+| 김범석 | 다른 팀들 보다 인원은 적은데 개발 할 것은 많아서 걱정 되었습니다. 힘들었지만 팀원들과 함께한 노력, 강사님 매니저님들의 관심으로 프로젝트를 마무리 지을 수 있었습니다. <br/><br/>개발하면서 왜 이렇게 해야하지? 이론만 알고 머리로 이해하지 못했던 부분들을 깨달으면서 개발 역량을 성장시킬 수 있었습니다. |
+| 홍재민 | 안녕하세요, 저는 홍재민입니다. 먼저 이 뜻깊은 프로젝트를  마치게 되어 큰 영광이며, 이 자리에 설 수 있도록 함께해 주신 모든 분께 감사의 인사를 전합니다.<br/><br/> 이번 HOMS 프로젝트는 단순한 주문관리시스템을 구축하는 것이 아니라, 보다 효율적인 프로세스를 설계하고, 사용자 중심의 편리한 시스템을 개발하는 데 초점을 맞춘 프로젝트였습니다.<br/><br/> 처음 시작할 때에는 많은 도전이 있었지만, 팀원들의 열정과 협력 덕분에 성공적으로 마무리할 수 있었습니다.<br/><br/> 이 자리를 빌려, 프로젝트를 함께 이끌어 준 Be4after팀원들에게 깊은 감사를 전합니다. 또한, 지속적으로 피드백을 주며 성장할 수 있도록 도와주신 문인수 강사님과 정민환 멘토님께도 감사드립니다.<br/><br/> 이 프로젝트는 팀원 모두가 함께 힘을 모은 노력의 결과라고 생각합니다. 앞으로도 최고의 프로젝트와 협업을 할 수 있도록 최선을 다하겠습니다. 다시 한번 감사드리며, 앞으로도 좋은 모습으로 찾아뵙겠습니다. <br/><br/>감사합니다! |
 | 박서준 |  |
 
