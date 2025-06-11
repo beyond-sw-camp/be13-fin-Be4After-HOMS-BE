@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +33,7 @@ public class SettlementServiceImpl implements SettlementService {
     public List<SettlementResponseDto> getAllSettlement() {
         return settlementRepository.findAll().stream()
                 .map(this::toSettlementResponse)
+                .sorted(Comparator.comparing(SettlementResponseDto::getOrderDate).reversed()) // 날짜 필드로 내림차순 정렬
                 .collect(Collectors.toList());
     }
 
@@ -39,6 +41,7 @@ public class SettlementServiceImpl implements SettlementService {
     public List<SettlementResponseDto> getSettlementByUser(Long userId) {
         return settlementRepository.findAllByOrderUserUserId(userId).stream()
                 .map(this::toSettlementResponse)
+                .sorted(Comparator.comparing(SettlementResponseDto::getOrderDate).reversed()) // 날짜 필드로 내림차순 정렬
                 .collect(Collectors.toList());
     }
 
