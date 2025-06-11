@@ -80,15 +80,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderResponseDto> getAllOrders(OrderSearchOption option, String keyword, Pageable pageable) {
         Long userId = null;
+        boolean isAdmin = false;
         
         // 로그인한 유저가 일반 유저라면 해당 유저의 Id값으로 검색
         if(SecurityUtil.getCurrentUserRole() == ROLE_USER){
             userId = SecurityUtil.getCurrentUserId();
+        }else{ // 아니면 관리자로 필터링
+            isAdmin = true;
         }
 
-        Page<OrderResponseDto> searchResult = orderRepository.findOrders(option, keyword, userId, pageable);
-
-        return searchResult;
+        return orderRepository.findOrders(option, keyword, userId, isAdmin, pageable);
     }
 
     @Override

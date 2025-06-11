@@ -84,11 +84,6 @@ public class ClaimServiceImpl implements ClaimService {
         Page<ClaimListResponseDto> searchResult = orderRepository.findClaimOrders(option, keyword, userId, pageable);
         List<ClaimListResponseDto> orderDtos = searchResult.getContent();
 
-        // 검색결과가 없는 경우 예외 처리
-        if (orderDtos.isEmpty()) {
-            throw new CustomException(ExceptionMessage.ORDER_NOT_FOUND);
-        }
-
         // 각 주문에 대한 클레임 해결 상태 판단 및 DTO에 설정
         List<ClaimListResponseDto> processedOrderDtos = orderDtos.stream()
                 .peek(orderDto -> {
